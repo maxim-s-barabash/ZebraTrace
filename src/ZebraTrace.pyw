@@ -24,7 +24,7 @@ import os
 import shutil
 import tempfile
 from PyQt4 import QtCore, QtGui, uic
-from FuncPlotter2 import FuncPlotter
+from funcplotter2 import FuncPlotter
 from svgview import *
 from math import *
 
