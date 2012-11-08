@@ -33,7 +33,7 @@ app_name = "ZebraTRACE"
 about = """<center><b>%s</b> version %s. <br><br>
 See <a href='http://linuxgraphics.ru/'>linuxgraphics.ru</a>
 for more information.<br><br>
-Copiright (C) 2012</center>"""
+Copyright (C) 2012</center>"""
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -79,7 +79,7 @@ class MainWindow(QtGui.QMainWindow):
 			if not bitmap_file.exists():
 				QtGui.QMessageBox.critical(self, "Open Bitmap File",
 					"Could not open file '%s'." % path)
-			self.trace_image = path
+			self.currentPath = self.trace_image = path
 
 	def saveFileSVG(self, path=None):
 		if not path:
@@ -95,14 +95,14 @@ class MainWindow(QtGui.QMainWindow):
 	def trace(self):
 		image_size = [self.spinBoxX.value(), self.spinBoxY.value()]
 		dimensions = [-1, -1, 1, 1]
-		# количество кривых
+		# number of curves
 		self.n = self.spinBoxCurves.value()
-		# диапазон значений переменной
+		# range of the variable
 		alpha = [self.doubleSpinBoxAlphaMin.value(),
 				self.doubleSpinBoxAlphaMax.value()]
-		# качество кривой
+		# curve quality
 		resolution = self.doubleSpinBoxResolution.value()
-		# без обводки (при трассировке используется заливка)
+		# no stroke (when tracing is used fill)
 		stroke_color = 'none'
 		width_range = [self.doubleSpinBoxMin.value(), self.doubleSpinBoxMax.value()]
 		funcX = eval("lambda a:" + unicode(self.lineEditX.text()), self.__dict__)

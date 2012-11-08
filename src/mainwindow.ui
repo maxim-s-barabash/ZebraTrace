@@ -226,7 +226,7 @@
             <item row="0" column="0">
              <widget class="QLabel" name="label_8">
               <property name="text">
-               <string>H:</string>
+               <string>W:</string>
               </property>
              </widget>
             </item>
@@ -249,7 +249,7 @@
             <item row="0" column="2">
              <widget class="QLabel" name="label_9">
               <property name="text">
-               <string>W:</string>
+               <string>H:</string>
               </property>
              </widget>
             </item>
@@ -324,7 +324,7 @@
             <item row="1" column="1">
              <widget class="QDoubleSpinBox" name="doubleSpinBoxResolution">
               <property name="singleStep">
-               <double>0.100000000000000</double>
+               <double>0.010000000000000</double>
               </property>
               <property name="value">
                <double>0.300000000000000</double>
@@ -458,7 +458,7 @@
             <item row="2" column="1">
              <widget class="QLineEdit" name="lineEditX">
               <property name="text">
-               <string> (0.95+0.02*sin(20*a))*i/n</string>
+               <string>(0.95+0.02*sin(20*a))*i/n</string>
               </property>
              </widget>
             </item>
