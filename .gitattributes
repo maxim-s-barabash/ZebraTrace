@@ -1,6 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# For Python
+*.py text eol=crlf
+*.pyw text eol=crlf
+*.qrc text eol=crlf
+*.ui text eol=crlf
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 *.sln    merge=union
