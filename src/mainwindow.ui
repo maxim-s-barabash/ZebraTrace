@@ -602,7 +602,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionOpenBitmap"/>
     <addaction name="actionSaveSVG"/>
@@ -611,12 +611,20 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutQt"/>
    </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionBackground"/>
+    <addaction name="actionBorder"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu_View"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionOpenBitmap">
@@ -659,6 +667,28 @@
   <action name="actionAboutQt">
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionBackground">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Background</string>
+   </property>
+  </action>
+  <action name="actionBorder">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Border &amp;Frame</string>
    </property>
   </action>
  </widget>

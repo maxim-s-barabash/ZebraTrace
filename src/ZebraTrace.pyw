@@ -81,6 +81,9 @@ class MainWindow(QtGui.QMainWindow):
 					QtCore.SIGNAL("clicked()"), self.saveFileSVG)
 		self.connect(self.pushButtonQuit,
 					QtCore.SIGNAL("clicked()"), self.close)
+					
+		self.actionBackground.toggled.connect(self.view.setViewBackground)
+		self.actionBorder.toggled.connect(self.view.setViewOutline)
 
 	def openFileBitmap(self, path=None):
 		if not path:

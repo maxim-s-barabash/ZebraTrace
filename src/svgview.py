@@ -90,7 +90,7 @@ class SvgView(QtGui.QGraphicsView):
 		if self.backgroundItem:
 			drawBackground = self.backgroundItem.isVisible()
 		else:
-			drawBackground = False
+			drawBackground = True
 
 		if self.outlineItem:
 			drawOutline = self.outlineItem.isVisible()
@@ -112,7 +112,7 @@ class SvgView(QtGui.QGraphicsView):
 		self.backgroundItem.setZValue(-1)
 
 		self.outlineItem = QtGui.QGraphicsRectItem(self.svgItem.boundingRect())
-		outline = QtGui.QPen(QtCore.Qt.black, 2, QtCore.Qt.DashLine)
+		outline = QtGui.QPen(QtCore.Qt.darkGray, 1, QtCore.Qt.SolidLine)
 		outline.setCosmetic(True)
 		self.outlineItem.setPen(outline)
 		self.outlineItem.setBrush(QtGui.QBrush(QtCore.Qt.NoBrush))
