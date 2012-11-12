@@ -22,40 +22,52 @@ reload(sys)
 sys.setdefaultencoding('UTF-8')
 import os
 import shutil
-import tempfile
+import mainwindow_rc
+import time
 from PyQt4 import QtCore, QtGui, uic
 from funcplotter2 import FuncPlotter
 from svgview import *
+from app_config import *
 from math import *
 
-__version__ = "0.1 alpha"
-app_name = "ZebraTRACE"
+
 about = """<center><b>%s</b> version %s. <br><br>
 See <a href='http://linuxgraphics.ru/'>linuxgraphics.ru</a>
 for more information.<br><br>
 Copyright (C) 2012</center>"""
 
 
+class Function():
+	def __init__(self, func=None):
+		self.setFunc(func)
+
+	def setFunc(self, func):
+			self.func = func.strip()
+
+	def getFunc(self, cfg):
+		if self.func:
+			ret = eval("lambda a:" + self.func, cfg)
+		else:
+			ret = None
+		return ret
+
+
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self):
 		QtGui.QMainWindow.__init__(self)
 		uic.loadUi("mainwindow.ui", self)
-		self.tabInfo.hide()
-		self.tabColors.hide()
-
 		self.currentPath = ''
-		self.tempfilename = os.path.join(tempfile.gettempdir(), "temp.svg")
 		self.trace_image = ''
+
+		self.app_data = AppData()
+
 		self.view = SvgView()
 		self.horizontalLayoutContainer.addWidget(self.view)
-		self.sin = sin
-		self.cos = cos
-		self.pi = pi
 		self.createActions()
 
 	def __del__(self):
-		if os.path.isfile(self.tempfilename):
-			os.remove(self.tempfilename)
+		if os.path.isfile(self.app_data.temp_svg):
+			os.remove(self.app_data.temp_svg)
 
 	def createActions(self):
 		self.actionOpenBitmap.triggered.connect(self.openFileBitmap)
@@ -75,28 +87,28 @@ class MainWindow(QtGui.QMainWindow):
 			path = QtGui.QFileDialog.getOpenFileName(self, "Open Bitmap File",
 				self.currentPath, "Bitmap files (*.jpg *.ipeg *.png)")
 		if path:
-			bitmap_file = QtCore.QFile(path)
-			if not bitmap_file.exists():
-				QtGui.QMessageBox.critical(self, "Open Bitmap File",
-					"Could not open file '%s'." % path)
-			self.currentPath = self.trace_image = path
+			self.trace_image = unicode(path)
+			self.currentPath = os.path.dirname(self.trace_image)
+			self.trace()
 
 	def saveFileSVG(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getSaveFileName(self, "Save SVG File",
 				self.currentPath, "SVG files (*.svg)")
 		if path:
-			svg_file = QtCore.QFile(path)
-			shutil.copy(self.tempfilename, path)
+			svg_file = unicode(path)
+			self.currentPath = os.path.dirname(svg_file)
+			shutil.copy(self.app_data.temp_svg, svg_file)
 
 	def about(self):
-		QtGui.QMessageBox.about(self, "About", about % (app_name, __version__))
+		QtGui.QMessageBox.about(self, "About", about % (self.app_data.app_name, 
+														self.app_data.app_version))
 
 	def trace(self):
 		image_size = [self.spinBoxX.value(), self.spinBoxY.value()]
 		dimensions = [-1, -1, 1, 1]
 		# number of curves
-		self.n = self.spinBoxCurves.value()
+		n = self.spinBoxCurves.value()
 		# range of the variable
 		alpha = [self.doubleSpinBoxAlphaMin.value(),
 				self.doubleSpinBoxAlphaMax.value()]
@@ -105,16 +117,24 @@ class MainWindow(QtGui.QMainWindow):
 		# no stroke (when tracing is used fill)
 		stroke_color = 'none'
 		width_range = [self.doubleSpinBoxMin.value(), self.doubleSpinBoxMax.value()]
-		funcX = eval("lambda a:" + unicode(self.lineEditX.text()), self.__dict__)
-		if self.lineEditY.text() != "":
-			funcY = eval("lambda a:" + unicode(self.lineEditY.text()), self.__dict__)
-		else:
-			funcY = None
+
+		dic = {"sin": sin,
+				"cos": cos,
+				"pi": pi,
+				"n": n,
+			}
+
+		funcX = Function(unicode(self.lineEditX.text())).getFunc(dic)
+		funcY = Function(unicode(self.lineEditY.text())).getFunc(dic)
+
 		fp = FuncPlotter(image_size, dimensions, trace_image=self.trace_image,
 						width_range=width_range)
-		self.progressBar.setMaximum(self.n)
-		for i in xrange(self.n + 1):
-			self.i = float(i)
+
+		self.progressBar.setMaximum(n + 1)
+		start = time.time()
+
+		for i in xrange(n + 1):
+			dic['i'] = float(i)
 			fp.append_func(funcX,
 							funcY,
 							alpha,
@@ -122,8 +142,10 @@ class MainWindow(QtGui.QMainWindow):
 							stroke_color,
 							close_path=True)
 			self.progressBar.setValue(i)
-		fp.plot(unicode(self.tempfilename))
-		self.view.openFile(QtCore.QFile(self.tempfilename))
+
+		fp.plot(self.app_data.temp_svg)
+		print "- Done in", time.time() - start, 'seconds.'
+		self.view.openFile(QtCore.QFile(self.app_data.temp_svg))
 		self.progressBar.setValue(0)
 
 
@@ -135,5 +157,5 @@ if __name__ == "__main__":
 	else:
 		window.openFileBitmap("images/tux.png")
 	window.show()
-	window.trace()
+	#window.trace()
 	sys.exit(app.exec_())
