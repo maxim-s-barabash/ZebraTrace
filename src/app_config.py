@@ -19,8 +19,14 @@
 
 import os
 import tempfile
-import jsonconfig
+from jsonconfig import *
 
+default_preset = {
+  "AlphaMin": 0.0, 
+  "funcY": "", 
+  "funcX": "(0.95+0.02*sin(20*a))*i/n", 
+  "AlphaMax": 6.283
+}
 
 class AppData:
 
@@ -32,6 +38,12 @@ class AppData:
 		os.makedirs(app_config_dir)
 	app_config = unicode(os.path.join(app_config_dir, 'preferences.cfg'))
 	temp_svg = unicode(os.path.join(tempfile.gettempdir(), "temp.svg"))
+
+
+class Preset(JsonConfigParser):
+	def __init__(self):
+		self.update(default_preset)
+	
 
 
 class AppCofig():

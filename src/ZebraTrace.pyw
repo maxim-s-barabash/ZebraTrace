@@ -57,6 +57,7 @@ class MainWindow(QtGui.QMainWindow):
 		QtGui.QMainWindow.__init__(self)
 		uic.loadUi("mainwindow.ui", self)
 		self.currentPath = ''
+		self.presetPath = './preset'
 		self.trace_image = ''
 
 		self.app_data = AppData()
@@ -72,6 +73,8 @@ class MainWindow(QtGui.QMainWindow):
 	def createActions(self):
 		self.actionOpenBitmap.triggered.connect(self.openFileBitmap)
 		self.actionSaveSVG.triggered.connect(self.saveFileSVG)
+		self.actionSavePreset.triggered.connect(self.savePreset)
+		self.actionLoadPreset.triggered.connect(self.loadPreset)
 		self.actionQuit.triggered.connect(QtGui.qApp.quit)
 		self.actionAbout.triggered.connect(self.about)
 		self.actionAboutQt.triggered.connect(QtGui.qApp.aboutQt)
@@ -102,6 +105,35 @@ class MainWindow(QtGui.QMainWindow):
 			svg_file = unicode(path)
 			self.currentPath = os.path.dirname(svg_file)
 			shutil.copy(self.app_data.temp_svg, svg_file)
+
+	def loadPreset(self, path=None):
+		if not path:
+			path = QtGui.QFileDialog.getOpenFileName(self, "Load Preset File",
+				self.presetPath, "Preset files (*.preset)")
+		if path:
+			preset_file = unicode(path)
+			self.presetPath = os.path.dirname(preset_file)
+			preset = Preset()
+			preset.load(preset_file)
+			self.lineEditX.setText(preset.funcX)
+			self.lineEditY.setText(preset.funcY)
+			self.doubleSpinBoxAlphaMin.setValue(preset.AlphaMin)
+			self.doubleSpinBoxAlphaMax.setValue(preset.AlphaMax)
+			self.trace()
+
+	def savePreset(self, path=None):
+		if not path:
+			path = QtGui.QFileDialog.getSaveFileName(self, "Save Preset File",
+				self.presetPath, "Preset files (*.preset)")
+		if path:
+			preset_file = unicode(path)
+			self.presetPath = os.path.dirname(preset_file)
+			preset = Preset()
+			preset.funcX = unicode(self.lineEditX.text())
+			preset.funcY = unicode(self.lineEditY.text())
+			preset.AlphaMin = self.doubleSpinBoxAlphaMin.value()
+			preset.AlphaMax = self.doubleSpinBoxAlphaMax.value()
+			preset.save(preset_file)
 
 	def about(self):
 		QtGui.QMessageBox.about(self, "About", about % (self.app_data.app_name, 

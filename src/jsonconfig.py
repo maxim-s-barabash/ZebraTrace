@@ -81,7 +81,8 @@ class JsonConfigParser:
 if __name__ == '__main__':
 	"""TEST"""
 	test = 1
-	test2 = ['Вторник']
+	test2 = {'a':{'1':1, '2':2},
+			'b':{'3':'3', '4':'4'}}
 	conf = JsonConfigParser()
 	conf.ztest = test
 	conf.ztest2 = test2

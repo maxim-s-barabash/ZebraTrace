@@ -539,6 +539,9 @@
     <addaction name="actionOpenBitmap"/>
     <addaction name="actionSaveSVG"/>
     <addaction name="separator"/>
+    <addaction name="actionLoadPreset"/>
+    <addaction name="actionSavePreset"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -621,6 +624,16 @@
    </property>
    <property name="text">
     <string>Border &amp;Frame</string>
+   </property>
+  </action>
+  <action name="actionLoadPreset">
+   <property name="text">
+    <string>Load Preset...</string>
+   </property>
+  </action>
+  <action name="actionSavePreset">
+   <property name="text">
+    <string>Save Preset...</string>
    </property>
   </action>
  </widget>
