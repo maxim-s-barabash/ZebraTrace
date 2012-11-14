@@ -108,8 +108,12 @@ class MainWindow(QtGui.QMainWindow):
 														self.app_data.app_version))
 
 	def trace(self):
-		image_size = [self.spinBoxX.value(), self.spinBoxY.value()]
-		dimensions = [-1, -1, 1, 1]
+		img = QtGui.QImage(self.trace_image)
+		img_w = float(img.width())
+		img_h = float(img.height())
+		img_d = [[1, img_w / img_h], [img_h / img_w, 1]][img_w > img_h]
+		image_size = [img_w, img_h]
+		dimensions = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
 		# number of curves
 		n = self.spinBoxCurves.value()
 		# range of the variable
