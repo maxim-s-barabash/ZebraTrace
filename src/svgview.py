@@ -98,7 +98,7 @@ class SvgView(QtGui.QGraphicsView):
 			drawOutline = True
 
 		s.clear()
-		self.resetTransform()
+		#self.resetTransform()
 
 		self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
 		self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)

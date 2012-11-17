@@ -95,6 +95,7 @@ class MainWindow(QtGui.QMainWindow):
 		if path:
 			self.trace_image = unicode(path)
 			self.currentPath = os.path.dirname(self.trace_image)
+			self.view.resetTransform()
 			self.trace()
 
 	def saveFileSVG(self, path=None):
