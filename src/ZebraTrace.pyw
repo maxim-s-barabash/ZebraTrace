@@ -157,6 +157,7 @@ class MainWindow(QtGui.QMainWindow):
 		# no stroke (when tracing is used fill)
 		stroke_color = 'none'
 		width_range = [self.doubleSpinBoxMin.value(), self.doubleSpinBoxMax.value()]
+		tolerance = self.tolerance.value()/5000.
 
 		dic = {"sin": sin,
 				"cos": cos,
@@ -180,7 +181,8 @@ class MainWindow(QtGui.QMainWindow):
 							alpha,
 							resolution,
 							stroke_color,
-							close_path=True)
+							close_path=True,
+							tolerance=tolerance)
 			self.progressBar.setValue(i)
 
 		fp.plot(self.app_data.temp_svg)

@@ -207,19 +207,19 @@
             <x>10</x>
             <y>10</y>
             <width>251</width>
-            <height>141</height>
+            <height>171</height>
            </rect>
           </property>
           <property name="title">
            <string> Curves:</string>
           </property>
-          <widget class="QWidget" name="layoutWidget">
+          <widget class="QWidget" name="">
            <property name="geometry">
             <rect>
              <x>10</x>
              <y>20</y>
              <width>231</width>
-             <height>111</height>
+             <height>131</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -303,6 +303,29 @@
               </property>
              </widget>
             </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Node Reduction:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QSpinBox" name="tolerance">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="singleStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </widget>
@@ -310,7 +333,7 @@
           <property name="geometry">
            <rect>
             <x>10</x>
-            <y>160</y>
+            <y>250</y>
             <width>251</width>
             <height>131</height>
            </rect>
@@ -643,6 +666,7 @@
   <tabstop>doubleSpinBoxResolution</tabstop>
   <tabstop>doubleSpinBoxMin</tabstop>
   <tabstop>doubleSpinBoxMax</tabstop>
+  <tabstop>tolerance</tabstop>
   <tabstop>doubleSpinBoxAlphaMin</tabstop>
   <tabstop>doubleSpinBoxAlphaMax</tabstop>
   <tabstop>lineEditX</tabstop>
