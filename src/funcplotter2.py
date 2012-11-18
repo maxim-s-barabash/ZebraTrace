@@ -131,7 +131,7 @@ class FuncPlotter:
 		left.reverse()
 		self.coords = right + left + [right[0]]
 
-	def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=True):
+	def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=True, tolerance=0.0):
 		"""Adds a graph of the functions fX (t) and fY (t).
 
 		fX			- a function of one variable, calculates the coordinates of x or
@@ -142,6 +142,7 @@ class FuncPlotter:
 						of the SVG specification, or 'none'
 		width		- the thickness of the circuit
 		close_path	- parameter that indicates whether or not to close the curve
+		tolerance	- it simplifies a line by reducing the number of points by some tolerance.
 		"""
 		dT = float(T[1] - T[0])
 		resolution = int(dT / self.scale * res)
@@ -160,6 +161,11 @@ class FuncPlotter:
 		if self.img:                            # if there is a picture, tracing
 			self._trace_image()                 # (the result is written to self.coords)
 
+		# Douglas-Peucker line simplification.
+		if tolerance > 0.0:
+			from dp import simplify_points
+			self.coords = simplify_points(self.coords, tolerance)
+
 		self._generate_path([], color, width, close_path)
 
 	def plot(self, file_name='plot.svg'):
@@ -174,7 +180,7 @@ class FuncPlotter:
 									[self.x2, self.y1 + self.dy / g * i]], ['grey', 'lightgrey'][bool(i - g / 2)])
 
 		header = """<?xml version="1.0" encoding="utf-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" """
-		header += """width="%i" height="%i" viewBox="%f %f %f %f">\n\t<g fill="%s">\n""" % \
+		header += """width="%i" height="%i" viewBox="%f %f %f %f">\n\t<g fill="%s" fill-rule="evenodd">\n""" % \
 					(self.w, self.h, self.x1, self.y1, self.dx, self.dy, ['none', 'black'][bool(self.img)])
 		# imag = '  <image y="-1" x="-1" xlink:href="%s" height="2" width="2" opacity=".2" />' % (self.trace_image)
 		footer = "\n\n\t</g>\n\n</svg>"
