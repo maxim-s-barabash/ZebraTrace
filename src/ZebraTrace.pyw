@@ -22,11 +22,11 @@ reload(sys)
 sys.setdefaultencoding("UTF-8")
 import os
 import shutil
-import mainwindow_rc
+import gui.mainwindow_rc
 import time
 from PyQt4 import QtCore, QtGui, uic
 from funcplotter2 import FuncPlotter
-from svgview import *
+from widgets.svgview import *
 from app_config import *
 from math import *
 
@@ -88,7 +88,7 @@ class Info():
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self):
 		QtGui.QMainWindow.__init__(self)
-		uic.loadUi("mainwindow.ui", self)
+		uic.loadUi("gui/mainwindow.ui", self)
 		self.currentPath = ""
 		self.presetPath = "./preset/"
 		self.trace_image = ""

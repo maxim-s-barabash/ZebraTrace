@@ -21,7 +21,7 @@ import os
 import tempfile
 import utils
 
-from jsonconfig import *
+from utils.jsonconfig import *
 
 default_preset = {
   "funcX": "(0.95+0.02*sin(20*a))*i/n", 
