@@ -19,6 +19,8 @@
 
 import os
 import tempfile
+import utils
+
 from jsonconfig import *
 
 default_preset = {
@@ -27,6 +29,8 @@ default_preset = {
   "rangeMax": 6.28318530718,
   "rangeMin": 0.0
 }
+
+TEMP_PREFIX = "TRACE_"
 
 
 class AppData:
@@ -37,7 +41,9 @@ class AppData:
 	if not os.path.lexists(app_config_dir):
 		os.makedirs(app_config_dir)
 	app_config = unicode(os.path.join(app_config_dir, "preferences.cfg"))
-	temp_svg = unicode(os.path.join(tempfile.gettempdir(), "temp.svg"))
+	temp_dir = tempfile.gettempdir()
+	temp_svg = unicode(os.path.join(temp_dir, TEMP_PREFIX + 
+							utils.id_generator() + ".svg"))
 
 
 class Preset(JsonConfigParser):
@@ -52,3 +58,4 @@ class AppCofig():
 if __name__ == "__main__":
 	"""TEST"""
 	app_data = AppData()
+	print utils.id_generator()
