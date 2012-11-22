@@ -166,4 +166,3 @@ class SvgView(QtGui.QGraphicsView):
 		factor = pow(1.2, event.delta() / 240.0)
 		self.scale(factor, factor)
 		event.accept()
-

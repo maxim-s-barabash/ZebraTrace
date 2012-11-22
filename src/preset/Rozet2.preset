@@ -1,6 +1,6 @@
 {
-  "AlphaMin": 0.0, 
   "funcY": "", 
-  "funcX": "(0.77+0.08*sin(8*a+4.1)*sin(20*a)*sin(i/n))*i/n                  ", 
-  "AlphaMax": 6.283
+  "funcX": "(0.77+0.08*sin(8*a+4.1)*sin(20*a)*sin(i/n))*i/n", 
+  "rangeMax": 6.283, 
+  "rangeMin": 0.0
 }

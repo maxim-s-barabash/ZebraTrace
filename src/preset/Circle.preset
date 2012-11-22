@@ -1,6 +1,6 @@
 {
-  "AlphaMin": 0.0, 
+  "rangeMin": 0.0, 
   "funcY": "", 
   "funcX": "1.4*i/n", 
-  "AlphaMax": 6.283
+  "rangeMax": 6.283
 }

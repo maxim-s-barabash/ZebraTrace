@@ -19,7 +19,7 @@
 
 import sys
 reload(sys)
-sys.setdefaultencoding('UTF-8')
+sys.setdefaultencoding("UTF-8")
 import os
 import shutil
 import mainwindow_rc
@@ -32,38 +32,72 @@ from math import *
 
 
 about = """<center><b>%s</b> version %s. <br><br>
-See <a href='http://linuxgraphics.ru/'>linuxgraphics.ru</a>
+See <a href="http://linuxgraphics.ru/">linuxgraphics.ru</a>
 for more information.<br><br>
 Copyright (C) 2012</center>"""
+
+info = """Time trace: %5.3f seconds.
+Graphic Objects
+  Number of objects: %i
+  Number of points: %i
+"""
 
 
 class Function():
 	def __init__(self, func=None):
 		self.setFunc(func)
+		self.dic = {"sin": sin,
+				"cos": cos,
+				"tan": tan,
+				"sqrt": sqrt,
+				"pi": pi,
+				"i": 0,
+				"n": 0,
+				}
 
 	def setFunc(self, func):
 			self.func = func.strip()
 
-	def getFunc(self, cfg):
+	def __call__(self, cfg={}):
 		if self.func:
-			ret = eval("lambda a:" + self.func, cfg)
+			dic = self.dic
+			dic.update(cfg)
+			ret = eval("lambda a:" + self.func, dic)
 		else:
 			ret = None
 		return ret
+
+
+class Info():
+	def __init__(self):
+		self.traceTime = 0.0
+		self.numberObject = 0
+		self.numberPoint = 0
+
+	def __setattr__(self, attr, value):
+		if not hasattr(self, attr) or getattr(self, attr) != value:
+			self.__dict__[attr] = value
+
+	def __call__(self):
+		text = info % (self.traceTime,
+						self.numberObject,
+						self.numberPoint)
+		return text
 
 
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self):
 		QtGui.QMainWindow.__init__(self)
 		uic.loadUi("mainwindow.ui", self)
-		self.currentPath = ''
-		self.presetPath = './preset'
-		self.trace_image = ''
-
+		self.currentPath = ""
+		self.presetPath = "./preset/"
+		self.trace_image = ""
 		self.app_data = AppData()
-
+		self.loadPreset("./preset/default.preset")
 		self.view = SvgView()
-		self.horizontalLayoutContainer.addWidget(self.view)
+		self.tabProperties.setCurrentIndex(0)
+		self.PreviewMode.setEnabled(False)
+		self.viewContainer.addWidget(self.view)
 		self.createActions()
 
 	def __del__(self):
@@ -78,25 +112,32 @@ class MainWindow(QtGui.QMainWindow):
 		self.actionQuit.triggered.connect(QtGui.qApp.quit)
 		self.actionAbout.triggered.connect(self.about)
 		self.actionAboutQt.triggered.connect(QtGui.qApp.aboutQt)
-		self.connect(self.pushButtonTrace,
+		self.connect(self.buttonTrace,
 					QtCore.SIGNAL("clicked()"), self.trace)
-		self.connect(self.pushButtonSaveSVG,
+		self.connect(self.buttonSaveSVG,
 					QtCore.SIGNAL("clicked()"), self.saveFileSVG)
-		self.connect(self.pushButtonQuit,
+		self.connect(self.buttonQuit,
 					QtCore.SIGNAL("clicked()"), self.close)
-					
+
+		self.connect(self,
+					QtCore.SIGNAL("loadPreset()"), self.trace)
+		self.connect(self,
+					QtCore.SIGNAL("openFileBitmap()"), self.trace)
+		self.connect(self,
+					QtCore.SIGNAL("infoChanget()"), self.infoUpdate)
+
 		self.actionBackground.toggled.connect(self.view.setViewBackground)
 		self.actionBorder.toggled.connect(self.view.setViewOutline)
 
 	def openFileBitmap(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getOpenFileName(self, "Open Bitmap File",
-				self.currentPath, "Bitmap files (*.jpg *.ipeg *.png)")
+				self.currentPath, "Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff)")
 		if path:
 			self.trace_image = unicode(path)
 			self.currentPath = os.path.dirname(self.trace_image)
 			self.view.resetTransform()
-			self.trace()
+			self.emit(QtCore.SIGNAL("openFileBitmap()"))
 
 	def saveFileSVG(self, path=None):
 		if not path:
@@ -118,9 +159,9 @@ class MainWindow(QtGui.QMainWindow):
 			preset.load(preset_file)
 			self.lineEditX.setText(preset.funcX)
 			self.lineEditY.setText(preset.funcY)
-			self.doubleSpinBoxAlphaMin.setValue(preset.AlphaMin)
-			self.doubleSpinBoxAlphaMax.setValue(preset.AlphaMax)
-			self.trace()
+			self.rangeMin.setValue(preset.rangeMin)
+			self.rangeMax.setValue(preset.rangeMax)
+			self.emit(QtCore.SIGNAL("loadPreset()"))
 
 	def savePreset(self, path=None):
 		if not path:
@@ -132,15 +173,19 @@ class MainWindow(QtGui.QMainWindow):
 			preset = Preset()
 			preset.funcX = unicode(self.lineEditX.text())
 			preset.funcY = unicode(self.lineEditY.text())
-			preset.AlphaMin = self.doubleSpinBoxAlphaMin.value()
-			preset.AlphaMax = self.doubleSpinBoxAlphaMax.value()
+			preset.rangeMin = self.rangeMin.value()
+			preset.rangeMax = self.rangeMax.value()
 			preset.save(preset_file)
 
+	def infoUpdate(self):
+		self.infoText.setPlainText(self.info())
+
 	def about(self):
-		QtGui.QMessageBox.about(self, "About", about % (self.app_data.app_name, 
+		QtGui.QMessageBox.about(self, "About", about % (self.app_data.app_name,
 														self.app_data.app_version))
 
 	def trace(self):
+		self.info = Info()
 		img = QtGui.QImage(self.trace_image)
 		img_w = float(img.width())
 		img_h = float(img.height())
@@ -148,25 +193,18 @@ class MainWindow(QtGui.QMainWindow):
 		image_size = [img_w, img_h]
 		dimensions = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
 		# number of curves
-		n = self.spinBoxCurves.value()
+		n = self.numberCurves.value()
 		# range of the variable
-		alpha = [self.doubleSpinBoxAlphaMin.value(),
-				self.doubleSpinBoxAlphaMax.value()]
+		alpha = [self.rangeMin.value(), self.rangeMax.value()]
 		# curve quality
-		resolution = self.doubleSpinBoxResolution.value()
+		resolution = self.curveResolution.value()
 		# no stroke (when tracing is used fill)
-		stroke_color = 'none'
-		width_range = [self.doubleSpinBoxMin.value(), self.doubleSpinBoxMax.value()]
-		tolerance = self.tolerance.value()/5000.
+		stroke_color = "none"
+		width_range = [self.curveWidthMin.value(), self.curveWidthMax.value()]
+		tolerance = self.nodeReduction.value() / 10000.
 
-		dic = {"sin": sin,
-				"cos": cos,
-				"pi": pi,
-				"n": n,
-			}
-
-		funcX = Function(unicode(self.lineEditX.text())).getFunc(dic)
-		funcY = Function(unicode(self.lineEditY.text())).getFunc(dic)
+		funcX = Function(unicode(self.lineEditX.text()))
+		funcY = Function(unicode(self.lineEditY.text()))
 
 		fp = FuncPlotter(image_size, dimensions, trace_image=self.trace_image,
 						width_range=width_range)
@@ -174,19 +212,27 @@ class MainWindow(QtGui.QMainWindow):
 		self.progressBar.setMaximum(n + 1)
 		start = time.time()
 
-		for i in xrange(n + 1):
-			dic['i'] = float(i)
-			fp.append_func(funcX,
-							funcY,
+		for i in xrange(1, n + 1):
+			fp.append_func(funcX({'i': float(i), 'n': n}),
+							funcY({'i': float(i), 'n': n}),
 							alpha,
 							resolution,
 							stroke_color,
 							close_path=True,
 							tolerance=tolerance)
+			self.info.numberPoint += len(fp.coords) - 1
+			self.info.numberObject += 1
+			self.info.traceTime = time.time() - start
+			self.emit(QtCore.SIGNAL("infoChanget()"))
+
+			QtGui.QApplication.processEvents()
 			self.progressBar.setValue(i)
 
 		fp.plot(self.app_data.temp_svg)
-		print "- Done in", time.time() - start, 'seconds.'
+
+		self.info.traceTime = time.time() - start
+		self.emit(QtCore.SIGNAL("infoChanget()"))
+
 		self.view.openFile(QtCore.QFile(self.app_data.temp_svg))
 		self.progressBar.setValue(0)
 

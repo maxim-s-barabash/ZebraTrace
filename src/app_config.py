@@ -22,34 +22,33 @@ import tempfile
 from jsonconfig import *
 
 default_preset = {
-  "AlphaMin": 0.0, 
-  "funcY": "", 
   "funcX": "(0.95+0.02*sin(20*a))*i/n", 
-  "AlphaMax": 6.283
+  "funcY": "", 
+  "rangeMax": 6.28318530718,
+  "rangeMin": 0.0
 }
 
-class AppData:
 
-	app_name = 'ZebraTRACE'
-	app_version = "0.2 alpha"
-	app_config_dir = os.path.join('~', '.config', 'zebratrace')
+class AppData:
+	app_name = "ZebraTRACE"
+	app_version = "0.3 alpha"
+	app_config_dir = os.path.join("~", ".config", "zebratrace")
 	app_config_dir = unicode(os.path.expanduser(app_config_dir))
 	if not os.path.lexists(app_config_dir):
 		os.makedirs(app_config_dir)
-	app_config = unicode(os.path.join(app_config_dir, 'preferences.cfg'))
+	app_config = unicode(os.path.join(app_config_dir, "preferences.cfg"))
 	temp_svg = unicode(os.path.join(tempfile.gettempdir(), "temp.svg"))
 
 
 class Preset(JsonConfigParser):
 	def __init__(self):
 		self.update(default_preset)
-	
 
 
 class AppCofig():
 	pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 	"""TEST"""
 	app_data = AppData()

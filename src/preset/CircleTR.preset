@@ -1,6 +1,6 @@
 {
-  "AlphaMin": -1.576, 
+  "rangeMin": -1.576, 
   "funcY": "cos(a)*i/n*2.8-1", 
   "funcX": "sin(a)*i/n*2.8+1", 
-  "AlphaMax": 0.0
+  "rangeMax": 0.0
 }

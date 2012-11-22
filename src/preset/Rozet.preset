@@ -1,6 +1,6 @@
 {
-  "AlphaMin": 0.0, 
+  "rangeMin": 0.0, 
   "funcY": "", 
   "funcX": "(0.95+0.02*sin(20*a))*i/n", 
-  "AlphaMax": 6.283
+  "rangeMax": 6.283
 }

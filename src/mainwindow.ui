@@ -23,9 +23,9 @@
      <number>9</number>
     </property>
     <item>
-     <widget class="QFrame" name="frame_3">
+     <widget class="QFrame" name="topPanel">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -45,7 +45,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBoxPreview">
+        <widget class="QComboBox" name="PreviewMode">
          <property name="minimumSize">
           <size>
            <width>150</width>
@@ -160,7 +160,7 @@
         </spacer>
        </item>
       </layout>
-      <zorder>comboBoxPreview</zorder>
+      <zorder>PreviewMode</zorder>
       <zorder>SliderTransparency</zorder>
       <zorder>horizontalSpacer_2</zorder>
       <zorder>labelPreview</zorder>
@@ -172,10 +172,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayoutContainer"/>
+       <layout class="QHBoxLayout" name="viewContainer"/>
       </item>
       <item>
-       <widget class="QTabWidget" name="tabWidget">
+       <widget class="QTabWidget" name="tabProperties">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -192,7 +192,7 @@
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideMiddle</enum>
@@ -213,13 +213,13 @@
           <property name="title">
            <string> Curves:</string>
           </property>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
              <x>10</x>
              <y>20</y>
              <width>231</width>
-             <height>131</height>
+             <height>138</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -231,7 +231,7 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QSpinBox" name="spinBoxCurves">
+             <widget class="QSpinBox" name="numberCurves">
               <property name="minimum">
                <number>1</number>
               </property>
@@ -254,7 +254,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBoxResolution">
+             <widget class="QDoubleSpinBox" name="curveResolution">
               <property name="singleStep">
                <double>0.010000000000000</double>
               </property>
@@ -271,7 +271,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBoxMin">
+             <widget class="QDoubleSpinBox" name="curveWidthMin">
               <property name="maximum">
                <double>1000.000000000000000</double>
               </property>
@@ -291,7 +291,7 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBoxMax">
+             <widget class="QDoubleSpinBox" name="curveWidthMax">
               <property name="maximum">
                <double>1000.000000000000000</double>
               </property>
@@ -311,7 +311,7 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QSpinBox" name="tolerance">
+             <widget class="QSpinBox" name="nodeReduction">
               <property name="minimum">
                <number>0</number>
               </property>
@@ -328,12 +328,14 @@
             </item>
            </layout>
           </widget>
+          <zorder>layoutWidget</zorder>
+          <zorder>horizontalSpacer_5</zorder>
          </widget>
          <widget class="QGroupBox" name="groupBox_3">
           <property name="geometry">
            <rect>
             <x>10</x>
-            <y>250</y>
+            <y>190</y>
             <width>251</width>
             <height>131</height>
            </rect>
@@ -347,7 +349,7 @@
              <x>10</x>
              <y>20</y>
              <width>231</width>
-             <height>100</height>
+             <height>110</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
@@ -359,9 +361,9 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBoxAlphaMin">
+             <widget class="QDoubleSpinBox" name="rangeMin">
               <property name="decimals">
-               <number>3</number>
+               <number>7</number>
               </property>
               <property name="minimum">
                <double>-1000.000000000000000</double>
@@ -385,9 +387,9 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QDoubleSpinBox" name="doubleSpinBoxAlphaMax">
+             <widget class="QDoubleSpinBox" name="rangeMax">
               <property name="decimals">
-               <number>3</number>
+               <number>7</number>
               </property>
               <property name="minimum">
                <double>-1000.000000000000000</double>
@@ -399,7 +401,7 @@
                <double>0.100000000000000</double>
               </property>
               <property name="value">
-               <double>6.283000000000000</double>
+               <double>0.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -413,7 +415,7 @@
             <item row="2" column="1">
              <widget class="QLineEdit" name="lineEditX">
               <property name="text">
-               <string>(0.95+0.02*sin(20*a))*i/n</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -445,11 +447,40 @@
         </widget>
         <widget class="QWidget" name="tabInfo">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <attribute name="title">
           <string>Info</string>
          </attribute>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>251</width>
+            <height>411</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Trace Information</string>
+          </property>
+          <widget class="QPlainTextEdit" name="infoText">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>20</y>
+             <width>231</width>
+             <height>371</height>
+            </rect>
+           </property>
+           <property name="plainText">
+            <string/>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+           </property>
+          </widget>
+         </widget>
         </widget>
        </widget>
       </item>
@@ -466,7 +497,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QFrame" name="frame">
+     <widget class="QFrame" name="bottomPanel">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
@@ -512,30 +543,39 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonTrace">
+           <widget class="QPushButton" name="buttonTrace">
             <property name="text">
              <string>Trace</string>
+            </property>
+            <property name="shortcut">
+             <string>Return</string>
+            </property>
+            <property name="autoDefault">
+             <bool>true</bool>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonSaveSVG">
+           <widget class="QPushButton" name="buttonSaveSVG">
             <property name="text">
              <string>Save SVG</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonQuit">
+           <widget class="QPushButton" name="buttonQuit">
             <property name="text">
              <string>Quit</string>
             </property>
            </widget>
           </item>
          </layout>
-         <zorder>pushButtonSaveSVG</zorder>
-         <zorder>pushButtonQuit</zorder>
-         <zorder>pushButtonTrace</zorder>
+         <zorder>buttonSaveSVG</zorder>
+         <zorder>buttonQuit</zorder>
+         <zorder>buttonTrace</zorder>
         </widget>
        </item>
       </layout>
@@ -543,8 +583,8 @@
     </item>
    </layout>
    <zorder>progressBar</zorder>
-   <zorder>frame</zorder>
-   <zorder>frame_3</zorder>
+   <zorder>bottomPanel</zorder>
+   <zorder>topPanel</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -552,7 +592,7 @@
      <x>0</x>
      <y>0</y>
      <width>892</width>
-     <height>18</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -661,20 +701,20 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
-  <tabstop>spinBoxCurves</tabstop>
-  <tabstop>doubleSpinBoxResolution</tabstop>
-  <tabstop>doubleSpinBoxMin</tabstop>
-  <tabstop>doubleSpinBoxMax</tabstop>
-  <tabstop>tolerance</tabstop>
-  <tabstop>doubleSpinBoxAlphaMin</tabstop>
-  <tabstop>doubleSpinBoxAlphaMax</tabstop>
+  <tabstop>tabProperties</tabstop>
+  <tabstop>numberCurves</tabstop>
+  <tabstop>curveResolution</tabstop>
+  <tabstop>curveWidthMin</tabstop>
+  <tabstop>curveWidthMax</tabstop>
+  <tabstop>nodeReduction</tabstop>
+  <tabstop>rangeMin</tabstop>
+  <tabstop>rangeMax</tabstop>
   <tabstop>lineEditX</tabstop>
   <tabstop>lineEditY</tabstop>
-  <tabstop>pushButtonTrace</tabstop>
-  <tabstop>pushButtonSaveSVG</tabstop>
-  <tabstop>pushButtonQuit</tabstop>
-  <tabstop>comboBoxPreview</tabstop>
+  <tabstop>buttonTrace</tabstop>
+  <tabstop>buttonSaveSVG</tabstop>
+  <tabstop>buttonQuit</tabstop>
+  <tabstop>PreviewMode</tabstop>
   <tabstop>SliderTransparency</tabstop>
  </tabstops>
  <resources>
