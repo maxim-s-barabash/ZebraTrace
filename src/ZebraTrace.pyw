@@ -93,14 +93,20 @@ class MainWindow(QtGui.QMainWindow):
 		self.presetPath = "./preset/"
 		self.trace_image = ""
 		self.app_data = AppData()
+		self.config = AppConfig()
+		
+		self.loadConfig(self.app_data.app_config)
 		self.loadPreset("./preset/default.preset")
+
 		self.view = SvgView()
 		self.tabProperties.setCurrentIndex(0)
 		self.PreviewMode.setEnabled(False)
 		self.viewContainer.addWidget(self.view)
+
 		self.createActions()
 
 	def __del__(self):
+		self.saveConfig(self.app_data.app_config)
 		if os.path.isfile(self.app_data.temp_svg):
 			os.remove(self.app_data.temp_svg)
 
@@ -176,6 +182,29 @@ class MainWindow(QtGui.QMainWindow):
 			preset.rangeMin = self.rangeMin.value()
 			preset.rangeMax = self.rangeMax.value()
 			preset.save(preset_file)
+
+	def loadConfig(self, path=None):
+		self.config.load(path)
+		config = self.config
+		self.numberCurves.setValue(config.numberCurves)
+		self.curveResolution.setValue(config.curveResolution)
+		self.curveWidthMin.setValue(config.curveWidthMin)
+		self.curveWidthMax.setValue(config.curveWidthMax)
+		self.nodeReduction.setValue(config.nodeReduction)
+
+	def configUpdate(self, cnf=None):
+		if cnf == None:
+			cnf = {"numberCurves": self.numberCurves.value(),
+			"curveResolution": self.curveResolution.value(),
+			"curveWidthMin": self.curveWidthMin.value(),
+			"curveWidthMax": self.curveWidthMax.value(),
+			"nodeReduction": self.nodeReduction.value(),
+			}
+		self.config.update(cnf)
+
+	def saveConfig(self, path=None):
+		self.configUpdate()
+		self.config.save(path)
 
 	def infoUpdate(self):
 		self.infoText.setPlainText(self.info())

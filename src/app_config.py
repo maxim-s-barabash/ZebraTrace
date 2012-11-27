@@ -30,6 +30,17 @@ default_preset = {
   "rangeMin": 0.0
 }
 
+default_config = {
+  "currentPath": "",
+  "presetPath": "./preset/",
+  "trace_image": "",
+  "numberCurves": 80,
+  "curveResolution": 0.3,
+  "curveWidthMin": 1,
+  "curveWidthMax": 5,
+  "nodeReduction": 0,
+}
+
 TEMP_PREFIX = "TRACE_"
 
 
@@ -51,11 +62,13 @@ class Preset(JsonConfigParser):
 		self.update(default_preset)
 
 
-class AppCofig():
-	pass
+class AppConfig(JsonConfigParser):
+	def __init__(self):
+		self.update(default_config)
 
 
 if __name__ == "__main__":
 	"""TEST"""
 	app_data = AppData()
 	print utils.id_generator()
+

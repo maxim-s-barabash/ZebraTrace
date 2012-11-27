@@ -164,7 +164,7 @@ class FuncPlotter:
 		# Douglas-Peucker line simplification.
 		if tolerance > 0.0:
 			from dp import simplify_points
-			self.coords = simplify_points(self.coords, tolerance)
+			self.coords = simplify_points(self.coords, tolerance * self.scale)
 
 		self._generate_path([], color, width, close_path)
 

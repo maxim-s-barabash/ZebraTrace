@@ -111,10 +111,10 @@
           </size>
          </property>
          <property name="maximum">
-          <number>100</number>
+          <number>255</number>
          </property>
          <property name="value">
-          <number>50</number>
+          <number>128</number>
          </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -192,7 +192,7 @@
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideMiddle</enum>
@@ -242,7 +242,7 @@
                <number>1</number>
               </property>
               <property name="value">
-               <number>80</number>
+               <number>1</number>
               </property>
              </widget>
             </item>
@@ -259,7 +259,7 @@
                <double>0.010000000000000</double>
               </property>
               <property name="value">
-               <double>0.300000000000000</double>
+               <double>0.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -279,7 +279,7 @@
                <double>0.100000000000000</double>
               </property>
               <property name="value">
-               <double>1.000000000000000</double>
+               <double>0.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -299,7 +299,7 @@
                <double>0.100000000000000</double>
               </property>
               <property name="value">
-               <double>5.000000000000000</double>
+               <double>0.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -328,8 +328,6 @@
             </item>
            </layout>
           </widget>
-          <zorder>layoutWidget</zorder>
-          <zorder>horizontalSpacer_5</zorder>
          </widget>
          <widget class="QGroupBox" name="groupBox_3">
           <property name="geometry">
