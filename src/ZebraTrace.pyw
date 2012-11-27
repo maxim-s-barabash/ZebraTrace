@@ -68,8 +68,13 @@ class Function():
 		return ret
 
 
-class Info():
+# FIXME move to class Info to funcplotter2
+class Info(QtCore.QObject):
 	def __init__(self):
+		QtCore.QObject.__init__(self)
+		self.clear()
+
+	def clear(self):
 		self.traceTime = 0.0
 		self.numberObject = 0
 		self.numberPoint = 0
@@ -77,6 +82,7 @@ class Info():
 	def __setattr__(self, attr, value):
 		if not hasattr(self, attr) or getattr(self, attr) != value:
 			self.__dict__[attr] = value
+			self.emit(QtCore.SIGNAL("infoChanget()"))
 
 	def __call__(self):
 		text = info % (self.traceTime,
@@ -94,7 +100,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.trace_image = ""
 		self.app_data = AppData()
 		self.config = AppConfig()
-		
+		self.info = Info()
+
 		self.loadConfig(self.app_data.app_config)
 		self.loadPreset("./preset/default.preset")
 
@@ -129,7 +136,7 @@ class MainWindow(QtGui.QMainWindow):
 					QtCore.SIGNAL("loadPreset()"), self.trace)
 		self.connect(self,
 					QtCore.SIGNAL("openFileBitmap()"), self.trace)
-		self.connect(self,
+		self.connect(self.info,
 					QtCore.SIGNAL("infoChanget()"), self.infoUpdate)
 
 		self.actionBackground.toggled.connect(self.view.setViewBackground)
@@ -214,7 +221,7 @@ class MainWindow(QtGui.QMainWindow):
 														self.app_data.app_version))
 
 	def trace(self):
-		self.info = Info()
+		self.info.clear()
 		img = QtGui.QImage(self.trace_image)
 		img_w = float(img.width())
 		img_h = float(img.height())
@@ -252,7 +259,6 @@ class MainWindow(QtGui.QMainWindow):
 			self.info.numberPoint += len(fp.coords) - 1
 			self.info.numberObject += 1
 			self.info.traceTime = time.time() - start
-			self.emit(QtCore.SIGNAL("infoChanget()"))
 
 			QtGui.QApplication.processEvents()
 			self.progressBar.setValue(i)
@@ -260,7 +266,6 @@ class MainWindow(QtGui.QMainWindow):
 		fp.plot(self.app_data.temp_svg)
 
 		self.info.traceTime = time.time() - start
-		self.emit(QtCore.SIGNAL("infoChanget()"))
 
 		self.view.openFile(QtCore.QFile(self.app_data.temp_svg))
 		self.progressBar.setValue(0)
