@@ -65,6 +65,7 @@ class Preset(JsonConfigParser):
 class AppConfig(JsonConfigParser):
 	def __init__(self):
 		self.update(default_config)
+		self.update(default_preset)
 
 
 if __name__ == "__main__":

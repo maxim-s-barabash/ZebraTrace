@@ -95,15 +95,14 @@ class MainWindow(QtGui.QMainWindow):
 	def __init__(self):
 		QtGui.QMainWindow.__init__(self)
 		uic.loadUi("gui/mainwindow.ui", self)
-		self.currentPath = ""
-		self.presetPath = "./preset/"
 		self.trace_image = ""
 		self.app_data = AppData()
 		self.config = AppConfig()
 		self.info = Info()
-
 		self.loadConfig(self.app_data.app_config)
-		self.loadPreset("./preset/default.preset")
+
+		self.image_size = [1000, 1000]
+		self.dimensions = [-1, -1, 1, 1]
 
 		self.view = SvgView()
 		self.tabProperties.setCurrentIndex(0)
@@ -145,33 +144,41 @@ class MainWindow(QtGui.QMainWindow):
 	def openFileBitmap(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getOpenFileName(self, "Open Bitmap File",
-				self.currentPath, "Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff)")
+				unicode(self.config.currentPath), 
+				"Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff)")
 		if path:
 			self.trace_image = unicode(path)
-			self.currentPath = os.path.dirname(self.trace_image)
+			self.config.currentPath = unicode(os.path.dirname(self.trace_image))
+			img = QtGui.QImage(self.trace_image)
+			img_w = float(img.width())
+			img_h = float(img.height())
+			img_d = [[1, img_w / img_h], [img_h / img_w, 1]][img_w > img_h]
+			self.image_size = [img_w, img_h]
+			self.dimensions = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
+
 			self.view.resetTransform()
 			self.emit(QtCore.SIGNAL("openFileBitmap()"))
 
 	def saveFileSVG(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getSaveFileName(self, "Save SVG File",
-				self.currentPath, "SVG files (*.svg)")
+				unicode(self.config(currentPath)), "SVG files (*.svg)")
 		if path:
 			svg_file = unicode(path)
-			self.currentPath = os.path.dirname(svg_file)
+			self.config.currentPath = unicode(os.path.dirname(svg_file))
 			shutil.copy(self.app_data.temp_svg, svg_file)
 
 	def loadPreset(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getOpenFileName(self, "Load Preset File",
-				self.presetPath, "Preset files (*.preset)")
+				unicode(self.config.presetPath), "Preset files (*.preset)")
 		if path:
 			preset_file = unicode(path)
-			self.presetPath = os.path.dirname(preset_file)
+			self.config.presetPath = unicode(os.path.dirname(preset_file))
 			preset = Preset()
 			preset.load(preset_file)
-			self.lineEditX.setText(preset.funcX)
-			self.lineEditY.setText(preset.funcY)
+			self.lineEditX.setText(unicode(preset.funcX))
+			self.lineEditY.setText(unicode(preset.funcY))
 			self.rangeMin.setValue(preset.rangeMin)
 			self.rangeMax.setValue(preset.rangeMax)
 			self.emit(QtCore.SIGNAL("loadPreset()"))
@@ -179,10 +186,10 @@ class MainWindow(QtGui.QMainWindow):
 	def savePreset(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getSaveFileName(self, "Save Preset File",
-				self.presetPath, "Preset files (*.preset)")
+				unicode(self.config.presetPath), "Preset files (*.preset)")
 		if path:
 			preset_file = unicode(path)
-			self.presetPath = os.path.dirname(preset_file)
+			self.config.presetPath = unicode(os.path.dirname(preset_file))
 			preset = Preset()
 			preset.funcX = unicode(self.lineEditX.text())
 			preset.funcY = unicode(self.lineEditY.text())
@@ -199,6 +206,11 @@ class MainWindow(QtGui.QMainWindow):
 		self.curveWidthMax.setValue(config.curveWidthMax)
 		self.nodeReduction.setValue(config.nodeReduction)
 
+		self.lineEditX.setText(unicode(config.funcX))
+		self.lineEditY.setText(unicode(config.funcY))
+		self.rangeMin.setValue(config.rangeMin)
+		self.rangeMax.setValue(config.rangeMax)
+
 	def configUpdate(self, cnf=None):
 		if cnf == None:
 			cnf = {"numberCurves": self.numberCurves.value(),
@@ -206,6 +218,10 @@ class MainWindow(QtGui.QMainWindow):
 			"curveWidthMin": self.curveWidthMin.value(),
 			"curveWidthMax": self.curveWidthMax.value(),
 			"nodeReduction": self.nodeReduction.value(),
+			"funcX": unicode(self.lineEditX.text()),
+			"funcY":  unicode(self.lineEditY.text()),
+			"rangeMin": self.rangeMin.value(),
+			"rangeMax": self.rangeMax.value(),
 			}
 		self.config.update(cnf)
 
@@ -222,12 +238,8 @@ class MainWindow(QtGui.QMainWindow):
 
 	def trace(self):
 		self.info.clear()
-		img = QtGui.QImage(self.trace_image)
-		img_w = float(img.width())
-		img_h = float(img.height())
-		img_d = [[1, img_w / img_h], [img_h / img_w, 1]][img_w > img_h]
-		image_size = [img_w, img_h]
-		dimensions = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
+		image_size = self.image_size
+		dimensions = self.dimensions
 		# number of curves
 		n = self.numberCurves.value()
 		# range of the variable
@@ -237,7 +249,7 @@ class MainWindow(QtGui.QMainWindow):
 		# no stroke (when tracing is used fill)
 		stroke_color = "none"
 		width_range = [self.curveWidthMin.value(), self.curveWidthMax.value()]
-		tolerance = self.nodeReduction.value() / 10000.
+		tolerance = self.nodeReduction.value() / 100.
 
 		funcX = Function(unicode(self.lineEditX.text()))
 		funcY = Function(unicode(self.lineEditY.text()))
@@ -276,8 +288,7 @@ if __name__ == "__main__":
 	window = MainWindow()
 	if len(sys.argv) == 2:
 		window.openFileBitmap(sys.argv[1])
-	else:
-		window.openFileBitmap("images/tux.png")
+#	else:
+#		window.openFileBitmap("images/tux.png")
 	window.show()
-	#window.trace()
 	sys.exit(app.exec_())
