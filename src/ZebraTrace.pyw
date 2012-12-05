@@ -99,19 +99,24 @@ class MainWindow(QtGui.QMainWindow):
 		self.app_data = AppData()
 		self.config = AppConfig()
 		self.info = Info()
-		self.loadConfig(self.app_data.app_config)
 
 		self.image_size = [1000, 1000]
 		self.dimensions = [-1, -1, 1, 1]
 
-		self.view = SvgView()
-		self.tabProperties.setCurrentIndex(0)
-		self.PreviewMode.setEnabled(False)
-		self.viewContainer.addWidget(self.view)
-
+		self.view = TraceCanvas()
 		self.createActions()
+		
+		self.tabProperties.setCurrentIndex(0)
+		self.topPanel.setEnabled(False)
+		self.buttonTrace.setEnabled(False)
+		self.buttonSaveSVG.setEnabled(False)
+		self.actionSaveSVG.setEnabled(False)
+		self.sliderTransparency.setEnabled(False)
+		self.viewContainer.addWidget(self.view)
+		self.loadConfig(self.app_data.app_config)
 
 	def __del__(self):
+		import os
 		self.saveConfig(self.app_data.app_config)
 		if os.path.isfile(self.app_data.temp_svg):
 			os.remove(self.app_data.temp_svg)
@@ -133,13 +138,18 @@ class MainWindow(QtGui.QMainWindow):
 
 		self.connect(self,
 					QtCore.SIGNAL("loadPreset()"), self.trace)
-		self.connect(self,
-					QtCore.SIGNAL("openFileBitmap()"), self.trace)
+#		self.connect(self,
+#					QtCore.SIGNAL("openFileBitmap()"), self.trace)
 		self.connect(self.info,
 					QtCore.SIGNAL("infoChanget()"), self.infoUpdate)
 
 		self.actionBackground.toggled.connect(self.view.setViewBackground)
 		self.actionBorder.toggled.connect(self.view.setViewOutline)
+		self.sliderTransparency.valueChanged.connect(self.view.setOpacity)
+		self.previewMode.currentIndexChanged.connect(self.sliderTransparency.setEnabled)
+		self.previewMode.currentIndexChanged.connect(self.view.setViewTraceImage)
+		self.previewMode.currentIndexChanged.connect(self.labelTransparency.setEnabled)
+		self.info.clear()
 
 	def openFileBitmap(self, path=None):
 		if not path:
@@ -155,14 +165,19 @@ class MainWindow(QtGui.QMainWindow):
 			img_d = [[1, img_w / img_h], [img_h / img_w, 1]][img_w > img_h]
 			self.image_size = [img_w, img_h]
 			self.dimensions = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
-
+			self.view.openFileIMG(path)
 			self.view.resetTransform()
+			self.topPanel.setEnabled(True)
+			self.previewMode.setCurrentIndex(1)
+			self.buttonTrace.setEnabled(True)
+			self.buttonSaveSVG.setEnabled(False)
+			self.actionSaveSVG.setEnabled(False)
 			self.emit(QtCore.SIGNAL("openFileBitmap()"))
 
 	def saveFileSVG(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getSaveFileName(self, "Save SVG File",
-				unicode(self.config(currentPath)), "SVG files (*.svg)")
+				unicode(self.config.currentPath), "SVG files (*.svg)")
 		if path:
 			svg_file = unicode(path)
 			self.config.currentPath = unicode(os.path.dirname(svg_file))
@@ -210,6 +225,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.lineEditY.setText(unicode(config.funcY))
 		self.rangeMin.setValue(config.rangeMin)
 		self.rangeMax.setValue(config.rangeMax)
+		self.sliderTransparency.setValue(config.sliderTransparency)
 
 	def configUpdate(self, cnf=None):
 		if cnf == None:
@@ -222,6 +238,7 @@ class MainWindow(QtGui.QMainWindow):
 			"funcY":  unicode(self.lineEditY.text()),
 			"rangeMin": self.rangeMin.value(),
 			"rangeMax": self.rangeMax.value(),
+			"sliderTransparency": self.sliderTransparency.value()
 			}
 		self.config.update(cnf)
 
@@ -237,22 +254,21 @@ class MainWindow(QtGui.QMainWindow):
 														self.app_data.app_version))
 
 	def trace(self):
+		if not(self.buttonTrace.isEnabled()):
+			return
 		self.info.clear()
+		self.saveConfig()
+		config = self.config
 		image_size = self.image_size
 		dimensions = self.dimensions
-		# number of curves
-		n = self.numberCurves.value()
-		# range of the variable
-		alpha = [self.rangeMin.value(), self.rangeMax.value()]
-		# curve quality
-		resolution = self.curveResolution.value()
-		# no stroke (when tracing is used fill)
-		stroke_color = "none"
-		width_range = [self.curveWidthMin.value(), self.curveWidthMax.value()]
-		tolerance = self.nodeReduction.value() / 100.
-
-		funcX = Function(unicode(self.lineEditX.text()))
-		funcY = Function(unicode(self.lineEditY.text()))
+		n = config.numberCurves							# number of curves
+		alpha = [config.rangeMin, config.rangeMax]		# range of the variable
+		resolution = config.curveResolution				# curve quality
+		stroke_color = "none"							# no stroke (when tracing is used fill)
+		width_range = [config.curveWidthMin, config.curveWidthMax]
+		tolerance = config.nodeReduction / 100.
+		funcX = Function(config.funcX)
+		funcY = Function(config.funcY)
 
 		fp = FuncPlotter(image_size, dimensions, trace_image=self.trace_image,
 						width_range=width_range)
@@ -279,8 +295,10 @@ class MainWindow(QtGui.QMainWindow):
 
 		self.info.traceTime = time.time() - start
 
-		self.view.openFile(QtCore.QFile(self.app_data.temp_svg))
+		self.view.openFileSVG(QtCore.QFile(self.app_data.temp_svg))
 		self.progressBar.setValue(0)
+		self.buttonSaveSVG.setEnabled(True)
+		self.actionSaveSVG.setEnabled(True)
 
 
 if __name__ == "__main__":

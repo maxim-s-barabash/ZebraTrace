@@ -39,6 +39,7 @@ default_config = {
   "curveWidthMin": 1,
   "curveWidthMax": 5,
   "nodeReduction": 0,
+  "sliderTransparency": 100,
 }
 
 TEMP_PREFIX = "TRACE_"

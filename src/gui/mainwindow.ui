@@ -45,7 +45,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="PreviewMode">
+        <widget class="QComboBox" name="previewMode">
          <property name="minimumSize">
           <size>
            <width>150</width>
@@ -53,7 +53,7 @@
           </size>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <item>
           <property name="text">
@@ -91,7 +91,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSlider" name="SliderTransparency">
+        <widget class="QSlider" name="sliderTransparency">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -111,10 +111,16 @@
           </size>
          </property>
          <property name="maximum">
-          <number>255</number>
+          <number>100</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+         <property name="pageStep">
+          <number>10</number>
          </property>
          <property name="value">
-          <number>128</number>
+          <number>50</number>
          </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -160,8 +166,8 @@
         </spacer>
        </item>
       </layout>
-      <zorder>PreviewMode</zorder>
-      <zorder>SliderTransparency</zorder>
+      <zorder>previewMode</zorder>
+      <zorder>sliderTransparency</zorder>
       <zorder>horizontalSpacer_2</zorder>
       <zorder>labelPreview</zorder>
       <zorder>labelTransparency</zorder>
@@ -192,7 +198,7 @@
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideMiddle</enum>
@@ -435,14 +441,6 @@
           </widget>
          </widget>
         </widget>
-        <widget class="QWidget" name="tabColors">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <attribute name="title">
-          <string>Colors</string>
-         </attribute>
-        </widget>
         <widget class="QWidget" name="tabInfo">
          <property name="enabled">
           <bool>true</bool>
@@ -590,7 +588,7 @@
      <x>0</x>
      <y>0</y>
      <width>892</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -697,6 +695,17 @@
     <string>Save Preset...</string>
    </property>
   </action>
+  <action name="actionTraceImage">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Trace Image</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>tabProperties</tabstop>
@@ -712,8 +721,8 @@
   <tabstop>buttonTrace</tabstop>
   <tabstop>buttonSaveSVG</tabstop>
   <tabstop>buttonQuit</tabstop>
-  <tabstop>PreviewMode</tabstop>
-  <tabstop>SliderTransparency</tabstop>
+  <tabstop>previewMode</tabstop>
+  <tabstop>sliderTransparency</tabstop>
  </tabstops>
  <resources>
   <include location="mainwindow_rc.qrc"/>
