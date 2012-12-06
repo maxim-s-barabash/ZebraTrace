@@ -52,11 +52,12 @@ class FuncPlotter:
 		self.img = None
 		self.trace_image = trace_image
 		if trace_image and os.path.exists(trace_image):
-			from PyQt4.QtGui import QImage
+			from PyQt4.QtGui import QImage, QColor
 			# image tracing shall consist of 256 index colors
 			# ranked by the number of white (grayscale)
+			GRAYSCALE_COLORTABLE = [QColor(i, i, i).rgb() for i in range(256)]
 			self.img = QImage(trace_image)
-			self.img = self.img.convertToFormat(QImage.Format_Indexed8)
+			self.img = self.img.convertToFormat(QImage.Format_Indexed8, GRAYSCALE_COLORTABLE)
 			self.width_range = width_range
 			self.img_w = self.img.width()
 			self.img_h = self.img.height()
