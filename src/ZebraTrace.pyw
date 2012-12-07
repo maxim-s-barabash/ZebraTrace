@@ -103,6 +103,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.image_size = [1000, 1000]
 		self.dimensions = [-1, -1, 1, 1]
 
+		self.Escape = False
+
 		self.view = TraceCanvas()
 		self.createActions()
 		
@@ -120,6 +122,14 @@ class MainWindow(QtGui.QMainWindow):
 		self.saveConfig(self.app_data.app_config)
 		if os.path.isfile(self.app_data.temp_svg):
 			os.remove(self.app_data.temp_svg)
+
+	def keyPressEvent(self, event):
+		if type(event) == QtGui.QKeyEvent:
+			if (event.key()==QtCore.Qt.Key_Escape):
+				self.Escape = True
+			event.accept()
+		else:
+			event.ignore()
 
 	def createActions(self):
 		self.actionOpenBitmap.triggered.connect(self.openFileBitmap)
@@ -258,6 +268,7 @@ class MainWindow(QtGui.QMainWindow):
 			return
 		self.info.clear()
 		self.saveConfig()
+		self.Escape = False
 		config = self.config
 		image_size = self.image_size
 		dimensions = self.dimensions
@@ -277,19 +288,22 @@ class MainWindow(QtGui.QMainWindow):
 		start = time.time()
 
 		for i in xrange(1, n + 1):
-			fp.append_func(funcX({'i': float(i), 'n': n}),
-							funcY({'i': float(i), 'n': n}),
-							alpha,
-							resolution,
-							stroke_color,
-							close_path=True,
-							tolerance=tolerance)
-			self.info.numberPoint += len(fp.coords) - 1
-			self.info.numberObject += 1
-			self.info.traceTime = time.time() - start
+			if not(self.Escape):
+				fp.append_func(funcX({'i': float(i), 'n': n}),
+								funcY({'i': float(i), 'n': n}),
+								alpha,
+								resolution,
+								stroke_color,
+								close_path=True,
+								tolerance=tolerance)
+				self.info.numberPoint += len(fp.coords) - 1
+				self.info.numberObject += 1
+				self.info.traceTime = time.time() - start
 
-			QtGui.QApplication.processEvents()
-			self.progressBar.setValue(i)
+				QtGui.QApplication.processEvents()
+				self.progressBar.setValue(i)
+			else:
+				break
 
 		fp.plot(self.app_data.temp_svg)
 
