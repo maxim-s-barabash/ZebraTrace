@@ -49,7 +49,8 @@ class AppData:
 	app_name = "ZebraTRACE"
 	app_version = "0.3 alpha"
 	app_config_dir = os.path.join("~", ".config", "zebratrace")
-	app_config_dir = unicode(os.path.expanduser(app_config_dir))
+	app_config_dir = os.path.expanduser(app_config_dir)
+	app_config_dir = unicode(app_config_dir, sys.getfilesystemencoding())
 	if not os.path.lexists(app_config_dir):
 		os.makedirs(app_config_dir)
 	app_config = unicode(os.path.join(app_config_dir, "preferences.cfg"))
