@@ -107,7 +107,7 @@ class MainWindow(QtGui.QMainWindow):
 
 		self.view = TraceCanvas()
 		self.createActions()
-		
+
 		self.tabProperties.setCurrentIndex(0)
 		self.topPanel.setEnabled(False)
 		self.buttonTrace.setEnabled(False)
@@ -116,6 +116,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.sliderTransparency.setEnabled(False)
 		self.viewContainer.addWidget(self.view)
 		self.loadConfig(self.app_data.app_config)
+		self.setWindowTitle("%s" % self.app_data.app_name)
 
 	def __del__(self):
 		import os
@@ -125,7 +126,7 @@ class MainWindow(QtGui.QMainWindow):
 
 	def keyPressEvent(self, event):
 		if type(event) == QtGui.QKeyEvent:
-			if (event.key()==QtCore.Qt.Key_Escape):
+			if (event.key() == QtCore.Qt.Key_Escape):
 				self.Escape = True
 			event.accept()
 		else:
@@ -164,7 +165,7 @@ class MainWindow(QtGui.QMainWindow):
 	def openFileBitmap(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getOpenFileName(self, "Open Bitmap File",
-				unicode(self.config.currentPath), 
+				unicode(self.config.currentPath),
 				"Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff)")
 		if path:
 			self.trace_image = unicode(path)
@@ -178,6 +179,7 @@ class MainWindow(QtGui.QMainWindow):
 			self.view.openFileIMG(path)
 			self.view.resetTransform()
 			self.topPanel.setEnabled(True)
+			self.setWindowTitle("%s - %s" % (self.app_data.app_name, os.path.basename(self.trace_image)))
 			self.previewMode.setCurrentIndex(1)
 			self.buttonTrace.setEnabled(True)
 			self.buttonSaveSVG.setEnabled(False)
@@ -268,6 +270,9 @@ class MainWindow(QtGui.QMainWindow):
 			return
 		self.info.clear()
 		self.saveConfig()
+		self.buttonTrace.setEnabled(False)
+		self.buttonSaveSVG.setEnabled(False)
+		self.actionSaveSVG.setEnabled(False)
 		self.Escape = False
 		config = self.config
 		image_size = self.image_size
@@ -311,6 +316,8 @@ class MainWindow(QtGui.QMainWindow):
 
 		self.view.openFileSVG(QtCore.QFile(self.app_data.temp_svg))
 		self.progressBar.setValue(0)
+		self.buttonTrace.setEnabled(True)
+		self.buttonTrace.setFocus(True)
 		self.buttonSaveSVG.setEnabled(True)
 		self.actionSaveSVG.setEnabled(True)
 

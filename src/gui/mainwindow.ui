@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ZebraTRACE</string>
+   <string/>
   </property>
   <property name="windowIcon">
    <iconset resource="mainwindow_rc.qrc">
@@ -109,6 +109,9 @@
            <width>200</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="minimum">
+          <number>0</number>
          </property>
          <property name="maximum">
           <number>100</number>
@@ -346,6 +349,9 @@
           </property>
           <property name="title">
            <string>Function for Curves:</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
           </property>
           <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
