@@ -132,6 +132,22 @@ class FuncPlotter:
 		left.reverse()
 		self.coords = right + left + [right[0]]
 
+	def _getCoords(self, fX, fY, T, res=1):
+		dT = float(T[1] - T[0])
+		resolution = int(dT * res)
+		if not fY:                              # If only the function x
+			fR = fX                             # then consider the polar coordinates
+			fX = lambda a: fR(a) * cos(a)
+			fY = lambda a: fR(a) * sin(a)
+		tl = [T[0] + dT / resolution * i for i in xrange(resolution + 1)]
+		return map(fX, tl), map(fY, tl)
+
+	def auto_resolution(self, fX, fY, T):
+		coordX, coordY = self._getCoords(fX, fY, T, res=0.25 / self.scale)
+		rX = max(coordX) - min(coordX)
+		rY = max(coordY) - min(coordY)
+		return int(max(rX, rY) * 0.5)
+
 	def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=True, tolerance=0.0):
 		"""Adds a graph of the functions fX (t) and fY (t).
 
@@ -145,19 +161,8 @@ class FuncPlotter:
 		close_path	- parameter that indicates whether or not to close the curve
 		tolerance	- it simplifies a line by reducing the number of points by some tolerance.
 		"""
-		dT = float(T[1] - T[0])
-		resolution = int(dT / self.scale * res)
-		coords = []
-
-		if not fY:                              # If only the function x
-			fR = fX                             # then consider the polar coordinates
-			fX = lambda a: fR(a) * cos(a)
-			fY = lambda a: fR(a) * sin(a)
-
-		tl = [T[0] + dT / resolution * i for i in xrange(resolution + 1)]
-		coords = zip(map(fX, tl), map(fY, tl))    # y coordinate of the inverted (negative values above)
-
-		self.coords = coords
+		coordX, coordY = self._getCoords(fX, fY, T, res / self.scale)
+		self.coords = zip(coordX, coordY)
 
 		if self.img:                            # if there is a picture, tracing
 			self._trace_image()                 # (the result is written to self.coords)

@@ -294,10 +294,13 @@ class MainWindow(QtGui.QMainWindow):
 
 		for i in xrange(1, n + 1):
 			if not(self.Escape):
-				fp.append_func(funcX({'i': float(i), 'n': n}),
-								funcY({'i': float(i), 'n': n}),
+				fX = funcX({'i': float(i), 'n': n})
+				fY = funcY({'i': float(i), 'n': n})
+				auto_resolution = fp.auto_resolution(fX, fY, alpha)
+				fp.append_func(fX,
+								fY,
 								alpha,
-								resolution,
+								(resolution + auto_resolution) * 0.5,
 								stroke_color,
 								close_path=True,
 								tolerance=tolerance)
