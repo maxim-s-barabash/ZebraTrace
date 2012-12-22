@@ -31,18 +31,6 @@ from app_config import *
 from math import *
 
 
-about = """<center><b>%s</b> version %s. <br><br>
-See <a href="http://linuxgraphics.ru/">linuxgraphics.ru</a>
-for more information.<br><br>
-Copyright (C) 2012</center>"""
-
-info = """Time trace: %5.3f seconds.
-Graphic Objects
-  Number of objects: %i
-  Number of points: %i
-"""
-
-
 class Function():
 	def __init__(self, func=None):
 		self.setFunc(func)
@@ -85,9 +73,9 @@ class Info(QtCore.QObject):
 			self.emit(QtCore.SIGNAL("infoChanget()"))
 
 	def __call__(self):
-		text = info % (self.traceTime,
-						self.numberObject,
-						self.numberPoint)
+		text = ''
+		text += unicode(self.tr("Time trace: %5.3f seconds.\n")) % self.traceTime
+		text += unicode(self.tr("Graphic Objects\n  Number of objects: %i\n  Number of points: %i\n")) % (self.numberObject, self.numberPoint)
 		return text
 
 
@@ -164,9 +152,9 @@ class MainWindow(QtGui.QMainWindow):
 
 	def openFileBitmap(self, path=None):
 		if not path:
-			path = QtGui.QFileDialog.getOpenFileName(self, "Open Bitmap File",
+			path = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open Bitmap File"),
 				unicode(self.config.currentPath),
-				"Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff)")
+				self.tr("Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff)"))
 		if path:
 			self.trace_image = unicode(path)
 			self.config.currentPath = unicode(os.path.dirname(self.trace_image))
@@ -188,8 +176,8 @@ class MainWindow(QtGui.QMainWindow):
 
 	def saveFileSVG(self, path=None):
 		if not path:
-			path = QtGui.QFileDialog.getSaveFileName(self, "Save SVG File",
-				unicode(self.config.currentPath), "SVG files (*.svg)")
+			path = QtGui.QFileDialog.getSaveFileName(self, self.tr("Save SVG File"),
+				unicode(self.config.currentPath), self.tr("SVG files (*.svg)"))
 		if path:
 			svg_file = unicode(path)
 			self.config.currentPath = unicode(os.path.dirname(svg_file))
@@ -197,8 +185,8 @@ class MainWindow(QtGui.QMainWindow):
 
 	def loadPreset(self, path=None):
 		if not path:
-			path = QtGui.QFileDialog.getOpenFileName(self, "Load Preset File",
-				unicode(self.config.presetPath), "Preset files (*.preset)")
+			path = QtGui.QFileDialog.getOpenFileName(self, self.tr("Load Preset File"),
+				unicode(self.config.presetPath), self.tr("Preset files (*.preset)"))
 		if path:
 			preset_file = unicode(path)
 			self.config.presetPath = unicode(os.path.dirname(preset_file))
@@ -212,8 +200,8 @@ class MainWindow(QtGui.QMainWindow):
 
 	def savePreset(self, path=None):
 		if not path:
-			path = QtGui.QFileDialog.getSaveFileName(self, "Save Preset File",
-				unicode(self.config.presetPath), "Preset files (*.preset)")
+			path = QtGui.QFileDialog.getSaveFileName(self, self.tr("Save Preset File"),
+				unicode(self.config.presetPath), self.tr("Preset files (*.preset)"))
 		if path:
 			preset_file = unicode(path)
 			self.config.presetPath = unicode(os.path.dirname(preset_file))
@@ -262,7 +250,11 @@ class MainWindow(QtGui.QMainWindow):
 		self.infoText.setPlainText(self.info())
 
 	def about(self):
-		QtGui.QMessageBox.about(self, "About", about % (self.app_data.app_name,
+		about = unicode(self.tr("""<center><b>%s</b> version %s. <br><br>
+See <a href="http://linuxgraphics.ru/">linuxgraphics.ru</a>
+for more information.<br><br>
+Copyright (C) 2012</center>"""))
+		QtGui.QMessageBox.about(self, self.tr("About"), about % (self.app_data.app_name,
 														self.app_data.app_version))
 
 	def trace(self):
@@ -327,7 +319,19 @@ class MainWindow(QtGui.QMainWindow):
 
 if __name__ == "__main__":
 	app = QtGui.QApplication(sys.argv)
+	import locale
+	try:
+		lang, enc = locale.getdefaultlocale()
+		print 'Language: ', lang or '(undefined)'
+		print 'Encoding: ', enc or '(undefined)'
+		transl = QtCore.QTranslator(app)
+		transl.load('zebratrace_' + lang + ".qm", "translations")
+		app.installTranslator(transl)
+	except locale.Error:
+		print "locale Error"
+		pass
 	window = MainWindow()
+
 	if len(sys.argv) == 2:
 		window.openFileBitmap(sys.argv[1])
 #	else:
