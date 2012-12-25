@@ -1,0 +1,6 @@
+{
+  "funcY": "", 
+  "funcX": "cos(3*a+i/n*6.283185)", 
+  "rangeMax": 3.1415926, 
+  "rangeMin": 0.0
+}

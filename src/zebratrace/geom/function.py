@@ -16,5 +16,30 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from zebratrace import zebratrace
-zebratrace()
+
+from math import *
+
+
+class Function():
+	def __init__(self, func=None):
+		self.setFunc(func)
+		self.dic = {"sin": sin,
+				"cos": cos,
+				"tan": tan,
+				"sqrt": sqrt,
+				"pi": pi,
+				"i": 0,
+				"n": 0,
+				}
+
+	def setFunc(self, func):
+			self.func = func.strip()
+
+	def __call__(self, cfg={}):
+		if self.func:
+			dic = self.dic
+			dic.update(cfg)
+			ret = eval("lambda a:" + self.func, dic)
+		else:
+			ret = None
+		return ret
