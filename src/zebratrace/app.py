@@ -131,7 +131,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		if not path:
 			path = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open Bitmap File"),
 				unicode(self.config.currentPath),
-				self.tr("Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff)","All files (*.*)"))
+				self.tr("Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff);;All files (*.*)"))
 		if path:
 			self.trace_image = unicode(path)
 			self.config.currentPath = unicode(os.path.dirname(self.trace_image))

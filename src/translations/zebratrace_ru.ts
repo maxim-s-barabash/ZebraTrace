@@ -311,12 +311,6 @@ Copyright (C) 2012&lt;/center&gt;</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="app.py" line="132"/>
-        <source>Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff)</source>
-        <comment>All files (*.*)</comment>
-        <translation type="unfinished">Файлы изображений (*.jpg *.ipeg *.png *.gif *.tiff)</translation>
-    </message>
-    <message>
         <location filename="app.py" line="156"/>
         <source>Save File</source>
         <translation type="unfinished">Сохранить файл</translation>
@@ -325,6 +319,11 @@ Copyright (C) 2012&lt;/center&gt;</translation>
         <location filename="ui_mainwindow.py" line="452"/>
         <source>Tracing Result</source>
         <translation type="unfinished">Результат трассировки</translation>
+    </message>
+    <message>
+        <location filename="app.py" line="132"/>
+        <source>Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff);;All files (*.*)</source>
+        <translation type="unfinished">Файлы изображений (*.jpg *.ipeg *.png *.gif *.tiff);;Все фалы(*.*)</translation>
     </message>
 </context>
 </TS>
