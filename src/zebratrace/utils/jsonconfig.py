@@ -20,12 +20,14 @@
 import os
 import sys
 import json
+import codecs
 from . import unicode
 
 
 def _encode(data):
 	if isinstance(data, unicode):
 		data = data.encode('utf-8')
+
 	if isinstance(data, bytes):
 		data = data.decode('utf-8')
 	elif isinstance(data, list):
@@ -60,22 +62,23 @@ class JsonConfigParser:
 
 	def load(self, filename=None):
 		if os.path.exists(filename):
-			#try:
-				with open(filename, mode='r') as f:
+			try:
+				with codecs.open(filename, mode='r', encoding='utf-8') as f:
 					dic = f.read()
 				dic = json.loads(dic, object_hook=_encode_dict)
 				self.update(dic)
-			#except:
-			#	pass
+			except (IOError, os.error):
+				err = sys.exc_info()[1]
+				print(err)
 
 	def save(self, filename=None):
-		#if len(self.__dict__) == 0 or filename == None:
-		#	return
-		#try:
+		if len(self.__dict__) == 0 or filename == None:
+			return
+		try:
 			s = json.dumps(self.__dict__, ensure_ascii=False, indent=2)
-			with open(filename, mode='w') as f:
+			with codecs.open(filename, mode='w', encoding='utf-8') as f:
 				f.write(s)
-		#except (IOError, os.error) as value:
-			#sys.stderr('cannot write preferences into %s: %s' % (filename,
-			#				value[1]))
-			#return
+		except (IOError, os.error):
+			err = sys.exc_info()[1]
+			print(err)
+			return
