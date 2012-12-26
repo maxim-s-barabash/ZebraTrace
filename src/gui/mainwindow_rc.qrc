@@ -1,5 +1,0 @@
-<RCC>
-  <qresource prefix="image">
-    <file>../images/zebra.png</file>
-  </qresource>
-</RCC>
