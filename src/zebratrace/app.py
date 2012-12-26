@@ -131,16 +131,21 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		if not path:
 			path = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open Bitmap File"),
 				unicode(self.config.currentPath),
-				self.tr("Bitmap files (*.jpg *.ipeg *.png *.gif *.tiff);;All files (*.*)"))
+				self.tr("Bitmap files (*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga);;All files (*.*)"))
 		if path:
-			self.trace_image = unicode(path)
-			self.config.currentPath = unicode(os.path.dirname(self.trace_image))
-			img = QtGui.QImage(self.trace_image)
+			trace_image = unicode(path)
+			self.config.currentPath = unicode(os.path.dirname(trace_image))
+			img = QtGui.QImage(trace_image)
 			img_w = float(img.width())
+			if img_w == 0: 
+				QtGui.QMessageBox.warning(self, self.tr("Open file"),
+					self.tr("This file is corrupt or not supported?"))
+				return
 			img_h = float(img.height())
 			img_d = [[1, img_w / img_h], [img_h / img_w, 1]][img_w > img_h]
 			self.image_size = [img_w, img_h]
 			self.dimensions = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
+			self.trace_image = trace_image
 			self.view.openFileIMG(path)
 			self.view.resetTransform()
 			self.topPanel.setEnabled(True)
@@ -270,8 +275,14 @@ Copyright (C) 2012</center>"""))
 
 		for i in xrange(1, n + 1):
 			if not(self.Escape):
-				fX = funcX({'i': float(i), 'n': n})
-				fY = funcY({'i': float(i), 'n': n})
+				try:
+					fX = funcX({'i': float(i), 'n': n})
+					fY = funcY({'i': float(i), 'n': n})
+				except (SyntaxError):
+					QtGui.QMessageBox.critical(self, self.tr("Error in function"),
+						self.tr("Invalid syntax"))
+					break
+
 				auto_resolution = fp.auto_resolution(fX, fY, alpha)
 				fp.append_func(fX,
 								fY,
