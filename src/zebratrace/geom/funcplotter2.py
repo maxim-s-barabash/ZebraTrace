@@ -21,8 +21,13 @@ from math import *
 #to trace the image is used PyQt4
 #(http://www.riverbankcomputing.co.uk/software/pyqt/download)
 
+from PyQt4.QtGui import QImage, QColor
 from ..utils import xrange
 sys.setcheckinterval(0xfff)
+
+
+GRAYSCALE_COLORTABLE = [QColor(i, i, i).rgb() for i in xrange(256)]
+DESATURATE_COLORTABLE = [QColor(6*i//10, i, i//5).rgb() for i in xrange(256)]
 
 
 class FuncPlotter:
@@ -42,26 +47,29 @@ class FuncPlotter:
 		self.dx = float(self.x2 - self.x1)
 		self.dy = float(self.y2 - self.y1)
 
-		self.w = float(wh[0])
-		self.h = float(wh[1])
+		self.w, self.h = float(wh[0]), float(wh[1])
 
 		# Resolution field in units per pixel SVG
-		self.scale = float(self.dx) / self.w
-		self.grid = grid_lines
-		self.data = []
+		self.scale = self.dx / self.w
 
-		self.img = None
+		self.grid = grid_lines
 		self.trace_image = trace_image
+		self.width_range = width_range
+
+		self.data = []
+		self.img = None
+
 		if trace_image and os.path.exists(trace_image):
-			from PyQt4.QtGui import QImage, QColor
 			# image tracing shall consist of 256 index colors
 			# ranked by the number of white (grayscale)
-			GRAYSCALE_COLORTABLE = [QColor(i, i, i).rgb() for i in range(256)]
-			self.img = QImage(trace_image)
-			self.img = self.img.convertToFormat(QImage.Format_Indexed8, GRAYSCALE_COLORTABLE)
-			self.width_range = width_range
-			self.img_w = self.img.width()
-			self.img_h = self.img.height()
+			img = QImage(trace_image)
+			img.colorCount()
+
+			colortable = [DESATURATE_COLORTABLE,
+							GRAYSCALE_COLORTABLE][img.isGrayscale()]
+
+			self.img = img.convertToFormat(QImage.Format_Indexed8, colortable)
+			self.img_w, self.img_h = self.img.width(), self.img.height()
 			self.img_colors = float(self.img.colorCount() - 1)
 
 	def _generate_path(self, coords=[], color='black', width=1, close_path=False):
@@ -133,23 +141,27 @@ class FuncPlotter:
 		left.reverse()
 		self.coords = right + left + [right[0]]
 
-	def _getCoords(self, fX, fY, T, res=1):
-		dT = float(T[1] - T[0])
-		resolution = int(dT * res)
-		if not fY:                              # If only the function x
+	def _getCoords(self, fX, fY, T, res=1, polar_coord=False):
+		if polar_coord and fY:
+			fR, fT = fX, fY
+			fX = lambda a: fR(a) * cos(fT(a))
+			fY = lambda a: fR(a) * sin(fT(a))
+		elif not fY:                            # If only the function x
 			fR = fX                             # then consider the polar coordinates
 			fX = lambda a: fR(a) * cos(a)
 			fY = lambda a: fR(a) * sin(a)
+		dT = float(T[1] - T[0])
+		resolution = int(dT * res)
 		tl = [T[0] + dT / resolution * i for i in xrange(resolution + 1)]
 		return list(map(fX, tl)), list(map(fY, tl))
 
-	def auto_resolution(self, fX, fY, T):
-		coordX, coordY = self._getCoords(fX, fY, T, res=0.25 / self.scale)
+	def auto_resolution(self, fX, fY, T, polar_coord=False):
+		coordX, coordY = self._getCoords(fX, fY, T, res=0.25 / self.scale, polar_coord=polar_coord)
 		rX = max(coordX) - min(coordX)
 		rY = max(coordY) - min(coordY)
 		return int(max(rX, rY) * 0.5)
 
-	def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=True, tolerance=0.0):
+	def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=True, tolerance=0.0, polar_coord=False):
 		"""Adds a graph of the functions fX (t) and fY (t).
 
 		fX			- a function of one variable, calculates the coordinates of x or
@@ -162,7 +174,7 @@ class FuncPlotter:
 		close_path	- parameter that indicates whether or not to close the curve
 		tolerance	- it simplifies a line by reducing the number of points by some tolerance.
 		"""
-		coordX, coordY = self._getCoords(fX, fY, T, res / self.scale)
+		coordX, coordY = self._getCoords(fX, fY, T, res / self.scale, polar_coord)
 		self.coords = list(zip(coordX, coordY))
 
 		if self.img:                            # if there is a picture, tracing
