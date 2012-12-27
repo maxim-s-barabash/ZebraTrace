@@ -39,7 +39,7 @@ class Function():
 		if self.func:
 			dic = self.dic
 			dic.update(cfg)
-			ret = eval("lambda a:" + self.func, dic)
+			ret = eval("lambda a:" + self.func, {"__builtins__": dic})
 		else:
 			ret = None
 		return ret
