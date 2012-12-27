@@ -113,12 +113,12 @@ class FuncPlotter:
 
 		pre_x, pre_y = coords[-1]
 		for i, [x, y] in enumerate(coords):
-			if pre_y < y:
-				alpha = atan((pre_x - x) / (y - pre_y))
-			elif pre_y == y:
+			if pre_x < x:
+				alpha = atan((y - pre_y) / (x - pre_x)) + pi/2
+			elif pre_x == x:
 				alpha = pi / 2
 			else:
-				alpha = atan((pre_x - x) / (y - pre_y)) + pi
+				alpha = atan((y - pre_y) / (x - pre_x)) + pi/2 + pi
 
 			pixel_x = int((x - canvas_x1) / canvas_dx * img_w)
 			pixel_y = int((y - canvas_y1) / canvas_dy * img_h)
