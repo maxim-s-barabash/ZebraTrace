@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_build\mainwindow.ui'
 #
-# Created: Tue Dec 25 22:02:53 2012
+# Created: Thu Dec 27 11:30:34 2012
 #      by: PyQt4 UI code generator 4.9.5
 #
 # WARNING! All changes made in this file will be lost!
@@ -279,15 +279,15 @@ class Ui_MainWindow(object):
         self.lineEditY.setText(_fromUtf8(""))
         self.lineEditY.setObjectName(_fromUtf8("lineEditY"))
         self.gridLayout_2.addWidget(self.lineEditY, 3, 1, 1, 1)
-        self.checkBox = QtGui.QCheckBox(self.groupBox_3)
-        self.checkBox.setEnabled(False)
+        self.checkPolar = QtGui.QCheckBox(self.groupBox_3)
+        self.checkPolar.setEnabled(True)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.checkBox.sizePolicy().hasHeightForWidth())
-        self.checkBox.setSizePolicy(sizePolicy)
-        self.checkBox.setObjectName(_fromUtf8("checkBox"))
-        self.gridLayout_2.addWidget(self.checkBox, 4, 1, 1, 1)
+        sizePolicy.setHeightForWidth(self.checkPolar.sizePolicy().hasHeightForWidth())
+        self.checkPolar.setSizePolicy(sizePolicy)
+        self.checkPolar.setObjectName(_fromUtf8("checkPolar"))
+        self.gridLayout_2.addWidget(self.checkPolar, 4, 1, 1, 1)
         self.gridLayout_2.setColumnStretch(0, 1)
         self.gridLayout_2.setColumnStretch(1, 3)
         self.verticalLayout_2.addLayout(self.gridLayout_2)
@@ -437,8 +437,8 @@ class Ui_MainWindow(object):
         MainWindow.setTabOrder(self.rangeMin, self.rangeMax)
         MainWindow.setTabOrder(self.rangeMax, self.lineEditX)
         MainWindow.setTabOrder(self.lineEditX, self.lineEditY)
-        MainWindow.setTabOrder(self.lineEditY, self.checkBox)
-        MainWindow.setTabOrder(self.checkBox, self.buttonTrace)
+        MainWindow.setTabOrder(self.lineEditY, self.checkPolar)
+        MainWindow.setTabOrder(self.checkPolar, self.buttonTrace)
         MainWindow.setTabOrder(self.buttonTrace, self.buttonSave)
         MainWindow.setTabOrder(self.buttonSave, self.buttonHelp)
         MainWindow.setTabOrder(self.buttonHelp, self.previewMode)
@@ -471,8 +471,8 @@ class Ui_MainWindow(object):
         self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Function <b>X(a)</b>:", None, QtGui.QApplication.UnicodeUTF8))
         self.lineEditX.setToolTip(QtGui.QApplication.translate("MainWindow", "Use (a),( i) and (n) as parameters", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("MainWindow", "Function <b>Y(a)</b>:", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBox.setToolTip(QtGui.QApplication.translate("MainWindow", "Function X(a) means function of radius and Y(a) means function of angle in polar coordinates", None, QtGui.QApplication.UnicodeUTF8))
-        self.checkBox.setText(QtGui.QApplication.translate("MainWindow", "Polar Coordinates", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkPolar.setToolTip(QtGui.QApplication.translate("MainWindow", "Function X(a) means function of radius and Y(a) means function of angle in polar coordinates", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkPolar.setText(QtGui.QApplication.translate("MainWindow", "Polar Coordinates", None, QtGui.QApplication.UnicodeUTF8))
         self.tabPreferences.setTabText(self.tabPreferences.indexOf(self.tabOptions), QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Trace Information:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabPreferences.setTabText(self.tabPreferences.indexOf(self.tabInfo), QtGui.QApplication.translate("MainWindow", "Info", None, QtGui.QApplication.UnicodeUTF8))

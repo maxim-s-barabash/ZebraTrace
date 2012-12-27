@@ -29,7 +29,8 @@ default_preset = {
   "funcX": "(0.95+0.02*sin(20*a))*i/n", 
   "funcY": "", 
   "rangeMax": 6.28318530718,
-  "rangeMin": 0.0
+  "rangeMin": 0.0,
+  "polar": 0,
 }
 
 default_config = {

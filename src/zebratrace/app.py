@@ -17,6 +17,7 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import sys
 import os
 import shutil
 import time
@@ -137,7 +138,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			self.config.currentPath = unicode(os.path.dirname(trace_image))
 			img = QtGui.QImage(trace_image)
 			img_w = float(img.width())
-			if img_w == 0: 
+			if img_w == 0:
 				QtGui.QMessageBox.warning(self, self.tr("Open file"),
 					self.tr("This file is corrupt or not supported?"))
 				return
@@ -149,7 +150,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			self.view.openFileIMG(path)
 			self.view.resetTransform()
 			self.topPanel.setEnabled(True)
-			self.setWindowTitle("%s - %s" % (self.app_data.app_name, os.path.basename(self.trace_image)))
+			self.setWindowTitle("%s - %s [%ix%ipx]" % (self.app_data.app_name, 
+									os.path.basename(self.trace_image), img_w, img_h))
 			self.previewMode.setCurrentIndex(1)
 			self.buttonTrace.setEnabled(True)
 			self.buttonSave.setEnabled(False)
@@ -178,6 +180,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			self.lineEditY.setText(unicode(preset.funcY))
 			self.rangeMin.setValue(preset.rangeMin)
 			self.rangeMax.setValue(preset.rangeMax)
+			self.checkPolar.setCheckState(preset.polar)
 			self.emit(QtCore.SIGNAL("loadPreset()"))
 
 	def savePreset(self, path=None):
@@ -192,6 +195,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			preset.funcY = unicode(self.lineEditY.text())
 			preset.rangeMin = self.rangeMin.value()
 			preset.rangeMax = self.rangeMax.value()
+			preset.polar = self.checkPolar.checkState()
 			preset.save(preset_file)
 
 	def loadConfig(self, path=None):
@@ -272,31 +276,32 @@ Copyright (C) 2012</center>"""))
 
 		self.progressBar.setMaximum(n + 1)
 		start = time.time()
-
+		polar = self.checkPolar.checkState()
 		for i in xrange(1, n + 1):
 			if not(self.Escape):
 				try:
 					fX = funcX({'i': float(i), 'n': n})
 					fY = funcY({'i': float(i), 'n': n})
-				except (SyntaxError):
+					auto_resolution = fp.auto_resolution(fX, fY, alpha, polar)
+				except (SyntaxError, TypeError, NameError):
+					err = sys.exc_info()[1]
 					QtGui.QMessageBox.critical(self, self.tr("Error in function"),
-						self.tr("Invalid syntax"))
+						unicode(err))
 					break
 
-				auto_resolution = fp.auto_resolution(fX, fY, alpha)
 				fp.append_func(fX,
 								fY,
 								alpha,
 								(resolution + auto_resolution) * 0.5,
 								stroke_color,
 								close_path=True,
-								tolerance=tolerance)
+								tolerance=tolerance,
+								polar_coord=polar)
 				self.info.numberNodes += len(fp.coords) - 1
 				self.info.numberObject += 1
 				self.info.traceTime = time.time() - start
-
-				QtGui.QApplication.processEvents()
 				self.progressBar.setValue(i)
+				QtGui.QApplication.processEvents()
 			else:
 				break
 
