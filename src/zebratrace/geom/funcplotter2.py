@@ -111,23 +111,26 @@ class FuncPlotter:
 		img_pixelIndex = self.img.pixelIndex
 		scale = self.scale
 
-		p0, p1, pn = coords[0], coords[1], coords[-1]
+		p0, p1, pn, ps = coords[0], coords[1], coords[-1], coords[-2]
 		# if directions are not equal
 		if (p1[0] - p0[0]) * (p1[0] - pn[0]) < 0 or \
 			(p1[1] - p0[1]) * (p1[1] - pn[1]) < 0:
 			# extrapolation
-			pre_x, pre_y = 2*p0[0]-p1[0], 2*p0[1]-p1[1]
+			pre_x, pre_y = 2 * p0[0] - p1[0], 2 * p0[1] - p1[1]
+			coords += [[2 * pn[0] - ps[0], 2 * pn[1] - ps[1]]]
 		else:
 			# last but 1 point
-			pre_x, pre_y = coords[-2]
+			pre_x, pre_y = ps
+			coords += [p1]
 
-		for i, [x, y] in enumerate(coords):
-			if pre_x < x:
-				alpha = atan((y - pre_y) / (x - pre_x)) + pi/2
-			elif pre_x == x:
+		for i, [x, y] in enumerate(coords[:-1]):
+			x1, y1 = coords[i+1][0], coords[i+1][1]
+			if pre_x < x1:
+				alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi/2
+			elif pre_x == x1:
 				alpha = 0
 			else:
-				alpha = atan((y - pre_y) / (x - pre_x)) + pi/2 + pi
+				alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi/2 + pi
 
 			pixel_x = int((x - canvas_x1) / canvas_dx * img_w)
 			pixel_y = int((y - canvas_y1) / canvas_dy * img_h)
@@ -197,7 +200,6 @@ class FuncPlotter:
 				from .dp import simplify_points
 				self.coords = simplify_points(self.coords, tolerance * self.scale)
 		self._generate_path(self.coords, color, width, close_path)
-
 
 	def plot(self, file_name='plot.svg'):
 		""" Saves the file generated <path/> SVG.
