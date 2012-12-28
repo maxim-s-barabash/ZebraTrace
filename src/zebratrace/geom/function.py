@@ -30,6 +30,9 @@ class Function():
 				"pi": pi,
 				"i": 0,
 				"n": 0,
+				"e": e,
+				"abs": fabs,
+				"exp": exp,
 				}
 
 	def setFunc(self, func):

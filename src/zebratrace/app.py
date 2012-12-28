@@ -283,7 +283,7 @@ Copyright (C) 2012</center>"""))
 					fX = funcX({'i': float(i), 'n': n})
 					fY = funcY({'i': float(i), 'n': n})
 					auto_resolution = fp.auto_resolution(fX, fY, alpha, polar)
-				except (SyntaxError, TypeError, NameError):
+				except (SyntaxError, TypeError, NameError, ZeroDivisionError):
 					err = sys.exc_info()[1]
 					QtGui.QMessageBox.critical(self, self.tr("Error in function"),
 						unicode(err))
