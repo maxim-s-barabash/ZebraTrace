@@ -111,12 +111,21 @@ class FuncPlotter:
 		img_pixelIndex = self.img.pixelIndex
 		scale = self.scale
 
-		pre_x, pre_y = coords[-1]
+		p0, p1, pn = coords[0], coords[1], coords[-1]
+		# if directions are not equal
+		if (p1[0] - p0[0]) * (p1[0] - pn[0]) < 0 or \
+			(p1[1] - p0[1]) * (p1[1] - pn[1]) < 0:
+			# extrapolation
+			pre_x, pre_y = 2*p0[0]-p1[0], 2*p0[1]-p1[1]
+		else:
+			# last but 1 point
+			pre_x, pre_y = coords[-2]
+
 		for i, [x, y] in enumerate(coords):
 			if pre_x < x:
 				alpha = atan((y - pre_y) / (x - pre_x)) + pi/2
 			elif pre_x == x:
-				alpha = pi / 2
+				alpha = 0
 			else:
 				alpha = atan((y - pre_y) / (x - pre_x)) + pi/2 + pi
 
