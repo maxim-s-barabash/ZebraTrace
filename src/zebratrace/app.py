@@ -292,13 +292,13 @@ Copyright (C) 2012</center>"""))
 				fp.append_func(fX,
 								fY,
 								alpha,
-								(resolution + auto_resolution) * 0.5,
+								resolution * auto_resolution,
 								stroke_color,
 								close_path=True,
 								tolerance=tolerance,
 								polar_coord=polar)
-				self.info.numberNodes += len(fp.coords) - 1
-				self.info.numberObject += 1
+				self.info.numberObject = len(fp.data)
+				self.info.numberNodes += len(fp.coords)
 				self.info.traceTime = time.time() - start
 				self.progressBar.setValue(i)
 				QtGui.QApplication.processEvents()

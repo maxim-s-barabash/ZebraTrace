@@ -78,7 +78,7 @@ class FuncPlotter:
 		The coordinates are passed as [[x1, y1], [x2, y2], [x3, y3], ...].
 		"""
 		if not coords:
-			coords = self.coords
+			return
 
 		path = '\n\t\t<path stroke="%s" stroke-width="%s" d="M%f,%f ' % (color, width * self.scale, coords[0][0], coords[0][1])
 		path += ''.join(['L%f,%f ' % (x, y) for x, y in coords[1:]]) + ['"/>', 'Z"/>'][close_path]
@@ -161,14 +161,17 @@ class FuncPlotter:
 			fY = lambda a: fR(a) * sin(a)
 		dT = float(T[1] - T[0])
 		resolution = int(dT * res)
-		tl = [T[0] + dT / resolution * i for i in xrange(resolution + 1)]
-		return list(map(fX, tl)), list(map(fY, tl))
+		if resolution > 2:
+			tl = [T[0] + dT / resolution * i for i in xrange(resolution + 1)]
+			return list(map(fX, tl)), list(map(fY, tl))
+		else:
+			return None, None
 
 	def auto_resolution(self, fX, fY, T, polar_coord=False):
 		coordX, coordY = self._getCoords(fX, fY, T, res=0.25 / self.scale, polar_coord=polar_coord)
 		rX = max(coordX) - min(coordX)
 		rY = max(coordY) - min(coordY)
-		return int(max(rX, rY) * 0.5)
+		return max(rX, rY) * 0.5
 
 	def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=True, tolerance=0.0, polar_coord=False):
 		"""Adds a graph of the functions fX (t) and fY (t).
@@ -183,18 +186,18 @@ class FuncPlotter:
 		close_path	- parameter that indicates whether or not to close the curve
 		tolerance	- it simplifies a line by reducing the number of points by some tolerance.
 		"""
+		self.coords = []
 		coordX, coordY = self._getCoords(fX, fY, T, res / self.scale, polar_coord)
-		self.coords = list(zip(coordX, coordY))
+		if coordX:
+			self.coords = list(zip(coordX, coordY))
+			if self.img:                            # if there is a picture, tracing
+				self._trace_image()                 # (the result is written to self.coords)
+			# Douglas-Peucker line simplification.
+			if tolerance > 0.0:
+				from .dp import simplify_points
+				self.coords = simplify_points(self.coords, tolerance * self.scale)
+		self._generate_path(self.coords, color, width, close_path)
 
-		if self.img:                            # if there is a picture, tracing
-			self._trace_image()                 # (the result is written to self.coords)
-
-		# Douglas-Peucker line simplification.
-		if tolerance > 0.0:
-			from .dp import simplify_points
-			self.coords = simplify_points(self.coords, tolerance * self.scale)
-
-		self._generate_path([], color, width, close_path)
 
 	def plot(self, file_name='plot.svg'):
 		""" Saves the file generated <path/> SVG.
