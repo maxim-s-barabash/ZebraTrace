@@ -180,7 +180,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			self.lineEditY.setText(unicode(preset.funcY))
 			self.rangeMin.setValue(preset.rangeMin)
 			self.rangeMax.setValue(preset.rangeMax)
-			self.checkPolar.setCheckState(preset.polar)
+			self.coordSystem.setCurrentIndex(preset.polar)
 			self.emit(QtCore.SIGNAL("loadPreset()"))
 
 	def savePreset(self, path=None):
@@ -195,7 +195,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			preset.funcY = unicode(self.lineEditY.text())
 			preset.rangeMin = self.rangeMin.value()
 			preset.rangeMax = self.rangeMax.value()
-			preset.polar = self.checkPolar.checkState()
+			preset.polar = self.coordSystem.currentIndex()
 			preset.save(preset_file)
 
 	def loadConfig(self, path=None):
@@ -211,7 +211,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.lineEditY.setText(unicode(config.funcY))
 		self.rangeMin.setValue(config.rangeMin)
 		self.rangeMax.setValue(config.rangeMax)
+		self.coordSystem.setCurrentIndex(config.polar)
 		self.sliderTransparency.setValue(config.sliderTransparency)
+		self.boxAdvancedPref.setChecked(config.boxAdvancedPref)
 
 	def configUpdate(self, cnf=None):
 		if cnf == None:
@@ -224,7 +226,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			"funcY":  unicode(self.lineEditY.text()),
 			"rangeMin": self.rangeMin.value(),
 			"rangeMax": self.rangeMax.value(),
-			"sliderTransparency": self.sliderTransparency.value()
+			"polar": self.coordSystem.currentIndex(),
+			"sliderTransparency": self.sliderTransparency.value(),
+			"boxAdvancedPref": self.boxAdvancedPref.isChecked(),
 			}
 		self.config.update(cnf)
 
@@ -240,7 +244,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		webbrowser.open(url)
 
 	def infoUpdate(self):
-		self.infoText.setPlainText(self.info())
+#		self.infoText.setPlainText(self.info())
+		self.labelNumberObject.setText(unicode(self.info.numberObject))
+		self.labelNumberNodes.setText(unicode(self.info.numberNodes))
 
 	def about(self):
 		about = unicode(self.tr("""<center><b>%s</b> version %s. <br><br>
@@ -255,9 +261,11 @@ Copyright (C) 2012</center>"""))
 			return
 		self.info.clear()
 		self.saveConfig()
+
 		self.buttonTrace.setEnabled(False)
 		self.buttonSave.setEnabled(False)
 		self.actionSaveAs.setEnabled(False)
+
 		self.Escape = False
 		config = self.config
 		image_size = self.image_size
@@ -276,7 +284,7 @@ Copyright (C) 2012</center>"""))
 
 		self.progressBar.setMaximum(n + 1)
 		start = time.time()
-		polar = self.checkPolar.checkState()
+		polar = self.coordSystem.currentIndex()
 		for i in xrange(1, n + 1):
 			if not(self.Escape):
 				try:
@@ -297,21 +305,20 @@ Copyright (C) 2012</center>"""))
 								close_path=True,
 								tolerance=tolerance,
 								polar_coord=polar)
+
 				self.info.numberObject = len(fp.data)
 				self.info.numberNodes += len(fp.coords)
-				self.info.traceTime = time.time() - start
 				self.progressBar.setValue(i)
 				QtGui.QApplication.processEvents()
 			else:
 				break
 
-		fp.plot(self.app_data.temp_svg)
-
 		self.info.traceTime = time.time() - start
-
+		fp.plot(self.app_data.temp_svg)
 		self.view.openFileSVG(QtCore.QFile(self.app_data.temp_svg))
 		self.progressBar.setValue(0)
+
 		self.buttonTrace.setEnabled(True)
 		self.buttonTrace.setFocus(True)
-		self.buttonSave.setEnabled(True)
+		self.view.setEnabled(True)
 		self.actionSaveAs.setEnabled(True)
