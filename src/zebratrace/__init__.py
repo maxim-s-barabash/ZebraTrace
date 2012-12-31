@@ -51,7 +51,7 @@ def zebratrace():
 		translate_path = QLibraryInfo.location(QLibraryInfo.TranslationsPath)
 		transl = QTranslator(app)
 		if not(transl.load('zebratrace_' + lang, translate_path)):
-			transl.load('zebratrace_' + lang, "translations")
+			transl.load('zebratrace_' + lang, app_data.translations_dir)
 		app.installTranslator(transl)
 	except locale.Error:
 		pass

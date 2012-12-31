@@ -17,10 +17,11 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import os
 import sys
 import tempfile
 import locale
+
+from os.path import join, expanduser, abspath, dirname
 
 from .utils import unicode, id_generator
 from .utils.jsonconfig import *
@@ -43,6 +44,7 @@ default_config = {
   "curveWidthMax": 5,
   "nodeReduction": 0,
   "sliderTransparency": 80,
+  "boxAdvancedPref": False,
 }
 
 TEMP_PREFIX = "TRACE_"
@@ -53,17 +55,21 @@ class AppData:
 	app_version = "0.3 alpha"
 	lang, enc = locale.getdefaultlocale()
 
-	app_config_dir = os.path.join("~", ".config", "zebratrace")
-	app_config_dir = os.path.expanduser(app_config_dir)
+	app_dir = dirname(abspath(sys.argv[0]))
+	app_config_dir = join("~", ".config", "zebratrace")
+	app_config_dir = expanduser(app_config_dir)
+
 	if sys.version_info < (3,):
 		app_config_dir = unicode(app_config_dir, sys.getfilesystemencoding())
+		app_dir = unicode(app_dir, sys.getfilesystemencoding())
 
 	if not os.path.lexists(app_config_dir):
 		os.makedirs(app_config_dir)
-	app_config = unicode(os.path.join(app_config_dir, "preferences.cfg"))
 
+	app_config = unicode(join(app_config_dir, "preferences.cfg"))
+	translations_dir = unicode(join(app_dir, "translations"))
 	temp_dir = tempfile.gettempdir()
-	temp_svg = unicode(os.path.join(temp_dir, TEMP_PREFIX + 
+	temp_svg = unicode(join(temp_dir, TEMP_PREFIX + 
 							id_generator() + ".svg"))
 	help_index = unicode("http://github.com/maxim-s-barabash/ZebraTrace/wiki")
 
