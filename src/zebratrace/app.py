@@ -244,7 +244,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		webbrowser.open(url)
 
 	def infoUpdate(self):
-#		self.infoText.setPlainText(self.info())
+		self.infoText.setPlainText(self.info())
 		self.labelNumberObject.setText(unicode(self.info.numberObject))
 		self.labelNumberNodes.setText(unicode(self.info.numberNodes))
 
