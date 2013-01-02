@@ -52,7 +52,7 @@ TEMP_PREFIX = "TRACE_"
 
 class AppData:
 	app_name = "ZebraTRACE"
-	app_version = "0.3 alpha"
+	app_version = "0.4 alpha"
 	lang, enc = locale.getdefaultlocale()
 
 	app_dir = dirname(abspath(sys.argv[0]))
