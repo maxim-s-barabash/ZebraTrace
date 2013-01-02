@@ -320,6 +320,6 @@ Copyright (C) 2012</center>"""))
 		self.progressBar.setValue(0)
 
 		self.buttonTrace.setEnabled(True)
-		self.buttonTrace.setFocus(True)
-		self.view.setEnabled(True)
+		self.view.setFocus(True)
+		self.buttonSave.setEnabled(True)
 		self.actionSaveAs.setEnabled(True)
