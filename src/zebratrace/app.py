@@ -169,8 +169,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 	def loadPreset(self, path=None):
 		if not path:
+			presetPath = self.config.presetPath or self.app_data.preset_dir
 			path = QtGui.QFileDialog.getOpenFileName(self, self.tr("Load Preset File"),
-				unicode(self.config.presetPath), self.tr("Preset files (*.preset)"))
+				unicode(presetPath), self.tr("Preset files (*.preset)"))
 		if path:
 			preset_file = unicode(path)
 			self.config.presetPath = unicode(os.path.dirname(preset_file))

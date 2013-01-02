@@ -36,7 +36,7 @@ default_preset = {
 
 default_config = {
   "currentPath": "",
-  "presetPath": "./preset/",
+  "presetPath": "",
   "trace_image": "",
   "numberCurves": 80,
   "curveResolution": 0.3,
@@ -68,6 +68,7 @@ class AppData:
 
 	app_config = unicode(join(app_config_dir, "preferences.cfg"))
 	translations_dir = unicode(join(app_dir, "translations"))
+	preset_dir = unicode(join(app_dir, "preset"))
 	temp_dir = tempfile.gettempdir()
 	temp_svg = unicode(join(temp_dir, TEMP_PREFIX + 
 							id_generator() + ".svg"))
