@@ -1,0 +1,7 @@
+{
+  "funcX": "(a/n+3/n*(i-1))/2.13", 
+  "rangeMax": 3.0, 
+  "rangeMin": 0.0, 
+  "funcY": "a/3*pi*2", 
+  "polar": 1
+}
