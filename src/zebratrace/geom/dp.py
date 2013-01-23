@@ -22,8 +22,7 @@
 
 """
 
-import math
-
+from math import hypot, sqrt
 
 def simplify_points(pts, tolerance):
 	anchor = 0
@@ -37,9 +36,9 @@ def simplify_points(pts, tolerance):
 
 		# initialize line segment
 		if pts[floater] != pts[anchor]:
-			anchorX = float(pts[floater][0] - pts[anchor][0])
-			anchorY = float(pts[floater][1] - pts[anchor][1])
-			seg_len = math.sqrt(anchorX ** 2 + anchorY ** 2)
+			anchorX = float(pts[floater].x - pts[anchor].x)
+			anchorY = float(pts[floater].y - pts[anchor].y)
+			seg_len = sqrt(anchorX * anchorX + anchorY * anchorY)
 			# get the unit vector
 			anchorX /= seg_len
 			anchorY /= seg_len
@@ -52,24 +51,26 @@ def simplify_points(pts, tolerance):
 		for i in range(anchor + 1, floater):
 			dist_to_seg = 0.0
 			# compare to anchor
-			vecX = float(pts[i][0] - pts[anchor][0])
-			vecY = float(pts[i][1] - pts[anchor][1])
-			seg_len = math.sqrt(vecX ** 2 + vecY ** 2)
+			vecX = float(pts[i].x - pts[anchor].x)
+			vecY = float(pts[i].y - pts[anchor].y)
+			seg_len = sqrt(vecX * vecX + vecY * vecY)
+			#seg_len = hypot(vecX, vecY)
 			# dot product:
 			proj = vecX * anchorX + vecY * anchorY
 			if proj < 0.0:
 				dist_to_seg = seg_len
 			else:
 				# compare to floater
-				vecX = float(pts[i][0] - pts[floater][0])
-				vecY = float(pts[i][1] - pts[floater][1])
-				seg_len = math.sqrt(vecX ** 2 + vecY ** 2)
+				vecX = float(pts[i].x - pts[floater].x)
+				vecY = float(pts[i].y - pts[floater].y)
+				seg_len = sqrt(vecX * vecX + vecY * vecY)
+				#seg_len = hypot(vecX, vecY)
 				# dot product:
 				proj = vecX * (-anchorX) + vecY * (-anchorY)
 				if proj < 0.0:
 					dist_to_seg = seg_len
 				else:  # calculate perpendicular distance to line (pythagorean theorem):
-					dist_to_seg = math.sqrt(abs(seg_len ** 2 - proj ** 2))
+					dist_to_seg = sqrt(abs(seg_len * seg_len - proj * proj))
 				if max_dist < dist_to_seg:
 					max_dist = dist_to_seg
 					farthest = i

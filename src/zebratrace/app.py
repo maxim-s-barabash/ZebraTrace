@@ -21,6 +21,7 @@ import sys
 import os
 import shutil
 import time
+from math import cos, sin
 
 from PyQt4 import QtCore, QtGui
 from .gui.widgets.svgview import *
@@ -28,6 +29,8 @@ from .gui.ui_mainwindow import Ui_MainWindow
 
 from .geom.funcplotter2 import FuncPlotter
 from .geom.function import Function
+from .geom.image import desaterate, grayscale
+
 from .app_config import Preset
 from .utils import unicode
 from .utils import xrange
@@ -61,10 +64,13 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def __init__(self, data, config):
 		QtGui.QMainWindow.__init__(self)
 		self.setupUi(self)
-		self.trace_image = ""
+
 		self.app_data = data
 		self.config = config
 		self.info = Info()
+
+		self.trace_image = ""
+		self.image = None
 
 		self.image_size = [1000, 1000]
 		self.dimensions = [-1, -1, 1, 1]
@@ -147,10 +153,16 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			self.image_size = [img_w, img_h]
 			self.dimensions = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
 			self.trace_image = trace_image
-			self.view.openFileIMG(path)
+
+			self.progressBar.setMaximum(100)
+			img = desaterate(img, self.progressBar.setValue)
+			self.image = grayscale(img)
+			#self.view.openFileIMG(path)
+			self.view.openFileIMG(self.image)
+
 			self.view.resetTransform()
 			self.topPanel.setEnabled(True)
-			self.setWindowTitle("%s - %s [%ix%ipx]" % (self.app_data.app_name, 
+			self.setWindowTitle("%s - %s [%ix%ipx]" % (self.app_data.app_name,
 									os.path.basename(self.trace_image), img_w, img_h))
 			self.previewMode.setCurrentIndex(1)
 			self.buttonTrace.setEnabled(True)
@@ -280,23 +292,36 @@ Copyright (C) 2012</center>"""))
 		funcX = Function(config.funcX)
 		funcY = Function(config.funcY)
 
-		fp = FuncPlotter(image_size, dimensions, trace_image=self.trace_image,
+		polar_coord = self.coordSystem.currentIndex()
+
+		fp = FuncPlotter(image_size, dimensions, trace_image=self.image,
 						width_range=width_range)
 
 		self.progressBar.setMaximum(n + 1)
 		start = time.time()
-		polar = self.coordSystem.currentIndex()
+
 		for i in xrange(1, n + 1):
 			if not(self.Escape):
 				try:
-					fX = funcX({'i': float(i), 'n': n})
-					fY = funcY({'i': float(i), 'n': n})
-					auto_resolution = fp.auto_resolution(fX, fY, alpha, polar)
+					fX = funcX({'i': float(i), 'n': float(n)})
+					fY = funcY({'i': float(i), 'n': float(n)})
+					if polar_coord and fY:
+						fR, fT = fX, fY
+						fX = lambda a: fR(a) * cos(fT(a))
+						fY = lambda a: fR(a) * sin(fT(a))
+					elif not fY:                            # If only the function x
+						fR = fX                             # then consider the polar coordinates
+						fX = lambda a: fR(a) * cos(a)
+						fY = lambda a: fR(a) * sin(a)
+
+					##auto_resolution = fp.auto_resolution(fX, fY, alpha)
+					auto_resolution = fp.auto_resolution2(fX, fY, alpha)
 				except (SyntaxError, TypeError, NameError, ZeroDivisionError):
 					err = sys.exc_info()[1]
 					QtGui.QMessageBox.critical(self, self.tr("Error in function"),
 						unicode(err))
 					break
+				#print('auto_resolution',auto_resolution)
 
 				fp.append_func(fX,
 								fY,
@@ -305,16 +330,18 @@ Copyright (C) 2012</center>"""))
 								stroke_color,
 								close_path=True,
 								tolerance=tolerance,
-								polar_coord=polar)
+								)
 
 				self.info.numberObject = len(fp.data)
-				self.info.numberNodes += len(fp.coords)
+				if fp.data:
+					self.info.numberNodes += len(fp.data[-1])
 				self.progressBar.setValue(i)
 				QtGui.QApplication.processEvents()
 			else:
 				break
 
 		self.info.traceTime = time.time() - start
+		QtGui.QApplication.processEvents()
 		fp.plot(self.app_data.temp_svg)
 		self.view.openFileSVG(QtCore.QFile(self.app_data.temp_svg))
 		self.progressBar.setValue(0)

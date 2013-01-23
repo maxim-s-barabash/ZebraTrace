@@ -1,0 +1,7 @@
+{
+  "funcX": "i/n", 
+  "funcY": "a*2*pi", 
+  "rangeMin": 0.0, 
+  "rangeMax": 1.0, 
+  "polar": 1
+}
