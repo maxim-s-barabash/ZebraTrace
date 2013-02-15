@@ -323,18 +323,17 @@ Copyright (C) 2012</center>"""))
 					break
 				#print('auto_resolution',auto_resolution)
 
-				fp.append_func(fX,
+				if fp.append_func(fX,
 								fY,
 								alpha,
 								resolution * auto_resolution,
 								stroke_color,
 								close_path=True,
 								tolerance=tolerance,
-								)
+								):
+					self.info.numberObject = len(fp.data)
+					self.info.numberNodes += fp.data[-1].countNodes()
 
-				self.info.numberObject = len(fp.data)
-				if fp.data:
-					self.info.numberNodes += len(fp.data[-1])
 				self.progressBar.setValue(i)
 				QtGui.QApplication.processEvents()
 			else:

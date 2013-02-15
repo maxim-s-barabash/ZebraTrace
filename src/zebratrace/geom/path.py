@@ -20,23 +20,51 @@ from math import hypot, atan, pi, cos, sin, atan2
 from .point import Point
 
 
-def makePath(fX, fY, T, res=1):
-	retx, rety = tuple(_getCoords(fX, fY, T, res))
-	if retx:
-		return Path([Point(retx[i], rety[i]) for i in range(len(retx))])
+
+def makePathData(fX, fY, T, res=1, close_path=False):
+	dT = float(T[1] - T[0])
+	step = int(dT * res)
+	if step > 1:
+		seg = dT / step
+		tl = [T[0] + seg * i for i in range(step + 1)]
+		retx, rety = list(map(fX, tl)), list(map(fY, tl))
+		p = PathData([Point(retx[i], rety[i]) for i in range(len(retx))], close_path)
+		return p
 	else:
 		return None
 
 
-class Path(object):
-	__slots__ = ("node", "fill", "stroke", "strok_width", "close_path")
+def split(splitPath, threshold=0.0):
+	paths = []
+	path = []
+	end = False
+	leng = len(splitPath.node)
+	for i in range(leng):
+		n = splitPath.node[i]
+		d = n.d
+		if d <= threshold and len(path) > 0:
+			path.append(n)
+			end = True
+		elif d > threshold:
+			path.append(n)
 
-	def __init__(self, node=None, fill='black', stroke='None',
-						strok_width=0, close_path=False):
+		if end or i == leng - 1:
+			paths.append(PathData(path))
+			path = []
+			end = False
+
+		if i < leng - 1 and d <= threshold and \
+						splitPath.node[i + 1].d > threshold:
+			path.append(n)
+
+	return Path(paths)
+
+
+class PathData(object):
+	__slots__ = ("node", "close_path")
+
+	def __init__(self, node=None, close_path=False):
 		self.node = [node, []][node is None]
-		self.fill = fill
-		self.stroke = stroke
-		self.strok_width = strok_width
 		self.close_path = close_path
 
 	def __len__(self):
@@ -46,33 +74,7 @@ class Path(object):
 		return "%s" % (self.node)
 
 	def __repr__(self):
-		return "Path(%s)" % (self.node)
-
-#	def __iter__(self):
-#		#print('Path.__iter__')
-#		return iter(self.node)
-
-#	def __getitem__(self, key):
-#		return self.node[key]
-
-#	def __setitem__(self, key, value):
-#		self.node[key] = value
-
-#	def __add__(self, other):
-#		if isinstance(other, Point):
-#			self.node.append(other)
-#		elif isinstance(other, Path):
-#				self.node += other.node
-#		return self
-
-#	def __reversed__(self):
-#		return reversed(self.node)
-
-#	def append(self, value):
-#		self.node.append(value)
-
-#	def reverse(self):
-#		self.node.reverse()
+		return "PathData(%s)" % (self.node)
 
 	def boundingRect(self):
 		node = self.node
@@ -94,6 +96,9 @@ class Path(object):
 		maxY, minY = max(node, key=lay), min(node, key=lay)
 		return (maxY.y - minY.y)
 
+	def countNodes(self):
+		return len(self.node)
+
 	def length(self):
 		l = 0.0
 		p = self.node[0]
@@ -102,24 +107,14 @@ class Path(object):
 			p = n
 		return l
 
-	def asSVG(self):
-		path = ''
-		if len(self.node) > 1:
-			path += '<path stroke="%s" stroke-width="%g" fill="%s" ' % (self.stroke, self.strok_width, self.fill)
-			path += 'd="M%g,%g' % (self.node[0].x, self.node[0].y)
-			path += ''.join(['L%g,%g' % (n.x, n.y) for n in self.node[1:]])
-			path += ['"/>\n', 'Z"/>\n'][self.close_path]
-		return path
-
 	def strokeToPath(self, style=0):
-			"""	Here we take two neighboring points and calculate the angle (alpha), under which there is a line,
-			perpendicular to the tangent to the curve. With this angle we hold
-			connecting the ends of two parallel curves (right and left) to replace the old (coords),
-			separated by a distance that depends on the index of the image.
-			"""
+			if len(self.node) < 2:
+				return
+
 			node = self.node
 			right = []
 			left = []
+
 			p0, p1, pn, ps = node[0], node[1], node[-1], node[-2]
 			# if directions are not equal
 			if (p1.x - p0.x) * (p1.x - pn.x) < 0 or \
@@ -168,17 +163,88 @@ class Path(object):
 
 			left.reverse()
 			self.node = right + left
-			self.fill = self.stroke
-			self.stroke = 0
 			self.close_path = True
 
 
-def _getCoords(fX, fY, T, res=1):
-	dT = float(T[1] - T[0])
-	step = int(dT * res)
-	if step > 1:
-		seg = dT / step
-		tl = [T[0] + seg * i for i in range(step + 1)]
-		return (list(map(fX, tl)), list(map(fY, tl)))
-	else:
-		return (None, None)
+
+
+class Path(object):
+#	__slots__ = ("path", "fill", "stroke", "strok_width")
+
+	def __init__(self, path=None, fill='black', stroke='None',
+						strok_width=0):
+		self.path = [path, []][path is None]
+		self.fill = fill
+		self.stroke = stroke
+		self.strok_width = strok_width
+
+	def __len__(self):
+		return len(self.path)
+
+	def __str__(self):
+		return "%s" % (self.path)
+
+	def __repr__(self):
+		return "Path(%s)" % (self.path)
+
+	def __iter__(self):
+		return iter(self.path)
+
+	def __getitem__(self, key):
+		return self.path[key]
+
+	def __setitem__(self, key, value):
+		self.path[key] = value
+
+	def __add__(self, other):
+		if isinstance(other, PathData):
+			self.path.append(other)
+		elif isinstance(other, Paths):
+				self.path += other.path
+		return self
+
+	def __reversed__(self):
+		return reversed(self.path)
+
+	def append(self, value):
+		self.path.append(value)
+
+	def reverse(self):
+		self.path.reverse()
+
+	def boundingRect(self):
+		pass
+
+	def height(self):
+		pass
+
+	def width(self):
+		pass
+
+	def length(self):
+		l = 0
+		for p in self.path[:]:
+			l += p.length()
+		return l
+
+	def strokeToPath(self, style=0):
+		for p in self.path[:]:
+			p.strokeToPath(style)
+
+	def countNodes(self):
+		c = 0
+		for p in self.path[:]:
+			c += p.countNodes()
+		return c
+
+	def asSVG(self):
+		path = ''
+		path += '<path stroke="%s" stroke-width="%g" fill="%s" d="' % (self.stroke, self.strok_width, self.fill)
+		for p in self.path:
+			if len(p) < 2:
+				continue
+			path += 'M%g,%g' % (p.node[0].x, p.node[0].y)
+			path += ''.join(['L%g,%g' % (n.x, n.y) for n in p.node[1:]])
+			path += [' ', 'Z'][p.close_path]
+		path += '"/>\n'
+		return path

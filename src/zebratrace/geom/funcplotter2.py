@@ -24,8 +24,8 @@ from math import *
 from PyQt4.QtGui import QImage, QColor
 from ..utils import xrange
 sys.setcheckinterval(0xfff)
-from .path import Path, makePath
-from .point import Point
+from .path import makePathData, split
+#from .point import Point
 
 
 SIMPLIFICATION = 1
@@ -120,12 +120,12 @@ class FuncPlotter:
 		return path
 
 	def auto_resolution(self, fX, fY, T):
-		p = makePath(fX, fY, T, res=0.25 / self.scale)
+		p = makePathData(fX, fY, T, res=0.25 / self.scale)
 		x, y, w, h = p.boundingRect()
 		return max(w, h) * 0.5
 
 	def auto_resolution2(self, fX, fY, T):
-		p = makePath(fX, fY, T, res=0.25 / self.scale)
+		p = makePathData(fX, fY, T, res=0.25 / self.scale)
 		l = p.length()
 		return l / (T[1] - T[0])
 
@@ -144,29 +144,31 @@ class FuncPlotter:
 		"""
 
 		# Step 1. Make Path
-		path = makePath(fX, fY, T, res / self.scale)
-		if not(path):
+		pathData = makePathData(fX, fY, T, res / self.scale, close_path)
+		if not(pathData):
 			return False
-
-		path.close_path = close_path
-		path.strok_width = width * self.scale
 
 		# Step 2. If there is a picture, tracing
 		if self.img:
-			path = self._trace_image(path, self.width_range)
+			pathData = self._trace_image(pathData, self.width_range)
 			# This must be added the code division ways apart.
 			# Convert line to polygon
+			path = split(pathData)
 			path.strokeToPath()
 
 		# Step 3. Simplification Path
 		if tolerance > 0.0:
 			#start = time.time()
-			path.node = simplify_points(path.node, tolerance * self.scale)
+			for i in range(len(path)):
+				path[i] = simplify_points(path[i], tolerance * self.scale)
 			#print('simplify_points', time.time() - start)
 
 		# Step 5. Append Path to data
-		self.data.append(path)
-		return True
+		if len(path[0]) > 0:
+			self.data.append(path)
+			return True
+		else:
+			return False
 
 	def plot(self, file_name='plot.svg'):
 		""" Saves the file generated <path/> SVG.
