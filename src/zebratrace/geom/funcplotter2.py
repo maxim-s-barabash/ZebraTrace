@@ -160,7 +160,7 @@ class FuncPlotter:
 		if tolerance > 0.0:
 			#start = time.time()
 			for i in range(len(path)):
-				path[i] = simplify_points(path[i], tolerance * self.scale)
+				path[i].node = simplify_points(path[i].node, tolerance * self.scale)
 			#print('simplify_points', time.time() - start)
 
 		# Step 5. Append Path to data
