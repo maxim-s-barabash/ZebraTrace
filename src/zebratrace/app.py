@@ -189,6 +189,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			self.config.presetPath = unicode(os.path.dirname(preset_file))
 			preset = Preset()
 			preset.load(preset_file)
+			self.resolution.setValue(preset.resolution)
 			self.lineEditX.setText(unicode(preset.funcX))
 			self.lineEditY.setText(unicode(preset.funcY))
 			self.rangeMin.setValue(preset.rangeMin)
@@ -204,6 +205,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			preset_file = unicode(path)
 			self.config.presetPath = unicode(os.path.dirname(preset_file))
 			preset = Preset()
+			preset.resolution = self.resolution.value()
 			preset.funcX = unicode(self.lineEditX.text())
 			preset.funcY = unicode(self.lineEditY.text())
 			preset.rangeMin = self.rangeMin.value()
@@ -214,32 +216,38 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def loadConfig(self, path=None):
 		self.config.load(path)
 		config = self.config
+
 		self.numberCurves.setValue(config.numberCurves)
-		self.curveResolution.setValue(config.curveResolution)
 		self.curveWidthMin.setValue(config.curveWidthMin)
 		self.curveWidthMax.setValue(config.curveWidthMax)
 		self.nodeReduction.setValue(config.nodeReduction)
+		self.curveStyle.setCurrentIndex(config.curveStyle)
 
+		self.resolution.setValue(config.resolution)
 		self.lineEditX.setText(unicode(config.funcX))
 		self.lineEditY.setText(unicode(config.funcY))
 		self.rangeMin.setValue(config.rangeMin)
 		self.rangeMax.setValue(config.rangeMax)
 		self.coordSystem.setCurrentIndex(config.polar)
+
 		self.sliderTransparency.setValue(config.sliderTransparency)
 		self.boxAdvancedPref.setChecked(config.boxAdvancedPref)
 
 	def configUpdate(self, cnf=None):
 		if cnf == None:
 			cnf = {"numberCurves": self.numberCurves.value(),
-			"curveResolution": self.curveResolution.value(),
 			"curveWidthMin": self.curveWidthMin.value(),
 			"curveWidthMax": self.curveWidthMax.value(),
 			"nodeReduction": self.nodeReduction.value(),
-			"funcX": unicode(self.lineEditX.text()),
-			"funcY":  unicode(self.lineEditY.text()),
+			"curveStyle": self.curveStyle.currentIndex(),
+
+			"resolution": self.resolution.value(),
 			"rangeMin": self.rangeMin.value(),
 			"rangeMax": self.rangeMax.value(),
 			"polar": self.coordSystem.currentIndex(),
+			"funcX": unicode(self.lineEditX.text()),
+			"funcY":  unicode(self.lineEditY.text()),
+
 			"sliderTransparency": self.sliderTransparency.value(),
 			"boxAdvancedPref": self.boxAdvancedPref.isChecked(),
 			}
@@ -285,12 +293,13 @@ Copyright (C) 2012</center>"""))
 		dimensions = self.dimensions
 		n = config.numberCurves							# number of curves
 		alpha = [config.rangeMin, config.rangeMax]		# range of the variable
-		resolution = config.curveResolution				# curve quality
+		resolution = config.resolution					# curve quality
 		stroke_color = "none"							# no stroke (when tracing is used fill)
 		width_range = [config.curveWidthMin, config.curveWidthMax]
 		tolerance = config.nodeReduction / 100.
 		funcX = Function(config.funcX)
 		funcY = Function(config.funcY)
+		curveStyle = config.curveStyle
 
 		polar_coord = self.coordSystem.currentIndex()
 
@@ -330,6 +339,7 @@ Copyright (C) 2012</center>"""))
 								stroke_color,
 								close_path=True,
 								tolerance=tolerance,
+								style=curveStyle,
 								):
 					self.info.numberObject = len(fp.data)
 					self.info.numberNodes += fp.data[-1].countNodes()

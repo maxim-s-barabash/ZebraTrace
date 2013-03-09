@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>885</width>
-    <height>620</height>
+    <height>596</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -298,12 +298,15 @@
               <property name="checkable">
                <bool>false</bool>
               </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <property name="rightMargin">
+                <number>2</number>
+               </property>
                <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item>
-                <layout class="QGridLayout" name="gridLayout" columnstretch="1,3">
+                <layout class="QFormLayout" name="formLayout_3">
                  <item row="0" column="0">
                   <widget class="QLabel" name="label">
                    <property name="text">
@@ -337,39 +340,13 @@
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="label_1">
-                   <property name="text">
-                    <string>Resolution:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="curveResolution">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>&quot;Number of nodes to calculate per 1 curve&quot; = k * &quot;bitmap width&quot; * resolution, where &quot;k&quot; is variable (a) range to SVG viewbox width ratio (k=1, generally)</string>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.010000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>1.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
                   <widget class="QLabel" name="label_2">
                    <property name="text">
                     <string>Minimum Width:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
+                 <item row="1" column="1">
                   <widget class="QDoubleSpinBox" name="curveWidthMin">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -391,14 +368,14 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="0">
+                 <item row="2" column="0">
                   <widget class="QLabel" name="label_3">
                    <property name="text">
                     <string>Maximum Width:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="1">
+                 <item row="2" column="1">
                   <widget class="QDoubleSpinBox" name="curveWidthMax">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -420,14 +397,14 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="0">
+                 <item row="3" column="0">
                   <widget class="QLabel" name="label_8">
                    <property name="text">
                     <string>Node Reduction:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="1">
+                 <item row="3" column="1">
                   <widget class="QSpinBox" name="nodeReduction">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -450,6 +427,42 @@
                    <property name="value">
                     <number>0</number>
                    </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_10">
+                   <property name="text">
+                    <string>Style:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QComboBox" name="curveStyle">
+                   <item>
+                    <property name="text">
+                     <string>Center Line</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Left End</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Right End</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Left Line</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Right Line</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                 </layout>
@@ -503,34 +516,36 @@
                    <property name="checked">
                     <bool>false</bool>
                    </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_2">
+                   <layout class="QHBoxLayout" name="horizontalLayout_2">
                     <property name="rightMargin">
-                     <number>2</number>
-                    </property>
-                    <property name="bottomMargin">
                      <number>0</number>
                     </property>
                     <item>
                      <layout class="QFormLayout" name="formLayout">
                       <item row="0" column="0">
-                       <widget class="QLabel" name="label_9">
+                       <widget class="QLabel" name="label_1">
                         <property name="text">
-                         <string>Coordinates:</string>
+                         <string>Resolution:</string>
                         </property>
                        </widget>
                       </item>
                       <item row="0" column="1">
-                       <widget class="QComboBox" name="coordSystem">
-                        <item>
-                         <property name="text">
-                          <string>Cartesian</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>Polar</string>
-                         </property>
-                        </item>
+                       <widget class="QDoubleSpinBox" name="resolution">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="toolTip">
+                         <string>&quot;Number of nodes to calculate per 1 curve&quot; = k * &quot;bitmap width&quot; * resolution, where &quot;k&quot; is variable (a) range to SVG viewbox width ratio (k=1, generally)</string>
+                        </property>
+                        <property name="singleStep">
+                         <double>0.010000000000000</double>
+                        </property>
+                        <property name="value">
+                         <double>1.000000000000000</double>
+                        </property>
                        </widget>
                       </item>
                       <item row="1" column="0">
@@ -604,13 +619,34 @@
                        </widget>
                       </item>
                       <item row="3" column="0">
+                       <widget class="QLabel" name="label_9">
+                        <property name="text">
+                         <string>Coordinates:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="1">
+                       <widget class="QComboBox" name="coordSystem">
+                        <item>
+                         <property name="text">
+                          <string>Cartesian</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>Polar</string>
+                         </property>
+                        </item>
+                       </widget>
+                      </item>
+                      <item row="4" column="0">
                        <widget class="QLabel" name="label_6">
                         <property name="text">
                          <string>Function &lt;b&gt;X(a)&lt;/b&gt;:</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="3" column="1">
+                      <item row="4" column="1">
                        <widget class="QLineEdit" name="lineEditX">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -626,14 +662,14 @@
                         </property>
                        </widget>
                       </item>
-                      <item row="4" column="0">
+                      <item row="5" column="0">
                        <widget class="QLabel" name="label_7">
                         <property name="text">
                          <string>Function &lt;b&gt;Y(a)&lt;/b&gt;:</string>
                         </property>
                        </widget>
                       </item>
-                      <item row="4" column="1">
+                      <item row="5" column="1">
                        <widget class="QLineEdit" name="lineEditY">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -714,7 +750,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>0</height>
+                <height>40</height>
                </size>
               </property>
              </spacer>
@@ -993,12 +1029,15 @@
  </widget>
  <tabstops>
   <tabstop>numberCurves</tabstop>
-  <tabstop>curveResolution</tabstop>
   <tabstop>curveWidthMin</tabstop>
   <tabstop>curveWidthMax</tabstop>
   <tabstop>nodeReduction</tabstop>
+  <tabstop>curveStyle</tabstop>
+  <tabstop>boxAdvancedPref</tabstop>
+  <tabstop>resolution</tabstop>
   <tabstop>rangeMin</tabstop>
   <tabstop>rangeMax</tabstop>
+  <tabstop>coordSystem</tabstop>
   <tabstop>lineEditX</tabstop>
   <tabstop>lineEditY</tabstop>
   <tabstop>buttonTrace</tabstop>
@@ -1007,6 +1046,7 @@
   <tabstop>previewMode</tabstop>
   <tabstop>sliderTransparency</tabstop>
   <tabstop>tabPreferences</tabstop>
+  <tabstop>infoText</tabstop>
  </tabstops>
  <resources>
   <include location="mainwindow.qrc"/>

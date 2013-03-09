@@ -32,6 +32,7 @@ default_preset = {
   "rangeMax": 6.28318530718,
   "rangeMin": 0.0,
   "polar": 0,
+  "resolution": 1.0,
 }
 
 default_config = {
@@ -39,11 +40,11 @@ default_config = {
   "presetPath": "",
   "trace_image": "",
   "numberCurves": 80,
-  "curveResolution": 0.3,
   "curveWidthMin": 1,
   "curveWidthMax": 5,
   "nodeReduction": 0,
   "sliderTransparency": 80,
+  "curveStyle": 0,
   "boxAdvancedPref": False,
 }
 

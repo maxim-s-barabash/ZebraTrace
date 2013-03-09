@@ -117,11 +117,11 @@ class PathData(object):
 
 			p0, p1, pn, ps = node[0], node[1], node[-1], node[-2]
 			# if directions are not equal
-			if (p1.x - p0.x) * (p1.x - pn.x) < 0 or \
-				(p1.y - p0.y) * (p1.y - pn.y) < 0:
+			if (p1.x - p0.x) * (p1.x - pn.x) < 0. or \
+				(p1.y - p0.y) * (p1.y - pn.y) < 0.:
 				# extrapolation
-				pre_x, pre_y = 2 * p0.x - p1.x, 2 * p0.y - p1.y
-				node.append(Point(2 * pn.x - ps.x, 2 * pn.y - ps.y))
+				pre_x, pre_y = 2 * p0.x - p1.x, 2. * p0.y - p1.y
+				node.append(Point(2 * pn.x - ps.x, 2. * pn.y - ps.y))
 			else:
 				pre_x, pre_y = ps.x, ps.y
 				node.append(p1)
@@ -130,33 +130,32 @@ class PathData(object):
 				x, y = node[i].x, node[i].y
 				x1, y1 = node[i + 1].x, node[i + 1].y
 				if pre_x < x1:
-					alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2
+					alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2.
 				elif pre_x == x1:
-					alpha = [pi, 0][y1 < pre_y]
+					alpha = [pi, 0.][y1 < pre_y]
 				else:
-					alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2 + pi
+					alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2. + pi
 
 				d = node[i].d
 				dx = d * cos(alpha)
 				dy = d * sin(alpha)
 
+				dx2 = d * 2 * cos(alpha)
+				dy2 = d * 2 * sin(alpha)
+
 				if style == 0:
 					right.append(Point(x + dx, y + dy))
 					left.append(Point(x - dx, y - dy))
 				elif style == 1:
-					right.append(Point(x + dx, y + dy))
+					right.append(Point(x + dx2, y + dy2))
 					left.append(Point(x, y))
 				elif style == 2:
 					right.append(Point(x, y))
-					left.append(Point(x - dx, y - dy))
+					left.append(Point(x - dx2, y - dy2))
 				elif style == 3:
-					dx2 = d * 2 * cos(alpha)
-					dy2 = d * 2 * sin(alpha)
 					right.append(Point(x + dx2, y + dy2))
 					left.append(Point(x + dx, y + dy))
 				elif style == 4:
-					dx2 = d * 2 * cos(alpha)
-					dy2 = d * 2 * sin(alpha)
 					right.append(Point(x - dx, y - dy))
 					left.append(Point(x - dx2, y - dy2))
 				pre_x, pre_y = x, y
@@ -172,11 +171,12 @@ class Path(object):
 #	__slots__ = ("path", "fill", "stroke", "strok_width")
 
 	def __init__(self, path=None, fill='black', stroke='None',
-						strok_width=0):
+						strok_width=0, style=0):
 		self.path = [path, []][path is None]
 		self.fill = fill
 		self.stroke = stroke
 		self.strok_width = strok_width
+		self.style = style
 
 	def __len__(self):
 		return len(self.path)
@@ -227,7 +227,11 @@ class Path(object):
 			l += p.length()
 		return l
 
-	def strokeToPath(self, style=0):
+	def strokeToPath(self, style=None):
+		
+		if style is None:
+			style = self.style
+
 		for p in self.path[:]:
 			p.strokeToPath(style)
 

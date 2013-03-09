@@ -129,7 +129,7 @@ class FuncPlotter:
 		l = p.length()
 		return l / (T[1] - T[0])
 
-	def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=False, tolerance=0.0):
+	def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=False, tolerance=0.0, style=0):
 		"""Adds a graph of the functions fX (t) and fY (t).
 
 		fX			- a function of one variable, calculates the coordinates of x or
@@ -154,6 +154,7 @@ class FuncPlotter:
 			# This must be added the code division ways apart.
 			# Convert line to polygon
 			path = split(pathData)
+			path.style = style
 			path.strokeToPath()
 
 		# Step 3. Simplification Path
