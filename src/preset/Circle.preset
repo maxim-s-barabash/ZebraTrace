@@ -1,6 +1,7 @@
 {
-  "rangeMin": 0.0, 
-  "funcY": "", 
   "funcX": "1.4*i/n", 
-  "rangeMax": 6.283
+  "rangeMin": 0.0, 
+  "rangeMax": 6.28319, 
+  "funcY": "", 
+  "polar": 0
 }
