@@ -221,7 +221,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.curveWidthMin.setValue(config.curveWidthMin)
 		self.curveWidthMax.setValue(config.curveWidthMax)
 		self.nodeReduction.setValue(config.nodeReduction)
-		self.curveStyle.setCurrentIndex(config.curveStyle)
+		self.curveWriting.setCurrentIndex(config.curveWriting)
 
 		self.resolution.setValue(config.resolution)
 		self.lineEditX.setText(unicode(config.funcX))
@@ -239,7 +239,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			"curveWidthMin": self.curveWidthMin.value(),
 			"curveWidthMax": self.curveWidthMax.value(),
 			"nodeReduction": self.nodeReduction.value(),
-			"curveStyle": self.curveStyle.currentIndex(),
+			"curveWriting": self.curveWriting.currentIndex(),
 
 			"resolution": self.resolution.value(),
 			"rangeMin": self.rangeMin.value(),
@@ -299,7 +299,7 @@ Copyright (C) 2012</center>"""))
 		tolerance = config.nodeReduction / 100.
 		funcX = Function(config.funcX)
 		funcY = Function(config.funcY)
-		curveStyle = config.curveStyle
+		curveWriting = config.curveWriting
 
 		polar_coord = self.coordSystem.currentIndex()
 
@@ -339,7 +339,7 @@ Copyright (C) 2012</center>"""))
 								stroke_color,
 								close_path=True,
 								tolerance=tolerance,
-								style=curveStyle,
+								writing=curveWriting,
 								):
 					self.info.numberObject = len(fp.data)
 					self.info.numberNodes += fp.data[-1].countNodes()

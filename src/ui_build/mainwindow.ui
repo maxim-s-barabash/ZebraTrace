@@ -298,11 +298,8 @@
               <property name="checkable">
                <bool>false</bool>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_8">
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
                <property name="rightMargin">
-                <number>2</number>
-               </property>
-               <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item>
@@ -398,46 +395,14 @@
                   </widget>
                  </item>
                  <item row="3" column="0">
-                  <widget class="QLabel" name="label_8">
+                  <widget class="QLabel" name="label_10">
                    <property name="text">
-                    <string>Node Reduction:</string>
+                    <string>Writing:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QSpinBox" name="nodeReduction">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="toolTip">
-                    <string>Node reduction tolerance</string>
-                   </property>
-                   <property name="minimum">
-                    <number>0</number>
-                   </property>
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>1</number>
-                   </property>
-                   <property name="value">
-                    <number>0</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_10">
-                   <property name="text">
-                    <string>Style:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QComboBox" name="curveStyle">
+                  <widget class="QComboBox" name="curveWriting">
                    <item>
                     <property name="text">
                      <string>Center Line</string>
@@ -463,6 +428,38 @@
                      <string>Right Line</string>
                     </property>
                    </item>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_8">
+                   <property name="text">
+                    <string>Node Reduction:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QSpinBox" name="nodeReduction">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="toolTip">
+                    <string>Node reduction tolerance</string>
+                   </property>
+                   <property name="minimum">
+                    <number>0</number>
+                   </property>
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>0</number>
+                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -525,7 +522,7 @@
                       <item row="0" column="0">
                        <widget class="QLabel" name="label_1">
                         <property name="text">
-                         <string>Resolution:</string>
+                         <string>Quality:</string>
                         </property>
                        </widget>
                       </item>
@@ -1031,8 +1028,7 @@
   <tabstop>numberCurves</tabstop>
   <tabstop>curveWidthMin</tabstop>
   <tabstop>curveWidthMax</tabstop>
-  <tabstop>nodeReduction</tabstop>
-  <tabstop>curveStyle</tabstop>
+  <tabstop>curveWriting</tabstop>
   <tabstop>boxAdvancedPref</tabstop>
   <tabstop>resolution</tabstop>
   <tabstop>rangeMin</tabstop>

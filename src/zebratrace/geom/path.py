@@ -107,7 +107,7 @@ class PathData(object):
 			p = n
 		return l
 
-	def strokeToPath(self, style=0):
+	def strokeToPath(self, writing=0):
 			if len(self.node) < 2:
 				return
 
@@ -143,19 +143,19 @@ class PathData(object):
 				dx2 = d * 2 * cos(alpha)
 				dy2 = d * 2 * sin(alpha)
 
-				if style == 0:
+				if writing == 0:
 					right.append(Point(x + dx, y + dy))
 					left.append(Point(x - dx, y - dy))
-				elif style == 1:
+				elif writing == 1:
 					right.append(Point(x + dx2, y + dy2))
 					left.append(Point(x, y))
-				elif style == 2:
+				elif writing == 2:
 					right.append(Point(x, y))
 					left.append(Point(x - dx2, y - dy2))
-				elif style == 3:
+				elif writing == 3:
 					right.append(Point(x + dx2, y + dy2))
 					left.append(Point(x + dx, y + dy))
-				elif style == 4:
+				elif writing == 4:
 					right.append(Point(x - dx, y - dy))
 					left.append(Point(x - dx2, y - dy2))
 				pre_x, pre_y = x, y
@@ -171,12 +171,12 @@ class Path(object):
 #	__slots__ = ("path", "fill", "stroke", "strok_width")
 
 	def __init__(self, path=None, fill='black', stroke='None',
-						strok_width=0, style=0):
+						strok_width=0, writing=0):
 		self.path = [path, []][path is None]
 		self.fill = fill
 		self.stroke = stroke
 		self.strok_width = strok_width
-		self.style = style
+		self.writing = writing
 
 	def __len__(self):
 		return len(self.path)
@@ -227,13 +227,13 @@ class Path(object):
 			l += p.length()
 		return l
 
-	def strokeToPath(self, style=None):
+	def strokeToPath(self, writing=None):
 		
-		if style is None:
-			style = self.style
+		if writing is None:
+			writing = self.writing
 
 		for p in self.path[:]:
-			p.strokeToPath(style)
+			p.strokeToPath(writing)
 
 	def countNodes(self):
 		c = 0

@@ -44,7 +44,7 @@ default_config = {
   "curveWidthMax": 5,
   "nodeReduction": 0,
   "sliderTransparency": 80,
-  "curveStyle": 0,
+  "curveWriting": 0,
   "boxAdvancedPref": False,
 }
 
