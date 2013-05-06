@@ -46,6 +46,9 @@ default_config = {
   "sliderTransparency": 80,
   "curveWriting": 0,
   "boxAdvancedPref": False,
+  "units": 0,
+  "previewMode": 0,
+  "dpi":90.0,
 }
 
 TEMP_PREFIX = "TRACE_"

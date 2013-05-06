@@ -30,10 +30,13 @@ from .gui.ui_mainwindow import Ui_MainWindow
 from .geom.funcplotter2 import FuncPlotter
 from .geom.function import Function
 from .geom.image import desaterate, grayscale
+from .geom.DOM import DOM
 
 from .app_config import Preset
-from .utils import unicode
-from .utils import xrange
+from .utils import *
+
+from .utils import format_svg
+from .utils import format_gcode
 
 
 
@@ -41,9 +44,9 @@ from .utils import xrange
 class Info(QtCore.QObject):
 	def __init__(self):
 		QtCore.QObject.__init__(self)
-		self.clear()
+		self.clean()
 
-	def clear(self):
+	def clean(self):
 		self.traceTime = 0.0
 		self.numberObject = 0
 		self.numberNodes = 0
@@ -69,12 +72,15 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.config = config
 		self.info = Info()
 
+
 		self.trace_image = ""
 		self.image = None
 
-		self.image_size = [1000, 1000]
-		self.dimensions = [-1, -1, 1, 1]
+#		self.image_size = [1000, 1000]
+#		self.dimensions = [-1, -1, 1, 1]
 
+		self.document = None
+		
 		self.Escape = False
 
 		self.view = TraceCanvas()
@@ -88,7 +94,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.sliderTransparency.setEnabled(False)
 		self.viewContainer.addWidget(self.view)
 		self.loadConfig(self.app_data.app_config)
-		self.setWindowTitle("%s" % self.app_data.app_name)
+		self.windowTitleChanged()
 
 	def __del__(self):
 		import os
@@ -132,7 +138,15 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.previewMode.currentIndexChanged.connect(self.sliderTransparency.setEnabled)
 		self.previewMode.currentIndexChanged.connect(self.view.setViewTraceImage)
 		self.previewMode.currentIndexChanged.connect(self.labelTransparency.setEnabled)
-		self.info.clear()
+
+		self.units.currentIndexChanged.connect(self.unitsChanged)
+		self.docResolution.valueChanged.connect(self.docResolutionChanged)
+#		self.view.scene.mouseMoveEvent.connect(self.viewMouseMove)
+		self.view.mouseMoveEvent = self.viewMouseMove
+		self.view.mouseMoveEvent = self.viewMouseMove
+
+
+		self.info.clean()
 
 	def openFileBitmap(self, path=None):
 		if not path:
@@ -142,28 +156,30 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		if path:
 			trace_image = unicode(path)
 			self.config.currentPath = unicode(os.path.dirname(trace_image))
+			
 			img = QtGui.QImage(trace_image)
+			
 			img_w = float(img.width())
+			img_h = float(img.height())
+			self.image_size = [img_w, img_h]
 			if img_w == 0:
 				QtGui.QMessageBox.warning(self, self.tr("Open file"),
 					self.tr("This file is corrupt or not supported?"))
 				return
-			img_h = float(img.height())
-			img_d = [[1, img_w / img_h], [img_h / img_w, 1]][img_w > img_h]
-			self.image_size = [img_w, img_h]
-			self.dimensions = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
+
+			self.document = DOM(self.image_size)
+
 			self.trace_image = trace_image
 
 			self.progressBar.setMaximum(100)
-			img = desaterate(img, self.progressBar.setValue)
+			img = desaterate(img, self.feedback)
 			self.image = grayscale(img)
-			#self.view.openFileIMG(path)
 			self.view.openFileIMG(self.image)
 
 			self.view.resetTransform()
 			self.topPanel.setEnabled(True)
-			self.setWindowTitle("%s - %s [%ix%ipx]" % (self.app_data.app_name,
-									os.path.basename(self.trace_image), img_w, img_h))
+
+			self.windowTitleChanged()
 			self.previewMode.setCurrentIndex(1)
 			self.buttonTrace.setEnabled(True)
 			self.buttonSave.setEnabled(False)
@@ -173,11 +189,19 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def saveFileAs(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getSaveFileName(self, self.tr("Save File"),
-				unicode(self.config.currentPath), self.tr("SVG files (*.svg)"))
+				unicode(self.config.currentPath), self.tr("SVG files (*.svg);;NGC g-code files (*.ngc)"))
+			print(path)
 		if path:
-			svg_file = unicode(path)
-			self.config.currentPath = unicode(os.path.dirname(svg_file))
-			shutil.copy(self.app_data.temp_svg, svg_file)
+			filename = unicode(path)
+			root, ext = os.path.splitext(filename)
+			ext = unicode(ext.upper())
+			self.config.currentPath = unicode(os.path.dirname(filename))
+			print(ext)
+			if ext == '.SVG':
+				shutil.copy(self.app_data.temp_svg, filename)
+			elif ext == '.NGC':
+				G = format_gcode.GCode(self.document)
+				G.save(filename)
 
 	def loadPreset(self, path=None):
 		if not path:
@@ -189,7 +213,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			self.config.presetPath = unicode(os.path.dirname(preset_file))
 			preset = Preset()
 			preset.load(preset_file)
-			self.resolution.setValue(preset.resolution)
+			self.resolution.setValue(preset.resolution * 100.0)
 			self.lineEditX.setText(unicode(preset.funcX))
 			self.lineEditY.setText(unicode(preset.funcY))
 			self.rangeMin.setValue(preset.rangeMin)
@@ -205,7 +229,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			preset_file = unicode(path)
 			self.config.presetPath = unicode(os.path.dirname(preset_file))
 			preset = Preset()
-			preset.resolution = self.resolution.value()
+			preset.resolution = self.resolution.value() / 100.0
 			preset.funcX = unicode(self.lineEditX.text())
 			preset.funcY = unicode(self.lineEditY.text())
 			preset.rangeMin = self.rangeMin.value()
@@ -216,14 +240,17 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def loadConfig(self, path=None):
 		self.config.load(path)
 		config = self.config
+		units = config.units
 
 		self.numberCurves.setValue(config.numberCurves)
-		self.curveWidthMin.setValue(config.curveWidthMin)
-		self.curveWidthMax.setValue(config.curveWidthMax)
+		
+		self.curveWidthMin.setValue(pxToUnit(config.curveWidthMin, units))
+		self.curveWidthMax.setValue(pxToUnit(config.curveWidthMax, units))
+		
 		self.nodeReduction.setValue(config.nodeReduction)
 		self.curveWriting.setCurrentIndex(config.curveWriting)
 
-		self.resolution.setValue(config.resolution)
+		self.resolution.setValue(config.resolution * 100.0)
 		self.lineEditX.setText(unicode(config.funcX))
 		self.lineEditY.setText(unicode(config.funcY))
 		self.rangeMin.setValue(config.rangeMin)
@@ -232,16 +259,24 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 		self.sliderTransparency.setValue(config.sliderTransparency)
 		self.boxAdvancedPref.setChecked(config.boxAdvancedPref)
+		
+		self.units.setCurrentIndex(config.units)
+		self.previewMode.setCurrentIndex(config.previewMode)
+		self.docResolution.setValue(config.dpi)
 
 	def configUpdate(self, cnf=None):
 		if cnf == None:
+			units = self.units.currentIndex()
+			dpi = self.docResolution.value()
 			cnf = {"numberCurves": self.numberCurves.value(),
-			"curveWidthMin": self.curveWidthMin.value(),
-			"curveWidthMax": self.curveWidthMax.value(),
+			
+			"curveWidthMin": unitToPx(self.curveWidthMin.value(), units, dpi),
+			"curveWidthMax": unitToPx(self.curveWidthMax.value(), units, dpi),
+			
 			"nodeReduction": self.nodeReduction.value(),
 			"curveWriting": self.curveWriting.currentIndex(),
 
-			"resolution": self.resolution.value(),
+			"resolution": self.resolution.value() / 100.0,
 			"rangeMin": self.rangeMin.value(),
 			"rangeMax": self.rangeMax.value(),
 			"polar": self.coordSystem.currentIndex(),
@@ -250,6 +285,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 			"sliderTransparency": self.sliderTransparency.value(),
 			"boxAdvancedPref": self.boxAdvancedPref.isChecked(),
+			"units": units,
+			"previewMode": self.previewMode.currentIndex(),
+			"dpi": self.docResolution.value()
 			}
 		self.config.update(cnf)
 
@@ -258,6 +296,30 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 			path = self.app_data.app_config
 		self.configUpdate()
 		self.config.save(path)
+
+	def unitsChanged(self):
+		units = self.units.currentIndex()
+
+		self.curveWidthMin.setValue(unitToUnit(self.curveWidthMin.value(), 
+					self.config.units, units, self.config.dpi))
+		self.curveWidthMax.setValue(unitToUnit(self.curveWidthMax.value(), 
+					self.config.units, units, self.config.dpi))
+		self.config.units = units
+		self.windowTitleChanged()
+
+	def docResolutionChanged(self):
+		self.config.dpi = self.docResolution.value()
+		self.windowTitleChanged()
+
+	def windowTitleChanged(self):
+		if self.document is None:
+			self.setWindowTitle("%s" % self.app_data.app_name)
+		else:
+			img_w = pxToUnit(self.document.w, self.config.units, self.config.dpi)
+			img_h = pxToUnit(self.document.h, self.config.units, self.config.dpi)
+			self.setWindowTitle("%s - %s [%ix%i %s]" % (self.app_data.app_name,
+									os.path.basename(self.trace_image), img_w, img_h,
+									UNITS[self.config.units]))
 
 	def help(self):
 		import webbrowser
@@ -277,20 +339,40 @@ Copyright (C) 2012</center>"""))
 		QtGui.QMessageBox.about(self, self.tr("About"), about % (self.app_data.app_name,
 														self.app_data.app_version))
 
+	def viewMouseMove(self, event):
+		super(TraceCanvas, self.view).mouseMoveEvent(event)
+		pos = self.view.mapToScene(event.pos())
+		x = pxToUnit(pos.x(), self.config.units, self.config.dpi)
+		y = pxToUnit(pos.y(), self.config.units, self.config.dpi)
+		self.labelPos.setText('(%4.3f;%4.3f)' % (x,y))
+
+	def feedback(self, text='', progress=0):
+		if text == '' and progress == 0:
+			self.Escape = False
+			
+		if text is not None:
+			self.labelFeedback.setText(text)
+		if progress is not None:
+			self.progressBar.setValue(progress)
+		QtGui.QApplication.processEvents()
+		
+		# print(not self.Escape)
+		return(not self.Escape)
+
+
 	def trace(self):
 		if not(self.buttonTrace.isEnabled()):
 			return
-		self.info.clear()
+		self.info.clean()
+		self.document.clean()
 		self.saveConfig()
 
 		self.buttonTrace.setEnabled(False)
 		self.buttonSave.setEnabled(False)
 		self.actionSaveAs.setEnabled(False)
 
-		self.Escape = False
 		config = self.config
-		image_size = self.image_size
-		dimensions = self.dimensions
+
 		n = config.numberCurves							# number of curves
 		alpha = [config.rangeMin, config.rangeMax]		# range of the variable
 		resolution = config.resolution					# curve quality
@@ -303,14 +385,16 @@ Copyright (C) 2012</center>"""))
 
 		polar_coord = self.coordSystem.currentIndex()
 
-		fp = FuncPlotter(image_size, dimensions, trace_image=self.image,
+		fp = FuncPlotter(self.document, trace_image=self.image,
 						width_range=width_range)
 
-		self.progressBar.setMaximum(n + 1)
-		start = time.time()
 
+		dprogres = 100.0 / n
+
+		# Step 1. Make Path
+		start = time.time()
 		for i in xrange(1, n + 1):
-			if not(self.Escape):
+			if self.feedback(text='Trace the Image. Press ESC to Cancel.', progress = i * dprogres):
 				try:
 					fX = funcX({'i': float(i), 'n': float(n)})
 					fY = funcY({'i': float(i), 'n': float(n)})
@@ -330,7 +414,7 @@ Copyright (C) 2012</center>"""))
 					QtGui.QMessageBox.critical(self, self.tr("Error in function"),
 						unicode(err))
 					break
-				#print('auto_resolution',auto_resolution)
+
 
 				if fp.append_func(fX,
 								fY,
@@ -341,19 +425,29 @@ Copyright (C) 2012</center>"""))
 								tolerance=tolerance,
 								writing=curveWriting,
 								):
-					self.info.numberObject = len(fp.data)
-					self.info.numberNodes += fp.data[-1].countNodes()
-
-				self.progressBar.setValue(i)
-				QtGui.QApplication.processEvents()
+					self.info.numberObject = len(fp.document.data)
+					self.info.numberNodes += fp.document.data[-1].countNodes()
 			else:
 				break
 
-		self.info.traceTime = time.time() - start
+
 		QtGui.QApplication.processEvents()
-		fp.plot(self.app_data.temp_svg)
+		
+		self.info.traceTime = time.time() - start
+		########################################
+		prev = self.document
+		for i in prev:
+			i.strokeToPath()
+
+		previewSVG = format_svg.SVG(prev)
+		previewSVG.save(self.app_data.temp_svg)
+		#########################################
+
+
+
+
 		self.view.openFileSVG(QtCore.QFile(self.app_data.temp_svg))
-		self.progressBar.setValue(0)
+		self.feedback()
 
 		self.buttonTrace.setEnabled(True)
 		self.view.setFocus(True)

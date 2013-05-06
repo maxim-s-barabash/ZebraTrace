@@ -26,7 +26,7 @@ from ..utils import xrange
 sys.setcheckinterval(0xfff)
 from .path import makePathData, split
 #from .point import Point
-#from .DOM import DOM
+
 
 
 SIMPLIFICATION = 1
@@ -40,32 +40,17 @@ else:
 
 
 class FuncPlotter:
-	def __init__(self, wh, bound, grid_lines=0, trace_image='', width_range=[0.1, 2]):
+	def __init__(self, DOM, trace_image='', width_range=[0.1, 2]):
 		"""Draws the graphics functions.
 
 		Parameters:
-		wh			- list [width, height] specifying the size of the image in pixels SVG
-		bound		- list [x1, y1, x2, y2] - border coordinate plane
-		grid_lines	- an integer specifying the number of grid lines, 0 - no grid
 		trace_image	- a string specifying the name of the image file to trace
 						or QImage object
 		width_range	- a list of two values defining the range of thickness in the trace line
 		"""
-		self.x1, self.y1 = float(bound[0]), float(bound[1])
-		self.x2, self.y2 = float(bound[2]), float(bound[3])
-
-		self.dx = float(self.x2 - self.x1)
-		self.dy = float(self.y2 - self.y1)
-
-		self.w, self.h = float(wh[0]), float(wh[1])
-
-		# Resolution field in units per pixel SVG
-		self.scale = self.dx / self.w
-		self.grid = grid_lines
+		self.document = DOM
 		self.trace_image = trace_image
 		self.width_range = width_range
-
-		self.data = []
 		self.img = None
 
 		if isinstance(trace_image, QImage):
@@ -98,12 +83,12 @@ class FuncPlotter:
 		img_pixelIndex = self.img_pixelIndex
 		img_w, img_h = self.img_w, self.img_h
 		img_colors = self.img_colors
-		scale = self.scale
+		scale = self.document.scale
 
-		canvas_x1 = self.x1
-		canvas_y1 = self.y1
-		canvas_dx = self.dx / img_w
-		canvas_dy = self.dy / img_h
+		canvas_x1 = self.document.x1
+		canvas_y1 = self.document.y1
+		canvas_dx = self.document.dx / img_w
+		canvas_dy = self.document.dy / img_h
 
 		for i in range(len(path.node)):
 			x, y = path.node[i].x, path.node[i].y
@@ -126,7 +111,7 @@ class FuncPlotter:
 		return max(w, h) * 0.5
 
 	def auto_resolution2(self, fX, fY, T):
-		p = makePathData(fX, fY, T, res=0.25 / self.scale)
+		p = makePathData(fX, fY, T, res=0.25 / self.document.scale)
 		l = p.length()
 		return l / (T[1] - T[0])
 
@@ -145,7 +130,7 @@ class FuncPlotter:
 		"""
 
 		# Step 1. Make Path
-		pathData = makePathData(fX, fY, T, res / self.scale, close_path)
+		pathData = makePathData(fX, fY, T, res / self.document.scale, close_path)
 		if not(pathData):
 			return False
 
@@ -155,41 +140,19 @@ class FuncPlotter:
 			# This must be added the code division ways apart.
 			# Convert line to polygon
 			path = split(pathData)
-			path.writing = writing
-			path.strokeToPath()
-
-		# Step 3. Simplification Path
-		if tolerance > 0.0:
-			#start = time.time()
-			for i in range(len(path)):
-				path[i].node = simplify_points(path[i].node, tolerance * self.scale)
-			#print('simplify_points', time.time() - start)
+#			path.writing = writing
+#			path.strokeToPath()
+#
+#		# Step 3. Simplification Path
+#		if tolerance > 0.0:
+#			#start = time.time()
+#			for i in range(len(path)):
+#				path[i].node = simplify_points(path[i].node, tolerance * self.document.scale)
+#			#print('simplify_points', time.time() - start)
 
 		# Step 5. Append Path to data
 		if len(path[0]) > 0:
-			self.data.append(path)
+			self.document.data.append(path)
 			return True
 		else:
 			return False
-
-	def plot(self, file_name='plot.svg'):
-		""" Saves the file generated <path/> SVG.
-		"""
-#		if self.grid:                           # if you need a grid, then draw it with a thickness of default and a dark line in the center
-#			g = self.grid
-#			for i in xrange(g + 1):
-#				self._generate_path([[self.x1 + self.dx / g * i, self.y1], \
-#									[self.x1 + self.dx / g * i, self.y2]], ['grey', 'lightgrey'][bool(i - g / 2)])
-#				self._generate_path([[self.x1, self.y1 + self.dy / g * i], \
-#									[self.x2, self.y1 + self.dy / g * i]], ['grey', 'lightgrey'][bool(i - g / 2)])
-		header = '<?xml version="1.0" encoding="utf-8"?>\n'
-		header += '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none"\n'
-		header += 'width="%i" height="%i" viewBox="%f %f %f %f">\n\t<g fill="%s" fill-rule="evenodd">\n' % \
-					(self.w, self.h, self.x1, self.y1, self.dx, self.dy, ['none', 'black'][bool(self.img)])
-		footer = "</g>\n</svg>"
-
-		f = open(file_name, 'w')                # write to file
-		f.write(header)
-		f.write(''.join(reversed([s.asSVG() for s in self.data])))
-		f.write(footer)
-		f.close()

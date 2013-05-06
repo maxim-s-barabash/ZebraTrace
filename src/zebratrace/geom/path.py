@@ -18,6 +18,7 @@
 
 from math import hypot, atan, pi, cos, sin, atan2
 from .point import Point
+from .style import Style
 
 
 
@@ -168,14 +169,11 @@ class PathData(object):
 
 
 class Path(object):
-#	__slots__ = ("path", "fill", "stroke", "strok_width")
+	__slots__ = ("path", "style", "writing")
 
-	def __init__(self, path=None, fill='black', stroke='None',
-						strok_width=0, writing=0):
+	def __init__(self, path=None, style=None, writing=0):
 		self.path = [path, []][path is None]
-		self.fill = fill
-		self.stroke = stroke
-		self.strok_width = strok_width
+		self.style = [style, Style()][style is None]
 		self.writing = writing
 
 	def __len__(self):
