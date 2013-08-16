@@ -335,7 +335,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		about = unicode(self.tr("""<center><b>%s</b> version %s. <br><br>
 See <a href="http://linuxgraphics.ru/">linuxgraphics.ru</a>
 for more information.<br><br>
-Copyright (C) 2012</center>"""))
+Copyright (C) 2012-2013</center>"""))
 		QtGui.QMessageBox.about(self, self.tr("About"), about % (self.app_data.app_name,
 														self.app_data.app_version))
 
@@ -435,16 +435,26 @@ Copyright (C) 2012</center>"""))
 		
 		self.info.traceTime = time.time() - start
 		########################################
-		prev = self.document
-		for i in prev:
-			i.strokeToPath()
+		SIMPLIFICATION = 1
 
-		previewSVG = format_svg.SVG(prev)
+		if SIMPLIFICATION == 0:
+			# Douglas-Peucker line simplification.
+			from .geom.dp import simplify_points
+		else:
+			# Visvalingam line simplification.
+			from .geom.visvalingam import simplify_visvalingam_whyatt as simplify_points
+		
+		prev = self.document
+		for path in prev:
+			path.strokeToPath(curveWriting)
+
+			if tolerance > 0.0:
+				for i in range(len(path)):
+					path[i].node = simplify_points(path[i].node, tolerance * prev.scale)
+
+		previewSVG = format_svg.SVG(prev, feedback=self.feedback)
 		previewSVG.save(self.app_data.temp_svg)
 		#########################################
-
-
-
 
 		self.view.openFileSVG(QtCore.QFile(self.app_data.temp_svg))
 		self.feedback()
