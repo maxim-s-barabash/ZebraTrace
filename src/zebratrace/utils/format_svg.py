@@ -16,18 +16,24 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+tr = lambda a:a
 
 class SVG():
 
-	def __init__(self, dom, filename='plot.svg'):
+	def __init__(self, dom, filename='plot.svg', feedback=None):
 		self.dom = dom
 		self.filename = filename
+		self.feedback = feedback
 
 	def save(self, filename=None):
 		if filename == None:
 			filename = self.filename
 		dom = self.dom
 		style = dom.style
+		feedback = self.feedback
+		if feedback: 
+			feed = feedback(text = tr('Save SVG file.'))
+
 		header = '<?xml version="1.0" encoding="utf-8"?>\n'
 		header += '<svg xmlns="http://www.w3.org/2000/svg" '
 		header += 'xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" \n'
@@ -35,7 +41,7 @@ class SVG():
 					(style.strok_width, style.stroke, style.fill)
 		header += 'width="%i" height="%i" viewBox="%f %f %f %f">\n<g>\n' % \
 					(dom.w, dom.h, dom.x1, dom.y1, dom.dx, dom.dy)
-		
+
 		footer = "</g>\n</svg>"
 
 		body = ''.join(reversed([self.pathAsSVG(s) for s in dom.data]))
@@ -45,6 +51,8 @@ class SVG():
 		f.write(body.encode('utf-8'))
 		f.write(footer.encode('utf-8'))
 		f.close()
+
+		if feedback: feedback()
 
 
 	def pathStyle(self, s):
