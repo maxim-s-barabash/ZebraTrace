@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_build\mainwindow.ui'
 #
-# Created: Tue Mar 26 12:44:08 2013
+# Created: Sun Sep 22 21:04:26 2013
 #      by: PyQt4 UI code generator 4.9.5
 #
 # WARNING! All changes made in this file will be lost!
@@ -74,6 +74,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.docResolution.sizePolicy().hasHeightForWidth())
         self.docResolution.setSizePolicy(sizePolicy)
         self.docResolution.setDecimals(3)
+        self.docResolution.setMinimum(0.001)
         self.docResolution.setMaximum(10000.0)
         self.docResolution.setSingleStep(0.1)
         self.docResolution.setProperty("value", 90.0)
@@ -576,8 +577,8 @@ class Ui_MainWindow(object):
         self.tabPreferences.setTabText(self.tabPreferences.indexOf(self.tabOptions), QtGui.QApplication.translate("MainWindow", "Preferences", None, QtGui.QApplication.UnicodeUTF8))
         self.tabPreferences.setTabText(self.tabPreferences.indexOf(self.tabInfo), QtGui.QApplication.translate("MainWindow", "Info", None, QtGui.QApplication.UnicodeUTF8))
         self.progressBar.setFormat(QtGui.QApplication.translate("MainWindow", "%p%", None, QtGui.QApplication.UnicodeUTF8))
-        self.labelPos.setText(QtGui.QApplication.translate("MainWindow", "()", None, QtGui.QApplication.UnicodeUTF8))
-        self.labelFeedback.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelPos.setText(QtGui.QApplication.translate("MainWindow", "(0.000;0.000)", None, QtGui.QApplication.UnicodeUTF8))
+        self.labelFeedback.setText(QtGui.QApplication.translate("MainWindow", "Message", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonTrace.setToolTip(QtGui.QApplication.translate("MainWindow", "Trace the raster content", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonTrace.setText(QtGui.QApplication.translate("MainWindow", "Trace", None, QtGui.QApplication.UnicodeUTF8))
         self.buttonTrace.setShortcut(QtGui.QApplication.translate("MainWindow", "Return", None, QtGui.QApplication.UnicodeUTF8))

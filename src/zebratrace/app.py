@@ -95,6 +95,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		self.viewContainer.addWidget(self.view)
 		self.loadConfig(self.app_data.app_config)
 		self.windowTitleChanged()
+		self.feedback()
 
 	def __del__(self):
 		import os
@@ -333,7 +334,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
 	def about(self):
 		about = unicode(self.tr("""<center><b>%s</b> version %s. <br><br>
-See <a href="http://linuxgraphics.ru/">linuxgraphics.ru</a>
+See <a href="http://maxim-s-barabash.github.io/ZebraTrace/">ZebraTrace</a>
 for more information.<br><br>
 Copyright (C) 2012-2013</center>"""))
 		QtGui.QMessageBox.about(self, self.tr("About"), about % (self.app_data.app_name,
@@ -445,12 +446,18 @@ Copyright (C) 2012-2013</center>"""))
 			from .geom.visvalingam import simplify_visvalingam_whyatt as simplify_points
 		
 		prev = self.document
+		self.info.numberNodes =self.info.numberNodes * 2
 		for path in prev:
 			path.strokeToPath(curveWriting)
-
 			if tolerance > 0.0:
+				tempCountNodes = path.countNodes()
+				
 				for i in range(len(path)):
 					path[i].node = simplify_points(path[i].node, tolerance * prev.scale)
+				
+				self.info.numberObject = len(fp.document.data)
+				self.info.numberNodes -= (tempCountNodes - path.countNodes())
+				self.feedback(text=self.tr('Simplify Points'))
 
 		previewSVG = format_svg.SVG(prev, feedback=self.feedback)
 		previewSVG.save(self.app_data.temp_svg)
