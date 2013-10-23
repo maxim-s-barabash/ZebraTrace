@@ -49,11 +49,13 @@ class GCode():
 		header+= 'F#4\r\n\r\n'
 
 		footer = "M02\r\n%\r\n"
+		
+		body = ''.join(reversed([self.pathAsGCODE(s) for s in dom.data]))
 
 		f = open(filename, 'wb')                # write to file
-		f.write(header)
-		f.write(''.join(reversed([self.pathAsGCODE(s) for s in dom.data])))
-		f.write(footer)
+		f.write(header.encode('utf-8'))
+		f.write(body.encode('utf-8'))
+		f.write(footer.encode('utf-8'))
 		f.close()
 		
 	def pathAsGCODE(self, s):
