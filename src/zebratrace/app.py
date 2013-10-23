@@ -37,6 +37,7 @@ from .utils import *
 
 from .utils import format_svg
 from .utils import format_gcode
+from .utils import format_eps
 
 
 
@@ -190,7 +191,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 	def saveFileAs(self, path=None):
 		if not path:
 			path = QtGui.QFileDialog.getSaveFileName(self, self.tr("Save File"),
-				unicode(self.config.currentPath), self.tr("SVG files (*.svg);;NGC g-code files (*.ngc)"))
+				unicode(self.config.currentPath), self.tr("SVG files (*.svg);;NGC g-code files (*.ngc);;ESP files (*.eps)"))
 			print(path)
 		if path:
 			filename = unicode(path)
@@ -202,6 +203,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 				shutil.copy(self.app_data.temp_svg, filename)
 			elif ext == '.NGC':
 				G = format_gcode.GCode(self.document)
+				G.save(filename)
+			elif ext == '.EPS':
+				G = format_eps.EPS(self.document)
 				G.save(filename)
 
 	def loadPreset(self, path=None):
