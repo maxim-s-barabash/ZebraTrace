@@ -395,7 +395,7 @@ Copyright (C) 2012-2013</center>"""))
 		# Step 1. Make Path
 		start = time.time()
 		for i in xrange(1, n + 1):
-			if self.feedback(text='Trace the Image. Press ESC to Cancel.', progress = i * dprogres):
+			if self.feedback(text=self.tr('Trace the Image. Press ESC to Cancel.'), progress = i * dprogres):
 				try:
 					fX = funcX({'i': float(i), 'n': float(n)})
 					fY = funcY({'i': float(i), 'n': float(n)})
