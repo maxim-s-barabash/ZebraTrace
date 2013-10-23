@@ -127,7 +127,7 @@ class TraceCanvas(QtGui.QGraphicsView):
 		self.backgroundItem.setZValue(-1)
 
 		self.outlineItem = QtGui.QGraphicsRectItem(self.TraceImage.boundingRect())
-		outline = QtGui.QPen(QtCore.Qt.darkGray, 1, QtCore.Qt.SolidLine)
+		outline = QtGui.QPen(QtCore.Qt.darkGray, 1.5, QtCore.Qt.SolidLine)
 		outline.setCosmetic(True)
 		self.outlineItem.setPen(outline)
 		self.outlineItem.setBrush(QtGui.QBrush(QtCore.Qt.NoBrush))
