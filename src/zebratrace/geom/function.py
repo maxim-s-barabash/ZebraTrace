@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#	Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#	Copyright 2014 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 
 
 from math import *
+from random import *
 
 
 class Function():
@@ -33,6 +34,11 @@ class Function():
 				"e": e,
 				"abs": fabs,
 				"exp": exp,
+				"random": random,
+				"uniform": uniform,
+				"triangular": triangular,
+				"gauss":gauss,
+				"vonmisesvariate":vonmisesvariate,
 				}
 
 	def setFunc(self, func):
