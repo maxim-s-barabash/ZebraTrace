@@ -340,7 +340,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 		about = unicode(self.tr("""<center><b>%s</b> version %s. <br><br>
 See <a href="http://maxim-s-barabash.github.io/ZebraTrace/">ZebraTrace</a>
 for more information.<br><br>
-Copyright (C) 2012-2013</center>"""))
+Copyright (C) 2012-2014</center>"""))
 		QtGui.QMessageBox.about(self, self.tr("About"), about % (self.app_data.app_name,
 														self.app_data.app_version))
 
@@ -398,8 +398,9 @@ Copyright (C) 2012-2013</center>"""))
 
 		# Step 1. Make Path
 		start = time.time()
+		msg = self.tr('Trace the Image. Press ESC to Cancel.')
 		for i in xrange(1, n + 1):
-			if self.feedback(text=self.tr('Trace the Image. Press ESC to Cancel.'), progress = i * dprogres):
+			if self.feedback(text=msg, progress = i * dprogres):
 				try:
 					fX = funcX({'i': float(i), 'n': float(n)})
 					fY = funcY({'i': float(i), 'n': float(n)})
