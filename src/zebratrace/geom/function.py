@@ -17,8 +17,8 @@
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from math import *
-from random import *
+from math import sin, cos, tan, sqrt, pi, e, fabs, exp
+from random import random, uniform, triangular, gauss, vonmisesvariate
 
 
 class Function():
@@ -37,8 +37,8 @@ class Function():
 				"random": random,
 				"uniform": uniform,
 				"triangular": triangular,
-				"gauss":gauss,
-				"vonmisesvariate":vonmisesvariate,
+				"gauss": gauss,
+				"vonmisesvariate": vonmisesvariate,
 				}
 
 	def setFunc(self, func):
