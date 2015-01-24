@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="cs_CZ" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.0" language="cs_CZ">
 <context>
     <name>@default</name>
     <message>
@@ -64,7 +65,7 @@
     <message>
         <location filename="ui_mainwindow.py" line="592"/>
         <source>Trace</source>
-        <translation>Vektorizovat</translation>
+        <translation>Obkreslit</translation>
     </message>
     <message>
         <location filename="ui_mainwindow.py" line="602"/>
@@ -124,7 +125,7 @@
     <message>
         <location filename="ui_mainwindow.py" line="610"/>
         <source>Trace Image</source>
-        <translation>Vektorizovat obrázek</translation>
+        <translation>Obkreslit obrázek</translation>
     </message>
     <message>
         <location filename="app.py" line="154"/>
@@ -460,7 +461,7 @@ Autorské právo (C) 2012-2013&lt;/center&gt;</translation>
     <message>
         <location filename="app.py" line="398"/>
         <source>Trace the Image. Press ESC to Cancel.</source>
-        <translation type="unfinished"></translation>
+        <translation>Obkreslit obrázek (vektorizovat). Stiskněte Esc pro zrušení.</translation>
     </message>
 </context>
 </TS>
