@@ -95,14 +95,16 @@ class EPS():
 
 
 	def pathAsEPS(self, s):
+		import textwrap
 		scale = self.dom.scale / 0.75
 		path = ''
 		for p in s:
 			if len(p) < 2:
 				continue
-			path += '%g %g m \n' % (p.node[0].x / scale, p.node[0].y / scale * -1)
-			path += ''.join(['%g %g l \n' % (n.x / scale, n.y / scale * -1) for n in p.node[1:]])
-			path += [' ', 'h\n'][p.close_path]
-		path += 'f\n'
+			path += '%g %g m ' % (p.node[0].x / scale, p.node[0].y / scale * -1)
+			path += ''.join(['%g %g l ' % (n.x / scale, n.y / scale * -1) for n in p.node[1:]])
+			path += [' ', 'h '][p.close_path]
+		path = textwrap.fill(path, 250)
+		path += ' f\n'
 		return path
 
