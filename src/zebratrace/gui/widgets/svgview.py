@@ -47,167 +47,167 @@ from PyQt4 import QtCore, QtGui, QtSvg
 
 
 class TraceCanvas(QtGui.QGraphicsView):
-	Native, OpenGL, Image = range(3)
+    Native, OpenGL, Image = range(3)
 
-	def __init__(self, parent=None):
-		super(TraceCanvas, self).__init__(parent)
+    def __init__(self, parent=None):
+        super(TraceCanvas, self).__init__(parent)
 
-		self.renderer = TraceCanvas.Native
-		self.svgItem = None
-		self.backgroundItem = None
-		self.outlineItem = None
-		self.TraceImage = None
-		self.image = QtGui.QImage()
-		
-		self.opacity = 100
+        self.renderer = TraceCanvas.Native
+        self.svgItem = None
+        self.backgroundItem = None
+        self.outlineItem = None
+        self.TraceImage = None
+        self.image = QtGui.QImage()
+        
+        self.opacity = 100
 
-		self.setScene(QtGui.QGraphicsScene(self))
-		self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-		self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
-		self.setViewportUpdateMode(QtGui.QGraphicsView.FullViewportUpdate)
+        self.setScene(QtGui.QGraphicsScene(self))
+        self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
+        self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
+        self.setViewportUpdateMode(QtGui.QGraphicsView.FullViewportUpdate)
 
-		# Prepare background check-board pattern.
-		tilePixmap = QtGui.QPixmap(32, 32)
-		tilePixmap.fill(QtCore.Qt.white)
-		tilePainter = QtGui.QPainter(tilePixmap)
-		color = QtGui.QColor(192, 192, 192)
-		tilePainter.fillRect(0, 0, 16, 16, color)
-		tilePainter.fillRect(16, 16, 16, 16, color)
-		tilePainter.end()
+        # Prepare background check-board pattern.
+        tilePixmap = QtGui.QPixmap(32, 32)
+        tilePixmap.fill(QtCore.Qt.white)
+        tilePainter = QtGui.QPainter(tilePixmap)
+        color = QtGui.QColor(192, 192, 192)
+        tilePainter.fillRect(0, 0, 16, 16, color)
+        tilePainter.fillRect(16, 16, 16, 16, color)
+        tilePainter.end()
 
-		self.setBackgroundBrush(QtGui.QBrush(tilePixmap))
+        self.setBackgroundBrush(QtGui.QBrush(tilePixmap))
 
-	def drawBackground(self, p, rect):
-		p.save()
-		p.resetTransform()
-		p.drawTiledPixmap(self.viewport().rect(),
-				self.backgroundBrush().texture())
-		p.restore()
+    def drawBackground(self, p, rect):
+        p.save()
+        p.resetTransform()
+        p.drawTiledPixmap(self.viewport().rect(),
+                self.backgroundBrush().texture())
+        p.restore()
 
-	def openFileIMG(self, img_file):
+    def openFileIMG(self, img_file):
 
-		s = self.scene()
+        s = self.scene()
 
-		if self.backgroundItem:
-			drawBackground = self.backgroundItem.isVisible()
-		else:
-			drawBackground = True
+        if self.backgroundItem:
+            drawBackground = self.backgroundItem.isVisible()
+        else:
+            drawBackground = True
 
-		if self.outlineItem:
-			drawOutline = self.outlineItem.isVisible()
-		else:
-			drawOutline = True
+        if self.outlineItem:
+            drawOutline = self.outlineItem.isVisible()
+        else:
+            drawOutline = True
 
-		if self.TraceImage:
-			drawOutline = self.outlineItem.isVisible()
-		else:
-			drawOutline = True
+        if self.TraceImage:
+            drawOutline = self.outlineItem.isVisible()
+        else:
+            drawOutline = True
 
-		s.clear()
-		img = QtGui.QPixmap(img_file)
-		self.TraceImage = QtGui.QGraphicsPixmapItem(img)
-		self.TraceImage.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
-		self.TraceImage.setCacheMode(QtGui.QGraphicsItem.NoCache)
-		self.TraceImage.setZValue(1)
+        s.clear()
+        img = QtGui.QPixmap(img_file)
+        self.TraceImage = QtGui.QGraphicsPixmapItem(img)
+        self.TraceImage.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
+        self.TraceImage.setCacheMode(QtGui.QGraphicsItem.NoCache)
+        self.TraceImage.setZValue(1)
 
-		effect = QtGui.QGraphicsOpacityEffect(self)
-		self.TraceImage.setGraphicsEffect(effect)
-		self.setOpacity(self.opacity)
-		self.TraceImage.setZValue(1)
+        effect = QtGui.QGraphicsOpacityEffect(self)
+        self.TraceImage.setGraphicsEffect(effect)
+        self.setOpacity(self.opacity)
+        self.TraceImage.setZValue(1)
 
-		self.svgItem = QtSvg.QGraphicsSvgItem()
-		self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
-		self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
-		self.svgItem.setZValue(0)
+        self.svgItem = QtSvg.QGraphicsSvgItem()
+        self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
+        self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
+        self.svgItem.setZValue(0)
 
-		self.backgroundItem = QtGui.QGraphicsRectItem(self.TraceImage.boundingRect())
-		self.backgroundItem.setBrush(QtCore.Qt.white)
-		self.backgroundItem.setPen(QtGui.QPen(QtCore.Qt.NoPen))
-		self.backgroundItem.setVisible(drawBackground)
-		self.backgroundItem.setZValue(-1)
+        self.backgroundItem = QtGui.QGraphicsRectItem(self.TraceImage.boundingRect())
+        self.backgroundItem.setBrush(QtCore.Qt.white)
+        self.backgroundItem.setPen(QtGui.QPen(QtCore.Qt.NoPen))
+        self.backgroundItem.setVisible(drawBackground)
+        self.backgroundItem.setZValue(-1)
 
-		self.outlineItem = QtGui.QGraphicsRectItem(self.TraceImage.boundingRect())
-		outline = QtGui.QPen(QtCore.Qt.darkGray, 1.5, QtCore.Qt.SolidLine)
-		outline.setCosmetic(True)
-		self.outlineItem.setPen(outline)
-		self.outlineItem.setBrush(QtGui.QBrush(QtCore.Qt.NoBrush))
-		self.outlineItem.setVisible(drawOutline)
-		self.outlineItem.setZValue(2)
+        self.outlineItem = QtGui.QGraphicsRectItem(self.TraceImage.boundingRect())
+        outline = QtGui.QPen(QtCore.Qt.darkGray, 1.5, QtCore.Qt.SolidLine)
+        outline.setCosmetic(True)
+        self.outlineItem.setPen(outline)
+        self.outlineItem.setBrush(QtGui.QBrush(QtCore.Qt.NoBrush))
+        self.outlineItem.setVisible(drawOutline)
+        self.outlineItem.setZValue(2)
 
-		s.addItem(self.backgroundItem)
-		s.addItem(self.svgItem)
-		s.addItem(self.TraceImage)
-		s.addItem(self.outlineItem)
+        s.addItem(self.backgroundItem)
+        s.addItem(self.svgItem)
+        s.addItem(self.TraceImage)
+        s.addItem(self.outlineItem)
 
-		s.setSceneRect(self.outlineItem.boundingRect().adjusted(-10, -10, 10, 10))
+        s.setSceneRect(self.outlineItem.boundingRect().adjusted(-10, -10, 10, 10))
 
-	def setOpacity(self, opacity):
-		self.opacity = opacity
-		if self.TraceImage:
-			effect = self.TraceImage.graphicsEffect()
-			effect.setOpacity(opacity / 100.0)
+    def setOpacity(self, opacity):
+        self.opacity = opacity
+        if self.TraceImage:
+            effect = self.TraceImage.graphicsEffect()
+            effect.setOpacity(opacity / 100.0)
 
-	def openFileSVG(self, svg_file):
-		if not svg_file.exists():
-			return
-		r = QtSvg.QSvgRenderer()
-		r.load(svg_file.fileName())
-		self.svgItem.setSharedRenderer(r)
+    def openFileSVG(self, svg_file):
+        if not svg_file.exists():
+            return
+        r = QtSvg.QSvgRenderer()
+        r.load(svg_file.fileName())
+        self.svgItem.setSharedRenderer(r)
 
-	def setRenderer(self, renderer):
-		self.renderer = renderer
+    def setRenderer(self, renderer):
+        self.renderer = renderer
 
-		if self.renderer == TraceCanvas.OpenGL:
-			if QtOpenGL.QGLFormat.hasOpenGL():
-				self.setViewport(QtOpenGL.QGLWidget(QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)))
-		else:
-			self.setViewport(QtGui.QWidget())
+        if self.renderer == TraceCanvas.OpenGL:
+            if QtOpenGL.QGLFormat.hasOpenGL():
+                self.setViewport(QtOpenGL.QGLWidget(QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)))
+        else:
+            self.setViewport(QtGui.QWidget())
 
-	def setHighQualityAntialiasing(self, highQualityAntialiasing):
-		if QtOpenGL.QGLFormat.hasOpenGL():
-			self.setRenderHint(QtGui.QPainter.HighQualityAntialiasing,
-					highQualityAntialiasing)
+    def setHighQualityAntialiasing(self, highQualityAntialiasing):
+        if QtOpenGL.QGLFormat.hasOpenGL():
+            self.setRenderHint(QtGui.QPainter.HighQualityAntialiasing,
+                    highQualityAntialiasing)
 
-	def setViewBackground(self, enable):
-		if self.backgroundItem:
-			self.backgroundItem.setVisible(enable)
+    def setViewBackground(self, enable):
+        if self.backgroundItem:
+            self.backgroundItem.setVisible(enable)
 
-	def setViewOutline(self, enable):
-		if self.outlineItem:
-			self.outlineItem.setVisible(enable)
+    def setViewOutline(self, enable):
+        if self.outlineItem:
+            self.outlineItem.setVisible(enable)
 
-	def setViewTraceImage(self, enable):
-		if self.TraceImage:
-			self.TraceImage.setVisible(enable)
+    def setViewTraceImage(self, enable):
+        if self.TraceImage:
+            self.TraceImage.setVisible(enable)
 
-	def paintEvent(self, event):
-		if self.renderer == TraceCanvas.Image:
-			if self.image.size() != self.viewport().size():
-				self.image = QtGui.QImage(self.viewport().size(),
-						QtGui.QImage.Format_ARGB32_Premultiplied)
+    def paintEvent(self, event):
+        if self.renderer == TraceCanvas.Image:
+            if self.image.size() != self.viewport().size():
+                self.image = QtGui.QImage(self.viewport().size(),
+                        QtGui.QImage.Format_ARGB32_Premultiplied)
 
-			imagePainter = QtGui.QPainter(self.image)
-			QtGui.QGraphicsView.render(self, imagePainter)
-			imagePainter.end()
+            imagePainter = QtGui.QPainter(self.image)
+            QtGui.QGraphicsView.render(self, imagePainter)
+            imagePainter.end()
 
-			p = QtGui.QPainter(self.viewport())
-			p.drawImage(0, 0, self.image)
-		else:
-			super(TraceCanvas, self).paintEvent(event)
+            p = QtGui.QPainter(self.viewport())
+            p.drawImage(0, 0, self.image)
+        else:
+            super(TraceCanvas, self).paintEvent(event)
 
-	def keyPressEvent(self, event):
-		key = event.key()
+    def keyPressEvent(self, event):
+        key = event.key()
 
-		if key == QtCore.Qt.Key_Plus:
-			self.scale(1.2, 1.2)
-		elif key == QtCore.Qt.Key_Minus:
-			self.scale(0.8, 0.8)
-		elif key == QtCore.Qt.Key_Space:
-			self.resetTransform()
-		else:
-			super(TraceCanvas, self).keyPressEvent(event)
+        if key == QtCore.Qt.Key_Plus:
+            self.scale(1.2, 1.2)
+        elif key == QtCore.Qt.Key_Minus:
+            self.scale(0.8, 0.8)
+        elif key == QtCore.Qt.Key_Space:
+            self.resetTransform()
+        else:
+            super(TraceCanvas, self).keyPressEvent(event)
 
-	def wheelEvent(self, event):
-		factor = pow(1.2, event.delta() / 240.0)
-		self.scale(factor, factor)
-		event.accept()
+    def wheelEvent(self, event):
+        factor = pow(1.2, event.delta() / 240.0)
+        self.scale(factor, factor)
+        event.accept()

@@ -24,68 +24,69 @@
 
 from math import hypot, sqrt
 
+
 def simplify_points(pts, tolerance):
-	anchor = 0
-	floater = len(pts) - 1
-	stack = []
-	keep = set()
+    anchor = 0
+    floater = len(pts) - 1
+    stack = []
+    keep = set()
 
-	stack.append((anchor, floater))
-	while stack:
-		anchor, floater = stack.pop()
+    stack.append((anchor, floater))
+    while stack:
+        anchor, floater = stack.pop()
 
-		# initialize line segment
-		if pts[floater] != pts[anchor]:
-			anchorX = float(pts[floater].x - pts[anchor].x)
-			anchorY = float(pts[floater].y - pts[anchor].y)
-			seg_len = sqrt(anchorX * anchorX + anchorY * anchorY)
-			# get the unit vector
-			anchorX /= seg_len
-			anchorY /= seg_len
-		else:
-			anchorX = anchorY = seg_len = 0.0
+        # initialize line segment
+        if pts[floater] != pts[anchor]:
+            anchorX = float(pts[floater].x - pts[anchor].x)
+            anchorY = float(pts[floater].y - pts[anchor].y)
+            seg_len = sqrt(anchorX * anchorX + anchorY * anchorY)
+            # get the unit vector
+            anchorX /= seg_len
+            anchorY /= seg_len
+        else:
+            anchorX = anchorY = seg_len = 0.0
 
-		# inner loop:
-		max_dist = 0.0
-		farthest = anchor + 1
-		for i in range(anchor + 1, floater):
-			dist_to_seg = 0.0
-			# compare to anchor
-			vecX = float(pts[i].x - pts[anchor].x)
-			vecY = float(pts[i].y - pts[anchor].y)
-			seg_len = sqrt(vecX * vecX + vecY * vecY)
-			#seg_len = hypot(vecX, vecY)
-			# dot product:
-			proj = vecX * anchorX + vecY * anchorY
-			if proj < 0.0:
-				dist_to_seg = seg_len
-			else:
-				# compare to floater
-				vecX = float(pts[i].x - pts[floater].x)
-				vecY = float(pts[i].y - pts[floater].y)
-				seg_len = sqrt(vecX * vecX + vecY * vecY)
-				#seg_len = hypot(vecX, vecY)
-				# dot product:
-				proj = vecX * (-anchorX) + vecY * (-anchorY)
-				if proj < 0.0:
-					dist_to_seg = seg_len
-				else:  # calculate perpendicular distance to line (pythagorean theorem):
-					dist_to_seg = sqrt(abs(seg_len * seg_len - proj * proj))
-				if max_dist < dist_to_seg:
-					max_dist = dist_to_seg
-					farthest = i
+        # inner loop:
+        max_dist = 0.0
+        farthest = anchor + 1
+        for i in range(anchor + 1, floater):
+            dist_to_seg = 0.0
+            # compare to anchor
+            vecX = float(pts[i].x - pts[anchor].x)
+            vecY = float(pts[i].y - pts[anchor].y)
+            seg_len = sqrt(vecX * vecX + vecY * vecY)
+            #seg_len = hypot(vecX, vecY)
+            # dot product:
+            proj = vecX * anchorX + vecY * anchorY
+            if proj < 0.0:
+                dist_to_seg = seg_len
+            else:
+                # compare to floater
+                vecX = float(pts[i].x - pts[floater].x)
+                vecY = float(pts[i].y - pts[floater].y)
+                seg_len = sqrt(vecX * vecX + vecY * vecY)
+                #seg_len = hypot(vecX, vecY)
+                # dot product:
+                proj = vecX * (-anchorX) + vecY * (-anchorY)
+                if proj < 0.0:
+                    dist_to_seg = seg_len
+                else:  # calculate perpendicular distance to line (pythagorean theorem):
+                    dist_to_seg = sqrt(abs(seg_len * seg_len - proj * proj))
+                if max_dist < dist_to_seg:
+                    max_dist = dist_to_seg
+                    farthest = i
 
-		if max_dist <= tolerance:  # use line segment
-			keep.add(anchor)
-			keep.add(floater)
-		else:
-			stack.append((anchor, farthest))
-			stack.append((farthest, floater))
+        if max_dist <= tolerance:  # use line segment
+            keep.add(anchor)
+            keep.add(floater)
+        else:
+            stack.append((anchor, farthest))
+            stack.append((farthest, floater))
 
-	keep = list(keep)
-	keep.sort()
-	return [pts[i] for i in keep]
+    keep = list(keep)
+    keep.sort()
+    return [pts[i] for i in keep]
 
 if __name__ == "__main__":
-	import doctest
-	doctest.testmod()
+    import doctest
+    doctest.testmod()
