@@ -16,19 +16,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import sys
 import tempfile
 import locale
 
-from os.path import join, expanduser, abspath, dirname
+from os.path import join, expanduser, abspath, dirname, lexists
+from os import makedirs
+
 
 from .utils import unicode, id_generator
-from .utils.jsonconfig import *
+from .utils.jsonconfig import JsonConfigParser
 
 default_preset = {
-  "funcX": "(0.95+0.02*sin(20*a))*i/n", 
-  "funcY": "", 
+  "funcX": "(0.95+0.02*sin(20*a))*i/n",
+  "funcY": "",
   "rangeMax": 6.28318530718,
   "rangeMin": 0.0,
   "polar": 0,
@@ -48,7 +49,7 @@ default_config = {
   "boxAdvancedPref": False,
   "units": 0,
   "previewMode": 0,
-  "dpi":90.0,
+  "dpi": 90.0,
 }
 
 TEMP_PREFIX = "TRACE_"
@@ -56,7 +57,7 @@ TEMP_PREFIX = "TRACE_"
 
 class AppData:
     app_name = "ZebraTRACE"
-    app_version = "0.5 alpha"
+    app_version = "0.6 alpha"
     lang, enc = locale.getdefaultlocale()
 
     app_dir = dirname(abspath(sys.argv[0]))
@@ -67,14 +68,14 @@ class AppData:
         app_config_dir = unicode(app_config_dir, sys.getfilesystemencoding())
         app_dir = unicode(app_dir, sys.getfilesystemencoding())
 
-    if not os.path.lexists(app_config_dir):
-        os.makedirs(app_config_dir)
+    if not lexists(app_config_dir):
+        makedirs(app_config_dir)
 
     app_config = unicode(join(app_config_dir, "preferences.cfg"))
     translations_dir = unicode(join(app_dir, "translations"))
     preset_dir = unicode(join(app_dir, "preset"))
     temp_dir = tempfile.gettempdir()
-    temp_svg = unicode(join(temp_dir, TEMP_PREFIX + 
+    temp_svg = unicode(join(temp_dir, TEMP_PREFIX +
                             id_generator() + ".svg"))
     help_index = unicode("http://github.com/maxim-s-barabash/ZebraTrace/wiki")
 

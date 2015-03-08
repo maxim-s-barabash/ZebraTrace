@@ -27,9 +27,8 @@ GRAYSCALE_COLORTABLE = [QColor(i, i, i).rgb() for i in range(256)]
 
 
 def grayscale(image):
-    if not image.isGrayscale():
-        image = image.convertToFormat(QImage.Format_Indexed8,
-                                      GRAYSCALE_COLORTABLE)
+    image = image.convertToFormat(QImage.Format_Indexed8,
+                                  GRAYSCALE_COLORTABLE)
     return image
 
 

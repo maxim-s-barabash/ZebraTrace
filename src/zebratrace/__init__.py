@@ -19,46 +19,10 @@
 import sys
 import os
 
+from app import ZQApplication
 
-path_zebra = os.path.dirname(__file__)
-path_gui = os.path.join(path_zebra, 'gui')
-#path_widgets = os.path.join(path_gui, 'widgets')
-#path_geom = os.path.join(path_zebra, 'geom')
-#path_utils = os.path.join(path_zebra, 'utils')
-
-#sys.path.append(path_zebra)
-sys.path.append(path_gui)
-#sys.path.append(path_widgets)
-#sys.path.append(path_geom)
-#sys.path.append(path_utils)
-
-
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-from .app_config import *
-from .app import *
-
-
-
-##############################################
 
 def zebratrace():
-    app_data = AppData()
-    config = AppConfig()
-    app = QApplication(sys.argv)
-    try:
-        lang = app_data.lang
-        translate_path = QLibraryInfo.location(QLibraryInfo.TranslationsPath)
-        transl = QTranslator(app)
-        if not(transl.load('zebratrace_' + lang, translate_path)):
-            transl.load('zebratrace_' + lang, app_data.translations_dir)
-        app.installTranslator(transl)
-    except locale.Error:
-        pass
-
-    window = MainWindow(app_data, config)
-    if len(sys.argv) == 2:
-        window.openFileBitmap(sys.argv[1])
-    window.show()
-
+    app = ZQApplication(sys.argv)
+    app.run(sys.argv)
     sys.exit(app.exec_())
