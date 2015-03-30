@@ -46,7 +46,7 @@ class SVG():
         dy = dom.dy * order
 
         header = '<?xml version="1.0" encoding="utf-8"?>\n'
-        header += '<!-- Created with Inkscape (http://www.inkscape.org/) -->'
+        header += '<!-- Created with ZebraTRACE v0.6a -->'
         header += '<svg xmlns="http://www.w3.org/2000/svg" '
         header += 'xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" \n'
         header += 'strok_width="%i" stroke="%s" fill="%s" \n' % \

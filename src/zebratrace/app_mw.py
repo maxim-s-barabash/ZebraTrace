@@ -179,7 +179,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.docResolution.setValue(dpi)
 
     def configUpdate(self, cnf=None):
-        print('configUpdate')
+        #print('configUpdate')
         if cnf is None:
             units = self.units.currentIndex()
             dpi = self.docResolution.value()
@@ -217,7 +217,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.config.dpi = val
 
     def windowTitleChanged(self):
-        print('windowTitleChanged', self.app.document is None)
+        #print('windowTitleChanged', self.app.document is None)
         if self.app.document is not None:
             dpi = self.config.dpi
             units = self.config.units

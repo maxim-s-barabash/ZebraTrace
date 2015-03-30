@@ -161,13 +161,13 @@ class ZQApplication(AppData, QApplication):
         dialogs.about(self.mw)
 
     def docClean(self):
-        print('docClean')
+        #print('docClean')
         if self.document:
             self.document.clean()
             print('docClean')
 
     def docFlatClean(self):
-        print('docFlatClean')
+        #print('docFlatClean')
         if self.document:
             self.document.flat_data = []
 
