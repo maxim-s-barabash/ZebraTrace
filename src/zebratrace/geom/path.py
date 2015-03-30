@@ -17,6 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from math import hypot, atan, pi, cos, sin, atan2
+
 from .point import Point
 from .style import Style
 
@@ -30,8 +31,6 @@ def makePathData(fX, fY, T, res=1, close_path=False):
         retx, rety = list(map(fX, tl)), list(map(fY, tl))
         p = PathData([Point(retx[i], rety[i]) for i in range(len(retx))], close_path)
         return p
-    else:
-        return None
 
 
 def split(splitPath, threshold=0.0):
@@ -63,7 +62,7 @@ class PathData(object):
     __slots__ = ("node", "close_path")
 
     def __init__(self, node=None, close_path=False):
-        self.node = [node, []][node is None]
+        self.node = node if node else []
         self.close_path = close_path
 
     def __len__(self):
@@ -106,70 +105,74 @@ class PathData(object):
             p = n
         return l
 
-    def strokeToPath(self, writing=0):
-            if len(self.node) < 2:
-                return
+    def getStrokeAsPath(self, writing, scale=None):
+        node = self.node
+        if len(node) < 2:
+            return
+        right = []
+        left = []
+        p0, p1, pn, ps = node[0], node[1], node[-1], node[-2]
+        # if directions are not equal
+        if (p1.x - p0.x) * (p1.x - pn.x) < 0. or \
+            (p1.y - p0.y) * (p1.y - pn.y) < 0.:
+            # extrapolation
+            pre_x, pre_y = 2 * p0.x - p1.x, 2. * p0.y - p1.y
+            node.append(Point(2 * pn.x - ps.x, 2. * pn.y - ps.y))
+        else:
+            pre_x, pre_y = ps.x, ps.y
+            node.append(p1)
 
-            node = self.node
-            right = []
-            left = []
-
-            p0, p1, pn, ps = node[0], node[1], node[-1], node[-2]
-            # if directions are not equal
-            if (p1.x - p0.x) * (p1.x - pn.x) < 0. or \
-                (p1.y - p0.y) * (p1.y - pn.y) < 0.:
-                # extrapolation
-                pre_x, pre_y = 2 * p0.x - p1.x, 2. * p0.y - p1.y
-                node.append(Point(2 * pn.x - ps.x, 2. * pn.y - ps.y))
+        for i in range(len(node) - 1):
+            x, y = node[i].x, node[i].y
+            x1, y1 = node[i + 1].x, node[i + 1].y
+            if pre_x < x1:
+                alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2.
+            elif pre_x == x1:
+                alpha = [pi, 0.][y1 < pre_y]
             else:
-                pre_x, pre_y = ps.x, ps.y
-                node.append(p1)
+                alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2. + pi
 
-            for i in range(len(node) - 1):
-                x, y = node[i].x, node[i].y
-                x1, y1 = node[i + 1].x, node[i + 1].y
-                if pre_x < x1:
-                    alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2.
-                elif pre_x == x1:
-                    alpha = [pi, 0.][y1 < pre_y]
-                else:
-                    alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2. + pi
+            d = node[i].d
 
-                d = node[i].d
-                dx = d * cos(alpha)
-                dy = d * sin(alpha)
+            dx = d * cos(alpha)
+            dy = d * sin(alpha)
 
-                dx2 = d * 2 * cos(alpha)
-                dy2 = d * 2 * sin(alpha)
+            dx2 = dx * 2.0
+            dy2 = dy * 2.0
 
-                if writing == 0:
-                    right.append(Point(x + dx, y + dy))
-                    left.append(Point(x - dx, y - dy))
-                elif writing == 1:
-                    right.append(Point(x + dx2, y + dy2))
-                    left.append(Point(x, y))
-                elif writing == 2:
-                    right.append(Point(x, y))
-                    left.append(Point(x - dx2, y - dy2))
-                elif writing == 3:
-                    right.append(Point(x + dx2, y + dy2))
-                    left.append(Point(x + dx, y + dy))
-                elif writing == 4:
-                    right.append(Point(x - dx, y - dy))
-                    left.append(Point(x - dx2, y - dy2))
-                pre_x, pre_y = x, y
+            if writing == 0:
+                right.append(Point(x + dx, y + dy))
+                left.append(Point(x - dx, y - dy))
+            elif writing == 1:
+                right.append(Point(x + dx2, y + dy2))
+                left.append(Point(x, y))
+            elif writing == 2:
+                right.append(Point(x, y))
+                left.append(Point(x - dx2, y - dy2))
+            elif writing == 3:
+                right.append(Point(x + dx2, y + dy2))
+                left.append(Point(x + dx, y + dy))
+            elif writing == 4:
+                right.append(Point(x - dx, y - dy))
+                left.append(Point(x - dx2, y - dy2))
+            pre_x, pre_y = x, y
 
-            left.reverse()
-            self.node = right + left
-            self.close_path = True
+        return PathData(right + left[::-1], True)
+
+    def strokeToPath(self, writing=0, scale=None):
+        if len(self.node) < 2:
+            return
+        p = self.getStrokeAsPath(writing, scale)
+        self.node = p.node
+        self.close_path = p.close_path
 
 
 class Path(object):
     __slots__ = ("path", "style", "writing")
 
     def __init__(self, path=None, style=None, writing=0):
-        self.path = [path, []][path is None]
-        self.style = [style, Style()][style is None]
+        self.path = path if path else []
+        self.style = style if style else Style()
         self.writing = writing
 
     def __len__(self):
@@ -217,31 +220,29 @@ class Path(object):
 
     def length(self):
         l = 0
-        for p in self.path[:]:
+        for p in self.path:
             l += p.length()
         return l
+
+    def getStrokeAsPath(self, writing, scale=None):
+        if writing is None:
+            writing = self.writing
+        path = []
+        for p in self.path:
+            r = p.getStrokeAsPath(writing, scale)
+            if r:
+                path.append(r)
+        return Path(path, self.style, self.writing)
 
     def strokeToPath(self, writing=None):
         if writing is None:
             writing = self.writing
 
-        for p in self.path[:]:
+        for p in self.path:
             p.strokeToPath(writing)
 
     def countNodes(self):
         c = 0
-        for p in self.path[:]:
+        for p in self.path:
             c += p.countNodes()
         return c
-
-    def asSVG(self):
-        path = ''
-        path += '<path stroke="%s" stroke-width="%g" fill="%s" d="' % (self.stroke, self.strok_width, self.fill)
-        for p in self.path:
-            if len(p) < 2:
-                continue
-            path += 'M%g,%g' % (p.node[0].x, p.node[0].y)
-            path += ''.join(['L%g,%g' % (n.x, n.y) for n in p.node[1:]])
-            path += [' ', 'Z'][p.close_path]
-        path += '"/>\n'
-        return path

@@ -15,31 +15,21 @@
 # =============================================================
 
 
-import sys
 import os
-#from math import *
+import sys
+
+from PyQt4.QtGui import QImage
+
+from .path import makePathData, split
+
+
 # to trace the image is used PyQt4
 # (http://www.riverbankcomputing.co.uk/software/pyqt/download)
-
-from PyQt4.QtGui import QImage#, QColor
-#from ..utils import xrange
 sys.setcheckinterval(0xfff)
-from .path import makePathData, split
-#from .point import Point
-
-
-SIMPLIFICATION = 1
-
-#if SIMPLIFICATION == 0:
-#    # Douglas-Peucker line simplification.
-#    from .dp import simplify_points
-#else:
-#    # Visvalingam line simplification.
-#    from .visvalingam import simplify_visvalingam_whyatt as simplify_points
 
 
 class FuncPlotter:
-    def __init__(self, DOM, trace_image='', width_range=[0.1, 2]):
+    def __init__(self, DOM, trace_image=None, width_range=[0.1, 2]):
         """Draws the graphics functions.
 
         Parameters:
@@ -51,6 +41,9 @@ class FuncPlotter:
         self.trace_image = trace_image
         self.width_range = width_range
         self.img = None
+
+        if trace_image is None:
+            trace_image = DOM.image
 
         if isinstance(trace_image, QImage):
             self.img = trace_image
@@ -106,15 +99,15 @@ class FuncPlotter:
 
     def auto_resolution(self, fX, fY, T):
         p = makePathData(fX, fY, T, res=0.25 / self.scale)
-        x, y, w, h = p.boundingRect()
+        _, _, w, h = p.boundingRect()
         return max(w, h) * 0.5
 
     def auto_resolution2(self, fX, fY, T):
         p = makePathData(fX, fY, T, res=0.25 / self.document.scale)
-        l = p.length()
+        l = p.length() if p else 0
         return l / (T[1] - T[0])
 
-    def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=False, tolerance=0.0, writing=0):
+    def append_func(self, fX, fY, T, res=1, color='black', width=3, close_path=False):
         """Adds a graph of the functions fX (t) and fY (t).
 
         fX            - a function of one variable, calculates the coordinates of x or
@@ -125,7 +118,6 @@ class FuncPlotter:
                         of the SVG specification, or 'none'
         width        - the thickness of the circuit
         close_path    - parameter that indicates whether or not to close the curve
-        tolerance    - it simplifies a line by reducing the number of points by some tolerance.
         """
 
         # Step 1. Make Path
@@ -139,17 +131,7 @@ class FuncPlotter:
             # This must be added the code division ways apart.
             # Convert line to polygon
             path = split(pathData)
-#            path.writing = writing
-#            path.strokeToPath()
-#
-#        # Step 3. Simplification Path
-#        if tolerance > 0.0:
-#            #start = time.time()
-#            for i in range(len(path)):
-#                path[i].node = simplify_points(path[i].node, tolerance * self.document.scale)
-#            #print('simplify_points', time.time() - start)
-
-        # Step 5. Append Path to data
+        # Step 3. Append Path to data
         if len(path[0]) > 0:
             self.document.data.append(path)
             return True

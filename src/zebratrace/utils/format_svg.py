@@ -21,12 +21,13 @@ tr = lambda a: a
 
 class SVG():
 
-    def __init__(self, dom, filename='plot.svg', feedback=None):
+    def __init__(self, dom, filename='plot.svg', feedback=None, ):
         self.dom = dom
         self.filename = filename
         self.feedback = feedback
+        self.order = 100
 
-    def save(self, filename=None):
+    def save(self, filename=None, dpi=90.0):
         if filename is None:
             filename = self.filename
         dom = self.dom
@@ -35,17 +36,27 @@ class SVG():
         if feedback:
             feed = feedback(text=tr('Save SVG file.'))
 
+        order = self.order
+        d = 90.0 / dpi
+        w = dom.w * d
+        h = dom.h * d
+        x1 = dom.x1 * order
+        y1 = dom.y1 * order
+        dx = dom.dx * order
+        dy = dom.dy * order
+
         header = '<?xml version="1.0" encoding="utf-8"?>\n'
+        header += '<!-- Created with Inkscape (http://www.inkscape.org/) -->'
         header += '<svg xmlns="http://www.w3.org/2000/svg" '
         header += 'xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" \n'
         header += 'strok_width="%i" stroke="%s" fill="%s" \n' % \
                   (style.strok_width, style.stroke, style.fill)
         header += 'width="%i" height="%i" viewBox="%f %f %f %f">\n<g>\n' % \
-                  (dom.w, dom.h, dom.x1, dom.y1, dom.dx, dom.dy)
+                  (w, h, x1, y1, dx, dy)
 
         footer = "</g>\n</svg>"
 
-        body = ''.join(reversed([self.pathAsSVG(s) for s in dom.data]))
+        body = ''.join(reversed([self.pathAsSVG(s) for s in dom.flat_data]))
 
         f = open(filename, 'wb')                # write to file
         f.write(header.encode('utf-8'))
@@ -58,7 +69,7 @@ class SVG():
 
     def pathStyle(self, s):
         style = self.dom.style
-        path_style = ""
+        path_style = ''
 
         if s.style.stroke != style.stroke:
             path_style += 'stroke="%s" ' % (s.style.stroke)
@@ -70,13 +81,13 @@ class SVG():
         return path_style
 
     def pathAsSVG(self, s):
-        path = ''
-        path += '<path %s d="' % (self.pathStyle(s))
+        path = '<path %s d="' % (self.pathStyle(s))
+        order = self.order
         for p in s:
             if len(p) < 2:
                 continue
-            path += 'M%g,%g' % (p.node[0].x, p.node[0].y)
-            path += ''.join(['L%g,%g' % (n.x, n.y) for n in p.node[1:]])
-            path += [' ', 'Z'][p.close_path]
+            path += 'M%g,%g' % (p.node[0].x * order, p.node[0].y * order)
+            path += ''.join(['L%g,%g' % (n.x * order, n.y * order) for n in p.node[1:]])
+            path += 'Z' if p.close_path else ''
         path += '"/>\n'
         return path

@@ -58,7 +58,7 @@ class TraceCanvas(QtGui.QGraphicsView):
         self.outlineItem = None
         self.TraceImage = None
         self.image = QtGui.QImage()
-        
+
         self.opacity = 100
 
         self.setScene(QtGui.QGraphicsScene(self))
@@ -146,6 +146,13 @@ class TraceCanvas(QtGui.QGraphicsView):
         if self.TraceImage:
             effect = self.TraceImage.graphicsEffect()
             effect.setOpacity(opacity / 100.0)
+
+    def clean(self):
+        self.svgItem = None
+        self.backgroundItem = None
+        self.outlineItem = None
+        self.TraceImage = None
+        self.image = QtGui.QImage()
 
     def openFileSVG(self, svg_file):
         if not svg_file.exists():

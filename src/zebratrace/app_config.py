@@ -16,16 +16,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import locale
+from os import makedirs
+from os.path import join, expanduser, abspath, dirname, lexists
 import sys
 import tempfile
-import locale
 
-from os.path import join, expanduser, abspath, dirname, lexists
-from os import makedirs
-
-
+from . import event
 from .utils import unicode, id_generator
 from .utils.jsonconfig import JsonConfigParser
+
 
 default_preset = {
   "funcX": "(0.95+0.02*sin(20*a))*i/n",
@@ -71,7 +71,7 @@ class AppData:
     if not lexists(app_config_dir):
         makedirs(app_config_dir)
 
-    app_config = unicode(join(app_config_dir, "preferences.cfg"))
+    app_config_fn = unicode(join(app_config_dir, "preferences.cfg"))
     translations_dir = unicode(join(app_dir, "translations"))
     preset_dir = unicode(join(app_dir, "preset"))
     temp_dir = tempfile.gettempdir()
@@ -89,3 +89,11 @@ class AppConfig(JsonConfigParser):
     def __init__(self):
         self.update(default_config)
         self.update(default_preset)
+
+    def load(self, filename=None):
+        JsonConfigParser.load(self, filename=filename)
+        event.emit(event.CONFIG_LOADED)
+
+    def __setattr__(self, name, value):
+        self.__dict__[name] = value
+        event.emit(event.CONFIG_CHANGED)

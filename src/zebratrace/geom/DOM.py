@@ -20,8 +20,11 @@ from .style import Style
 
 
 class DOM(object):
+    image_fn = ""
+    image = None
 
     def __init__(self, wh, bound=None):
+
         # wh    - list [width, height] specifying the size of the image in pixels SVG
         # bound    - list [x1, y1, x2, y2] border coordinate plane
         self.wh = wh  # [1000, 1000]
@@ -45,6 +48,8 @@ class DOM(object):
 
     def clean(self):
         self.data = []
+        self.flat_data = []
+        self.info = {}
 
     def __len__(self):
         return len(self.data)

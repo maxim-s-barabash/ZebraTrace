@@ -44,11 +44,10 @@ class Function():
     def setFunc(self, func):
         self.func = compile("lambda a: %s" % func.strip(), 'string', 'eval') if func else None
 
-    def __call__(self, cfg={}):
+    def __call__(self, cfg):
         if self.func:
-            dic = self.dic
-            dic.update(cfg)
-            ret = eval(self.func, {"__builtins__": dic})
+            cfg.update(self.dic)
+            ret = eval(self.func, {"__builtins__": cfg})
         else:
             ret = None
         return ret

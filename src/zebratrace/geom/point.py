@@ -18,6 +18,7 @@
 
 from math import hypot
 
+
 EPSILON = 0.000000001
 
 

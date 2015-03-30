@@ -15,6 +15,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import textwrap
+
 
 tr = lambda a: a
 
@@ -26,21 +28,24 @@ class EPS():
         self.filename = filename
         self.feedback = feedback
 
-    def save(self, filename=None):
+    def save(self, filename=None, dpi=90.0):
         if filename is None:
             filename = self.filename
         dom = self.dom
+        scale = dom.scale / 0.75 * dpi / 90.0
+        shift = (dom.x1, dom.y1 + dom.dy)
+
         style = dom.style
         feedback = self.feedback
         if feedback:
             feed = feedback(text=tr('Save EPS file.'))
 
         header = '%!PS-Adobe-3.0 EPSF-3.0\n'
-        header += '%%Creator: ZebraTRACE v0.5a\n'
+        header += '%%Creator: ZebraTRACE v0.6a\n'
         header += '%%Pages: 1\n'
         header += '%%LanguageLevel: 2\n'
         header += '%%%%BoundingBox: %i %i %i %i\n' % \
-                  (dom.x1, dom.y1, dom.w, dom.h)
+                  (0, 0, dom.w / dpi * 72., dom.h / dpi * 72.)
         header += '%%EndComments\n'
         header += '%%BeginProlog\n'
         header += 'save\n'
@@ -58,7 +63,7 @@ class EPS():
         header += '%%Page: 1 1\n'
         header += '%%BeginPageSetup\n'
         header += '%%%%PageBoundingBox: %i %i %i %i\n' % \
-                  (dom.x1, dom.y1, dom.w, dom.h)
+                  (0, 0, dom.w / dpi * 72., dom.h / dpi * 72.)
         header += '%%EndPageSetup\n'
         header += '0 g\n'
 
@@ -68,7 +73,7 @@ class EPS():
         footer += 'end restore\n'
         footer += '%%EOF\n'
 
-        body = ''.join(reversed([self.pathAsEPS(s) for s in dom.data]))
+        body = ''.join(reversed([self.pathAsEPS(s, scale, shift) for s in dom.flat_data]))
 
         f = open(filename, 'wb')                # write to file
         f.write(header.encode('utf-8'))
@@ -79,29 +84,19 @@ class EPS():
         if feedback:
             feedback()
 
-    def pathStyle(self, s):
-        style = self.dom.style
-        path_style = ''
+    def pathAsEPS(self, s, scale, shift):
+        shift_x, shift_y = shift
 
-        if s.style.stroke != style.stroke:
-            path_style += 'stroke="%s" ' % (s.style.stroke)
-        if s.style.strok_width != style.strok_width:
-            path_style += 'strok_width="%s" ' % (s.style.strok_width)
-        if s.style.fill != style.fill:
-            path_style += 'fill="%s" ' % (s.style.fill)
+        px = lambda x: (x - shift_x) / scale
+        py = lambda y: (y - shift_y) / scale * -1.0
 
-        return path_style
-
-    def pathAsEPS(self, s):
-        import textwrap
-        scale = self.dom.scale / 0.75
         path = ''
         for p in s:
             if len(p) < 2:
                 continue
-            path += '%g %g m ' % (p.node[0].x / scale, p.node[0].y / scale * -1)
-            path += ''.join(['%g %g l ' % (n.x / scale, n.y / scale * -1) for n in p.node[1:]])
-            path += [' ', 'h '][p.close_path]
-        path = textwrap.fill(path, 250)
-        path += ' f\n'
+            path += ''.join([('%g %g l ' if i else '%g %g m ') % (px(n.x), py(n.y)) for i, n in enumerate(p.node)])
+            path += 'h ' if p.close_path else ' '
+        path += 'f'
+        path = textwrap.fill(path, 250) + '\n'
+
         return path

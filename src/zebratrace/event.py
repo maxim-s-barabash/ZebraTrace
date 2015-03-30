@@ -23,14 +23,14 @@ for internal events processing.
 
 # Signal channels
 
-CONFIG_MODIFIED = ['CONFIG_MODIFIED']
-PRESET_LOADED = ['PRESET_LOADED']
-PRESET_SAVED = ['PRESET_SAVED']
+
+CONFIG_LOADED = ['CONFIG_LOADED']
+CONFIG_CHANGED = ['CONFIG_CHANGED']
 
 NO_DOCS = ['NO_DOCS']
 DOC_OPENED = ['DOC_OPENED']
 DOC_EXPECTS = ['DOC_EXPECTS']
-DOC_TRACE = ['DOC_TRACE']
+DOC_TRACE = ['DOC_TRACE']  # Trace the image started
 DOC_MODIFIED = ['DOC_MODIFIED']
 DOC_SAVED = ['DOC_SAVED']
 DOC_CLOSED = ['DOC_CLOSED']
@@ -66,7 +66,9 @@ def emit(channel, *args):
             try:
                 if callable(receiver):
                     receiver(*args)
-            except:
-                pass
+            except Exception as e:
+                msg = 'Cannot emit from channel:'
+                print("%s %s receiver: %s" % (msg, channel, receiver))
+                print(e)
     except:
         print('Cannot send signal to channel: %s' % channel)

@@ -15,7 +15,7 @@
         <location filename="app.py" line="61"/>
         <source>Time trace: %5.3f seconds.
 </source>
-        <translation>Časová stopa: %5.3f sekund.
+        <translation type="obsolete">Časová stopa: %5.3f sekund.
 </translation>
     </message>
     <message>
@@ -24,7 +24,7 @@
   Number of objects: %i
   Number of nodes: %i
 </source>
-        <translation>Obrazové předměty
+        <translation type="obsolete">Obrazové předměty
   Počet předmětů: %i
   Počet uzlů:%i
 </translation>
@@ -130,27 +130,27 @@
     <message>
         <location filename="app.py" line="154"/>
         <source>Open Bitmap File</source>
-        <translation>Otevřít soubor s obrazem</translation>
+        <translation type="obsolete">Otevřít soubor s obrazem</translation>
     </message>
     <message>
         <location filename="app.py" line="210"/>
         <source>Load Preset File</source>
-        <translation>Nahrát soubor s přednastavením</translation>
+        <translation type="obsolete">Nahrát soubor s přednastavením</translation>
     </message>
     <message>
         <location filename="app.py" line="227"/>
         <source>Preset files (*.preset)</source>
-        <translation>Soubory s přednastavením (*.preset)</translation>
+        <translation type="obsolete">Soubory s přednastavením (*.preset)</translation>
     </message>
     <message>
         <location filename="app.py" line="227"/>
         <source>Save Preset File</source>
-        <translation>Uložit soubor s přednastavením</translation>
+        <translation type="obsolete">Uložit soubor s přednastavením</translation>
     </message>
     <message>
         <location filename="app.py" line="340"/>
         <source>About</source>
-        <translation>O programu</translation>
+        <translation type="obsolete">O programu</translation>
     </message>
     <message>
         <location filename="ui_mainwindow.py" line="538"/>
@@ -215,7 +215,7 @@
     <message>
         <location filename="app.py" line="192"/>
         <source>Save File</source>
-        <translation>Uložit soubor</translation>
+        <translation type="obsolete">Uložit soubor</translation>
     </message>
     <message>
         <location filename="ui_mainwindow.py" line="540"/>
@@ -225,22 +225,22 @@
     <message>
         <location filename="app.py" line="154"/>
         <source>Bitmap files (*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga);;All files (*.*)</source>
-        <translation>Obrazové soubory (*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga);;Všechny soubory (*.*)</translation>
+        <translation type="obsolete">Obrazové soubory (*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga);;Všechny soubory (*.*)</translation>
     </message>
     <message>
         <location filename="app.py" line="167"/>
         <source>Open file</source>
-        <translation>Otevřít soubor</translation>
+        <translation type="obsolete">Otevřít soubor</translation>
     </message>
     <message>
         <location filename="app.py" line="167"/>
         <source>This file is corrupt or not supported?</source>
-        <translation>Tento soubor je poškezen nebo není podporován?</translation>
+        <translation type="obsolete">Tento soubor je poškezen nebo není podporován?</translation>
     </message>
     <message>
         <location filename="app.py" line="415"/>
         <source>Error in function</source>
-        <translation>Chyba ve funkci</translation>
+        <translation type="obsolete">Chyba ve funkci</translation>
     </message>
     <message>
         <location filename="ui_mainwindow.py" line="552"/>
@@ -335,7 +335,7 @@
     <message>
         <location filename="app.py" line="192"/>
         <source>SVG files (*.svg);;NGC g-code files (*.ngc)</source>
-        <translation>Soubory SVG (*.svg);;Soubory NGC g-code (*.ngc)</translation>
+        <translation type="obsolete">Soubory SVG (*.svg);;Soubory NGC g-code (*.ngc)</translation>
     </message>
     <message>
         <location filename="ui_mainwindow.py" line="546"/>
@@ -440,7 +440,7 @@
     <message>
         <location filename="app.py" line="460"/>
         <source>Simplify Points</source>
-        <translation>Zjednodušit body</translation>
+        <translation type="obsolete">Zjednodušit body</translation>
     </message>
     <message>
         <location filename="app.py" line="336"/>
@@ -448,7 +448,7 @@
 See &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;ZebraTrace&lt;/a&gt;
 for more information.&lt;br&gt;&lt;br&gt;
 Copyright (C) 2012-2013&lt;/center&gt;</source>
-        <translation>&lt;center&gt;&lt;b&gt;%s&lt;/b&gt; verze %s. &lt;br&gt;&lt;br&gt;
+        <translation type="obsolete">&lt;center&gt;&lt;b&gt;%s&lt;/b&gt; verze %s. &lt;br&gt;&lt;br&gt;
 Podívejte se na &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;ZebraTrace&lt;/a&gt;,
 kde najdete další informace.&lt;br&gt;&lt;br&gt;
 Autorské právo (C) 2012-2013&lt;/center&gt;</translation>
@@ -461,7 +461,118 @@ Autorské právo (C) 2012-2013&lt;/center&gt;</translation>
     <message>
         <location filename="app.py" line="398"/>
         <source>Trace the Image. Press ESC to Cancel.</source>
-        <translation>Obkreslit obrázek (vektorizovat). Stiskněte Esc pro zrušení.</translation>
+        <translation type="obsolete">Obkreslit obrázek (vektorizovat). Stiskněte Esc pro zrušení.</translation>
+    </message>
+    <message>
+        <location filename="app_mw.py" line="237"/>
+        <source>Time trace: %5.3f seconds.
+</source>
+        <translation type="unfinished">Časová stopa: %5.3f sekund.
+</translation>
+    </message>
+    <message>
+        <location filename="app_mw.py" line="238"/>
+        <source>Time strokeToPath: %5.3f seconds.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="app_mw.py" line="239"/>
+        <source>Graphic Objects
+  Number of objects: %i
+  Number of nodes: %i
+</source>
+        <translation type="unfinished">Obrazové předměty
+  Počet předmětů: %i
+  Počet uzlů:%i
+</translation>
+    </message>
+</context>
+<context>
+    <name>ZQApplication</name>
+    <message>
+        <location filename="app.py" line="113"/>
+        <source>Open file</source>
+        <translation type="unfinished">Otevřít soubor</translation>
+    </message>
+    <message>
+        <location filename="app.py" line="113"/>
+        <source>This file is corrupt or not supported?</source>
+        <translation type="unfinished">Tento soubor je poškezen nebo není podporován?</translation>
+    </message>
+    <message>
+        <location filename="app.py" line="214"/>
+        <source>Trace the Image. Press ESC to Cancel.</source>
+        <translation type="unfinished">Obkreslit obrázek (vektorizovat). Stiskněte Esc pro zrušení.</translation>
+    </message>
+    <message>
+        <location filename="app.py" line="223"/>
+        <source>Error in function</source>
+        <translation type="unfinished">Chyba ve funkci</translation>
+    </message>
+    <message>
+        <location filename="app.py" line="244"/>
+        <source>strokeToPath</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="app.py" line="256"/>
+        <source>Simplify Points</source>
+        <translation type="unfinished">Zjednodušit body</translation>
+    </message>
+</context>
+<context>
+    <name>mw</name>
+    <message>
+        <location filename="dialogs.py" line="16"/>
+        <source>&lt;center&gt;&lt;b&gt;%s&lt;/b&gt; version %s.&lt;br&gt;&lt;br&gt;
+See &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;ZebraTrace&lt;/a&gt;
+for more information.&lt;br&gt;&lt;br&gt;
+Copyright (C) 2012-2015&lt;/center&gt;</source>
+        <translation type="unfinished">&lt;center&gt;&lt;b&gt;%s&lt;/b&gt; verze %s. &lt;br&gt;&lt;br&gt;
+Podívejte se na &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;ZebraTrace&lt;/a&gt;,
+kde najdete další informace.&lt;br&gt;&lt;br&gt;
+Autorské právo (C) 2012-2015&lt;/center&gt;</translation>
+    </message>
+    <message>
+        <location filename="dialogs.py" line="21"/>
+        <source>About</source>
+        <translation type="unfinished">O programu</translation>
+    </message>
+    <message>
+        <location filename="dialogs.py" line="25"/>
+        <source>Bitmap files (*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga);;All files (*.*)</source>
+        <translation type="unfinished">Obrazové soubory (*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga);;Všechny soubory (*.*)</translation>
+    </message>
+    <message>
+        <location filename="dialogs.py" line="26"/>
+        <source>Open Bitmap File</source>
+        <translation type="unfinished">Otevřít soubor s obrazem</translation>
+    </message>
+    <message>
+        <location filename="dialogs.py" line="32"/>
+        <source>SVG files (*.svg);;NGC g-code files (*.ngc);;EPS files (*.eps)</source>
+        <translation type="unfinished">Soubory SVG (*.svg);;Soubory NGC g-code (*.ngc);;Soubory EPS (*.eps)</translation>
+    </message>
+    <message>
+        <location filename="dialogs.py" line="33"/>
+        <source>Save File</source>
+        <translation type="unfinished">Uložit soubor</translation>
+    </message>
+    <message>
+        <location filename="dialogs.py" line="46"/>
+        <source>Preset files (*.preset)</source>
+        <translation type="unfinished">Soubory s přednastavením (*.preset)</translation>
+    </message>
+    <message>
+        <location filename="dialogs.py" line="40"/>
+        <source>Load Preset File</source>
+        <translation type="unfinished">Nahrát soubor s přednastavením</translation>
+    </message>
+    <message>
+        <location filename="dialogs.py" line="47"/>
+        <source>Save Preset File</source>
+        <translation type="unfinished">Uložit soubor s přednastavením</translation>
     </message>
 </context>
 </TS>

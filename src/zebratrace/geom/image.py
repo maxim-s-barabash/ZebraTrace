@@ -22,6 +22,7 @@
 
 from PyQt4.QtGui import QImage, QColor, qGray
 
+
 tr = lambda a: a
 GRAYSCALE_COLORTABLE = [QColor(i, i, i).rgb() for i in range(256)]
 

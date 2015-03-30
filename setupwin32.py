@@ -18,9 +18,11 @@
 
 
 import sys, os
+
 import PyQt4
 
 from cx_Freeze import setup, Executable
+
 
 base = None
 if sys.platform == "win32":

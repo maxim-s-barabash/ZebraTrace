@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_build\mainwindow.ui'
 #
-# Created: Mon Oct 21 12:30:07 2013
+# Created: Mon Mar 23 23:14:55 2015
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -609,4 +609,4 @@ class Ui_MainWindow(object):
         self.actionSavePreset.setText(_translate("MainWindow", "Save Preset...", None))
         self.actionTraceImage.setText(_translate("MainWindow", "Trace Image", None))
 
-import mainwindow_rc
+from . import mainwindow_rc

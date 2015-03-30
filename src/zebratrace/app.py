@@ -17,19 +17,46 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4.QtGui import QApplication
-from PyQt4.QtCore import QLibraryInfo, QTranslator
+from math import cos, sin
+import os
+import time
+import copy
 
-from app_config import locale, AppData, AppConfig
-from app_mw import MainWindow
+from PyQt4.QtCore import QLibraryInfo, QTranslator
+from PyQt4.QtGui import QApplication, QMessageBox, QImage
+
+from . import event
+from .app_config import Preset
+from .app_config import locale, AppData, AppConfig
+from .app_mw import MainWindow
+from .geom.DOM import DOM
+from .geom.funcplotter2 import FuncPlotter
+from .geom.function import Function
+from .geom.image import desaterate, grayscale
+from .gui import dialogs
+from .utils import BACKENDS
+from .utils import unicode, xrange
+
+
+SIMPLIFICATION = 1
+if SIMPLIFICATION == 0:
+    # Douglas-Peucker line simplification.
+    from .geom.dp import simplify_points
+else:
+    # Visvalingam line simplification.
+    from .geom.visvalingam import simplify_visvalingam_whyatt as simplify_points
 
 
 class ZQApplication(AppData, QApplication):
     def __init__(self, argv):
         super(ZQApplication, self).__init__(argv)
         self.config = AppConfig()
-        self.locale()
+        self.document = None
+        lang = getattr(self.config, 'lang', None)
+        self.locale(lang)
         self.mw = MainWindow(self)
+        self.tr = self.mw.tr
+        self.loadConfig()
 
     def locale(self, lang=None):
         try:
@@ -46,4 +73,206 @@ class ZQApplication(AppData, QApplication):
     def run(self, argv):
         self.mw.show()
         if len(argv) == 2:
-            self.mw.openFileBitmap(argv[1])
+            self.open(argv[1])
+
+    def quit(self):
+        self.saveConfig()
+        if os.path.isfile(self.temp_svg):
+            os.remove(self.temp_svg)
+        return QApplication.quit()
+
+    def loadConfig(self, fn=None):
+        if fn is None:
+            fn = self.app_config_fn
+        self.config.load(fn)
+
+    def saveConfig(self, fn=None):
+        if fn is None:
+            fn = self.app_config_fn
+        self.config.save(fn)
+
+    def open(self, fn=None):
+        if not fn:
+            fn = dialogs.getBitmapFileName(self.mw, unicode(self.config.currentPath))
+
+        if fn:
+            self.mw.view.clean()
+            image_fn = unicode(fn)
+            self.config.currentPath = unicode(os.path.dirname(image_fn))
+            img = QImage(image_fn)
+            img_w = float(img.width())
+            img_h = float(img.height())
+            if img_w:
+                self.document = DOM([img_w, img_h])
+                self.document.image_fn = image_fn
+                img = desaterate(img, self.mw.feedback)
+                self.document.image = grayscale(img)
+                event.emit(event.DOC_OPENED)
+                event.emit(event.DOC_EXPECTS)
+            else:
+                QMessageBox.warning(self.mw, self.tr("Open file"),
+                                    self.tr("This file is corrupt or not supported?"))
+
+    def saveAs(self, fn=None):
+        if not fn:
+            fn = dialogs.getSaveFileName(self.mw, unicode(self.config.currentPath))
+        if fn:
+            filename = unicode(fn)
+            _, ext = os.path.splitext(filename)
+            ext = unicode(ext.upper())
+            self.config.currentPath = unicode(os.path.dirname(filename))
+            backend = BACKENDS.get(ext)
+            if backend:
+                dpi = self.config.dpi
+                backend(self.document).save(filename, dpi=dpi)
+                event.emit(event.DOC_SAVED)
+
+    def help(self):
+        import webbrowser
+        url = self.help_index
+        webbrowser.open(url)
+
+    def loadPreset(self, fn=None):
+        if not fn:
+            path = self.config.presetPath or self.preset_dir
+            fn = dialogs.getPresetName(self.mw, unicode(path))
+        if fn:
+            fn = unicode(fn)
+            self.config.presetPath = os.path.dirname(fn)
+            self.config.load(fn)
+
+    def savePreset(self, fn=None):
+        config = self.config
+        if not fn:
+            fn = dialogs.getSavePresetName(self.mw, config.presetPath)
+        if fn:
+            fn = unicode(fn)
+            config.presetPath = unicode(os.path.dirname(fn))
+            preset = Preset()
+            preset.funcX = config.funcX
+            preset.funcY = config.funcY
+            preset.rangeMin = config.rangeMin
+            preset.rangeMax = config.rangeMax
+            preset.polar = config.polar
+            preset.resolution = config.resolution
+            preset.save(fn)
+
+    def about(self):
+        dialogs.about(self.mw)
+
+    def docClean(self):
+        print('docClean')
+        if self.document:
+            self.document.clean()
+            print('docClean')
+
+    def docFlatClean(self):
+        print('docFlatClean')
+        if self.document:
+            self.document.flat_data = []
+
+    def getFunctions(self, variables):
+        config = self.config
+        funcX = Function(config.funcX)
+        funcY = Function(config.funcY)
+        fX = funcX(variables)
+        fY = funcY(variables)
+        if config.polar and fY:
+            fR, fT = fX, fY
+            fX = lambda a: fR(a) * cos(fT(a))
+            fY = lambda a: fR(a) * sin(fT(a))
+        elif not fY:  # If only the function x
+            fR = fX  # then consider the polar coordinates
+            fX = lambda a: fR(a) * cos(a)
+            fY = lambda a: fR(a) * sin(a)
+        return fX, fY
+
+    def trace(self):
+        document = self.document
+        if document is None or not document.image:
+            return
+        event.emit(event.DOC_TRACE)
+        if not document.data:
+            self._tarce(document)
+
+        if not document.flat_data:
+            self.strokeToPath()
+            self.simplify()
+        self.savePreview()
+
+        event.emit(event.DOC_MODIFIED)
+        event.emit(event.DOC_EXPECTS)
+
+    def _tarce(self, document):
+        config = self.config
+        alpha = [config.rangeMin, config.rangeMax]  # range of the variable
+        resolution = config.resolution  # curve quality
+        stroke_color = "none"  # no stroke (when tracing is used fill)
+
+        width_range = [config.curveWidthMin, config.curveWidthMax]
+        fp = FuncPlotter(document, width_range=width_range)
+
+        variables = {}
+        fX, fY = self.getFunctions(variables)
+        n = config.numberCurves  # number of curves
+        variables['n'] = 1.0 * n
+
+        # Step 1. Make Path
+        dprogres = 100.0 / n
+        msg = self.tr('Trace the Image. Press ESC to Cancel.')
+        info = document.info
+        info['trace_start'] = time.time()
+        for i in xrange(1, n + 1):
+            if self.mw.feedback(text=msg, progress=i * dprogres):
+                try:
+                    variables['i'] = i
+                    auto_resolution = fp.auto_resolution2(fX, fY, alpha)
+                except (SyntaxError, TypeError, NameError, ZeroDivisionError) as err:
+                    QMessageBox.critical(self.mw, self.tr("Error in function"),
+                                         unicode(err))
+                    break
+
+                if fp.append_func(fX, fY, alpha,
+                                  resolution * auto_resolution,
+                                  stroke_color, close_path=True):
+                    '''
+                    self.mw.info.numberObject = len(fp.document.data)
+                    self.mw.info.numberNodes += fp.document.data[-1].countNodes()'''
+            else:
+                break
+        info['trace_end'] = time.time()
+
+    def savePreview(self):
+        document = self.document
+        previewSVG = BACKENDS['.SVG'](document, feedback=self.mw.feedback)
+        previewSVG.save(self.temp_svg)
+
+    def strokeToPath(self):
+        d = self.document
+        config = self.config
+        writing = self.config.curveWriting
+        dprogres = 100.0 / (len(d) or 1)
+        msg = self.tr('Flatten paths')
+        info = d.info
+        info['strokeToPath_start'] = time.time()
+        d.flat_data = []
+        for i, path in enumerate(d):
+            self.mw.feedback(text=msg, progress=dprogres * i)
+            p = path.getStrokeAsPath(writing)
+            d.flat_data.append(p)
+        info['strokeToPath_end'] = time.time()
+
+    def simplify(self):
+        d = self.document
+        tolerance = self.config.nodeReduction / 100. * d.scale
+        if tolerance > 0.0:
+            dprogres = 100.0 / (len(d) or 1)
+            msg = self.tr('Simplify Points')
+            for i, path in enumerate(d.flat_data):
+                self.mw.feedback(text=msg, progress=dprogres * i)
+#                tempCountNodes = path.countNodes()
+                for j in xrange(len(path)):
+                    path[j].node = simplify_points(path[j].node, tolerance)
+
+#                self.mw.info.numberObject = len(fp.document.data)
+#                self.mw.info.numberNodes -= (tempCountNodes - path.countNodes())
