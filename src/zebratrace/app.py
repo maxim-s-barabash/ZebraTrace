@@ -20,13 +20,12 @@
 from math import cos, sin
 import os
 import time
-import copy
 
 from PyQt4.QtCore import QLibraryInfo, QTranslator
 from PyQt4.QtGui import QApplication, QMessageBox, QImage
 
 from . import event
-from .app_config import Preset
+from .app_config import Preset, default_preset
 from .app_config import locale, AppData, AppConfig
 from .app_mw import MainWindow
 from .geom.DOM import DOM
@@ -38,13 +37,10 @@ from .utils import BACKENDS
 from .utils import unicode, xrange
 
 
-SIMPLIFICATION = 1
-if SIMPLIFICATION == 0:
-    # Douglas-Peucker line simplification.
-    from .geom.dp import simplify_points
-else:
-    # Visvalingam line simplification.
-    from .geom.visvalingam import simplify_visvalingam_whyatt as simplify_points
+# Douglas-Peucker line simplification.
+# from .geom.dp import simplify_points
+# Visvalingam line simplification.
+from .geom.visvalingam import simplify_visvalingam_whyatt as simplify_points
 
 
 class ZQApplication(AppData, QApplication):
@@ -138,7 +134,7 @@ class ZQApplication(AppData, QApplication):
             fn = dialogs.getPresetName(self.mw, unicode(path))
         if fn:
             fn = unicode(fn)
-            self.config.presetPath = os.path.dirname(fn)
+            self.config.update(default_preset)
             self.config.load(fn)
 
     def savePreset(self, fn=None):
@@ -161,20 +157,25 @@ class ZQApplication(AppData, QApplication):
         dialogs.about(self.mw)
 
     def docClean(self):
-        #print('docClean')
         if self.document:
             self.document.clean()
-            print('docClean')
 
     def docFlatClean(self):
-        #print('docFlatClean')
         if self.document:
             self.document.flat_data = []
 
     def getFunctions(self, variables):
         config = self.config
-        funcX = Function(config.funcX)
-        funcY = Function(config.funcY)
+        try:
+            funcX = Function(config.funcX)
+        except (SyntaxError, TypeError, NameError, ZeroDivisionError) as err:
+            QMessageBox.critical(self.mw, self.tr("Error in function"), "%s\n%s" % (config.funcX, unicode(err)))
+            return
+        try:
+            funcY = Function(config.funcY)
+        except (SyntaxError, TypeError, NameError, ZeroDivisionError) as err:
+            QMessageBox.critical(self.mw, self.tr("Error in function"), "%s\n%s" % (config.funcX, unicode(err)))
+            return
         fX = funcX(variables)
         fY = funcY(variables)
         if config.polar and fY:
@@ -213,34 +214,36 @@ class ZQApplication(AppData, QApplication):
         fp = FuncPlotter(document, width_range=width_range)
 
         variables = {}
-        fX, fY = self.getFunctions(variables)
-        n = config.numberCurves  # number of curves
-        variables['n'] = 1.0 * n
+        f = self.getFunctions(variables)
+        if f:
+            fX, fY = f
+            n = config.numberCurves  # number of curves
+            variables['n'] = 1.0 * n
 
-        # Step 1. Make Path
-        dprogres = 100.0 / n
-        msg = self.tr('Trace the Image. Press ESC to Cancel.')
-        info = document.info
-        info['trace_start'] = time.time()
-        for i in xrange(1, n + 1):
-            if self.mw.feedback(text=msg, progress=i * dprogres):
-                try:
-                    variables['i'] = i
-                    auto_resolution = fp.auto_resolution2(fX, fY, alpha)
-                except (SyntaxError, TypeError, NameError, ZeroDivisionError) as err:
-                    QMessageBox.critical(self.mw, self.tr("Error in function"),
-                                         unicode(err))
+            # Step 1. Make Path
+            dprogres = 100.0 / n
+            msg = self.tr('Trace the Image. Press ESC to Cancel.')
+            info = document.info
+            info['trace_start'] = time.time()
+            for i in xrange(1, n + 1):
+                if self.mw.feedback(text=msg, progress=i * dprogres):
+                    try:
+                        variables['i'] = i
+                        auto_resolution = fp.auto_resolution2(fX, fY, alpha)
+                    except (SyntaxError, TypeError, NameError, ZeroDivisionError) as err:
+                        QMessageBox.critical(self.mw, self.tr("Error in function"),
+                                             unicode(err))
+                        break
+
+                    if fp.append_func(fX, fY, alpha,
+                                      resolution * auto_resolution,
+                                      stroke_color, close_path=True):
+                        '''
+                        self.mw.info.numberObject = len(fp.document.data)
+                        self.mw.info.numberNodes += fp.document.data[-1].countNodes()'''
+                else:
                     break
-
-                if fp.append_func(fX, fY, alpha,
-                                  resolution * auto_resolution,
-                                  stroke_color, close_path=True):
-                    '''
-                    self.mw.info.numberObject = len(fp.document.data)
-                    self.mw.info.numberNodes += fp.document.data[-1].countNodes()'''
-            else:
-                break
-        info['trace_end'] = time.time()
+            info['trace_end'] = time.time()
 
     def savePreview(self):
         document = self.document
@@ -249,18 +252,17 @@ class ZQApplication(AppData, QApplication):
 
     def strokeToPath(self):
         d = self.document
-        config = self.config
         writing = self.config.curveWriting
         dprogres = 100.0 / (len(d) or 1)
         msg = self.tr('Flatten paths')
         info = d.info
-        info['strokeToPath_start'] = time.time()
+        info['flatten_paths_start'] = time.time()
         d.flat_data = []
         for i, path in enumerate(d):
             self.mw.feedback(text=msg, progress=dprogres * i)
             p = path.getStrokeAsPath(writing)
             d.flat_data.append(p)
-        info['strokeToPath_end'] = time.time()
+        info['flatten_paths_end'] = time.time()
 
     def simplify(self):
         d = self.document

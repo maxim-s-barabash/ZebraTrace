@@ -59,9 +59,12 @@ def disconnect(channel, receiver):
 
 
 def emit(channel, *args):
+    for receiver in channel[1:]:
+        if callable(receiver):
+            receiver(*args)
     '''Sends signal to all receivers in channel.
     '''
-    try:
+'''    try:
         for receiver in channel[1:]:
             try:
                 if callable(receiver):
@@ -71,4 +74,4 @@ def emit(channel, *args):
                 print("%s %s receiver: %s" % (msg, channel, receiver))
                 print(e)
     except:
-        print('Cannot send signal to channel: %s' % channel)
+        print('Cannot send signal to channel: %s' % channel)'''

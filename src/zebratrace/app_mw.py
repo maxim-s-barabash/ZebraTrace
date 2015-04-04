@@ -26,7 +26,7 @@ from .gui.ui_mainwindow import Ui_MainWindow
 from .gui.widgets.svgview import TraceCanvas
 from .utils import UNITS, pxToUnit, unitToPx, unitToUnit, unicode
 
-
+'''
 # FIXME move to class Info to funcplotter2
 class Info(QtCore.QObject):
     def __init__(self):
@@ -42,7 +42,7 @@ class Info(QtCore.QObject):
         if not hasattr(self, attr) or getattr(self, attr) != value:
             self.__dict__[attr] = value
             self.emit(QtCore.SIGNAL("infoChanget()"))
-
+'''
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, app):
@@ -51,7 +51,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         self.app = app
         self.config = app.config
-        self.info = Info()
+#        self.info = Info()
 
         self.Escape = False
 
@@ -102,6 +102,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         self.units.currentIndexChanged.connect(self.unitsChanged)
         self.docResolution.valueChanged.connect(self.docResolutionChanged)
+        self.docResolution.valueChanged.connect(self.app.docClean)
         self.view.mouseMoveEvent = self.viewMouseMove
 
         self.numberCurves.valueChanged.connect(self.app.docClean)
@@ -113,32 +114,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.rangeMin.valueChanged.connect(self.app.docClean)
         self.rangeMax.valueChanged.connect(self.app.docClean)
 
-        #self.coordSystem.currentIndex
         self.coordSystem.currentIndexChanged.connect(self.app.docClean)
         self.lineEditX.textChanged.connect(self.app.docClean)
         self.lineEditY.textChanged.connect(self.app.docClean)
-        '''
-            cnf = {"numberCurves": self.numberCurves.value(),
-                   "curveWidthMin": unitToPx(self.curveWidthMin.value(), units, dpi),
-                   "curveWidthMax": unitToPx(self.curveWidthMax.value(), units, dpi),
-
-                   "nodeReduction": self.nodeReduction.value(),
-                   "curveWriting": self.curveWriting.currentIndex(),
-
-                   "resolution": self.resolution.value() / 100.0,
-                   "rangeMin": self.rangeMin.value(),
-                   "rangeMax": self.rangeMax.value(),
-                   "polar": self.coordSystem.currentIndex(),
-                   "funcX": unicode(self.lineEditX.text()),
-                   "funcY": unicode(self.lineEditY.text()),
-
-                   "sliderTransparency": self.sliderTransparency.value(),
-                   "boxAdvancedPref": self.boxAdvancedPref.isChecked(),
-                   "units": units,
-                   "previewMode": self.previewMode.currentIndex(),
-                   "dpi": self.docResolution.value()'''
-
-
 
         event.connect(event.CONFIG_LOADED, self.configLoaded)
         event.connect(event.CONFIG_LOADED, self.app.trace)
@@ -149,7 +127,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         event.connect(event.DOC_TRACE, self.traceBegin)
         event.connect(event.DOC_MODIFIED, self.infoUpdated)
         event.connect(event.DOC_MODIFIED, self.traceEnd)
-        self.info.clean()
+#        self.info.clean()
 
     def configLoaded(self):
         config = self.config
@@ -179,7 +157,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.docResolution.setValue(dpi)
 
     def configUpdate(self, cnf=None):
-        #print('configUpdate')
         if cnf is None:
             units = self.units.currentIndex()
             dpi = self.docResolution.value()
@@ -231,19 +208,24 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.setWindowTitle(title)
 
     def infoUpdated(self):
-        info = self.app.document.info
+        doc = self.app.document
+        info = doc.info
+
         trace_elapsed = info.get('trace_end', 0) - info.get('trace_start', 0)
-        strokeToPath_elapsed = info.get('strokeToPath_end', 0) - info.get('strokeToPath_start', 0)
-        number_object = 0
+        flatten_paths = info.get('flatten_paths_end', 0) - info.get('flatten_paths_start', 0)
+        number_object = len(doc.flat_data)
         number_nodes = 0
+        for i in doc.flat_data:
+            for j in i:
+                number_nodes += len(j)
 
         text = unicode(self.tr("Time trace: %5.3f seconds.\n")) % trace_elapsed
-        text += unicode(self.tr("Time strokeToPath: %5.3f seconds.\n")) % strokeToPath_elapsed
+        text += unicode(self.tr("Time flatten paths: %5.3f seconds.\n")) % flatten_paths
         text += unicode(self.tr("Graphic Objects\n  Number of objects: %i\n  Number of nodes: %i\n")) % (number_object, number_nodes)
 
         self.infoText.setPlainText(text)
-        self.labelNumberObject.setText(unicode(self.info.numberObject))
-        self.labelNumberNodes.setText(unicode(self.info.numberNodes))
+        self.labelNumberObject.setText(unicode(number_object))
+        self.labelNumberNodes.setText(unicode(number_nodes))
 
     def viewMouseMove(self, event):
         super(TraceCanvas, self.view).mouseMoveEvent(event)
@@ -253,7 +235,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.labelPos.setText('(%4.3f;%4.3f)' % (x, y))
 
     def feedback(self, text='', progress=0):
-        #print("'%s' %s" % (text, progress), self.Escape)
         self.Escape = not(text)
 
         self.labelFeedback.setText(text)
@@ -264,7 +245,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def traceBegin(self):
         self.configUpdate()
-        self.info.clean()
+#        self.info.clean()
         self.buttonTrace.setEnabled(False)
         self.buttonSave.setEnabled(False)
         self.actionSaveAs.setEnabled(False)
