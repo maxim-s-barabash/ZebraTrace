@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="mainwindow.qrc">
-    <normaloff>:/image/images/zebra.png</normaloff>:/image/images/zebra.png</iconset>
+    <normaloff>:/image/ico/zebra.ico</normaloff>:/image/ico/zebra.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -898,11 +898,11 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="bottomPanel" stretch="0,0,1,0,0,0">
+     <layout class="QHBoxLayout" name="bottomPanel" stretch="0,0,1,0,0,0,0">
       <item>
        <widget class="QLabel" name="labelPos">
         <property name="text">
-         <string>(0.000;0.000)</string>
+         <string notr="true">(0.000;0.000)</string>
         </property>
        </widget>
       </item>
@@ -927,6 +927,30 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="buttonAutoTrace">
+        <property name="toolTip">
+         <string>Auto Update</string>
+        </property>
+        <property name="text">
+         <string notr="true"/>
+        </property>
+        <property name="icon">
+         <iconset resource="mainwindow.qrc">
+          <normaloff>:/image/png32/046-32_2.png</normaloff>
+          <normalon>:/image/png32/046-32_1.png</normalon>:/image/png32/046-32_2.png</iconset>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="buttonTrace">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -945,6 +969,9 @@
         </property>
         <property name="autoDefault">
          <bool>true</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -1134,6 +1161,7 @@
   <tabstop>units</tabstop>
   <tabstop>tabPreferences</tabstop>
   <tabstop>infoText</tabstop>
+  <tabstop>buttonAutoTrace</tabstop>
  </tabstops>
  <resources>
   <include location="mainwindow.qrc"/>

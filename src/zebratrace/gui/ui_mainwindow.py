@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_build\mainwindow.ui'
 #
-# Created: Mon Mar 23 23:14:55 2015
+# Created: Sat Apr 04 23:03:54 2015
 #      by: PyQt4 UI code generator 4.10.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(885, 605)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/image/images/zebra.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/image/ico/zebra.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -414,6 +414,7 @@ class Ui_MainWindow(object):
         self.bottomPanel = QtGui.QHBoxLayout()
         self.bottomPanel.setObjectName(_fromUtf8("bottomPanel"))
         self.labelPos = QtGui.QLabel(self.centralwidget)
+        self.labelPos.setText(_fromUtf8("(0.000;0.000)"))
         self.labelPos.setObjectName(_fromUtf8("labelPos"))
         self.bottomPanel.addWidget(self.labelPos)
         self.labelFeedback = QtGui.QLabel(self.centralwidget)
@@ -421,6 +422,17 @@ class Ui_MainWindow(object):
         self.bottomPanel.addWidget(self.labelFeedback)
         spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.bottomPanel.addItem(spacerItem3)
+        self.buttonAutoTrace = QtGui.QPushButton(self.centralwidget)
+        self.buttonAutoTrace.setText(_fromUtf8(""))
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/image/png32/046-32_2.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/image/png32/046-32_1.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        self.buttonAutoTrace.setIcon(icon1)
+        self.buttonAutoTrace.setCheckable(True)
+        self.buttonAutoTrace.setChecked(False)
+        self.buttonAutoTrace.setFlat(False)
+        self.buttonAutoTrace.setObjectName(_fromUtf8("buttonAutoTrace"))
+        self.bottomPanel.addWidget(self.buttonAutoTrace)
         self.buttonTrace = QtGui.QPushButton(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -428,6 +440,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.buttonTrace.sizePolicy().hasHeightForWidth())
         self.buttonTrace.setSizePolicy(sizePolicy)
         self.buttonTrace.setAutoDefault(True)
+        self.buttonTrace.setDefault(False)
         self.buttonTrace.setFlat(False)
         self.buttonTrace.setObjectName(_fromUtf8("buttonTrace"))
         self.bottomPanel.addWidget(self.buttonTrace)
@@ -462,9 +475,9 @@ class Ui_MainWindow(object):
         self.menu_View.setObjectName(_fromUtf8("menu_View"))
         MainWindow.setMenuBar(self.menubar)
         self.actionOpenBitmap = QtGui.QAction(MainWindow)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionOpenBitmap.setIcon(icon1)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionOpenBitmap.setIcon(icon2)
         self.actionOpenBitmap.setMenuRole(QtGui.QAction.NoRole)
         self.actionOpenBitmap.setObjectName(_fromUtf8("actionOpenBitmap"))
         self.actionSaveAs = QtGui.QAction(MainWindow)
@@ -533,6 +546,7 @@ class Ui_MainWindow(object):
         MainWindow.setTabOrder(self.docResolution, self.units)
         MainWindow.setTabOrder(self.units, self.tabPreferences)
         MainWindow.setTabOrder(self.tabPreferences, self.infoText)
+        MainWindow.setTabOrder(self.infoText, self.buttonAutoTrace)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "ZebraTRACE", None))
@@ -586,8 +600,8 @@ class Ui_MainWindow(object):
         self.tabPreferences.setTabText(self.tabPreferences.indexOf(self.tabOptions), _translate("MainWindow", "Preferences", None))
         self.tabPreferences.setTabText(self.tabPreferences.indexOf(self.tabInfo), _translate("MainWindow", "Info", None))
         self.progressBar.setFormat(_translate("MainWindow", "%p%", None))
-        self.labelPos.setText(_translate("MainWindow", "(0.000;0.000)", None))
         self.labelFeedback.setText(_translate("MainWindow", "Message", None))
+        self.buttonAutoTrace.setToolTip(_translate("MainWindow", "Auto Update", None))
         self.buttonTrace.setToolTip(_translate("MainWindow", "Trace the raster content", None))
         self.buttonTrace.setText(_translate("MainWindow", "Trace", None))
         self.buttonTrace.setShortcut(_translate("MainWindow", "Return", None))

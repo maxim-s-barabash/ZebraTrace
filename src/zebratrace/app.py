@@ -21,7 +21,7 @@ from math import cos, sin
 import os
 import time
 
-from PyQt4.QtCore import QLibraryInfo, QTranslator
+from PyQt4.QtCore import QLibraryInfo, QTranslator, QTimer
 from PyQt4.QtGui import QApplication, QMessageBox, QImage
 
 from . import event
@@ -50,9 +50,16 @@ class ZQApplication(AppData, QApplication):
         self.document = None
         lang = getattr(self.config, 'lang', None)
         self.locale(lang)
+        self.autoTraceTimer = QTimer()
+        self.autoTraceTimer.timeout.connect(self.autoTrace)
         self.mw = MainWindow(self)
         self.tr = self.mw.tr
         self.loadConfig()
+
+    def autoTrace(self):
+        self.autoTraceTimer.stop()
+        if self.mw.buttonAutoTrace.isChecked():
+            self.mw.buttonTrace.clicked.emit(True)
 
     def locale(self, lang=None):
         try:
@@ -157,10 +164,12 @@ class ZQApplication(AppData, QApplication):
         dialogs.about(self.mw)
 
     def docClean(self):
+        self.autoTraceTimer.start(1500)
         if self.document:
             self.document.clean()
 
     def docFlatClean(self):
+        self.autoTraceTimer.start(500)
         if self.document:
             self.document.flat_data = []
 

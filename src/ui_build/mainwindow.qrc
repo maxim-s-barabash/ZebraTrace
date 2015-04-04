@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="image">
-    <file>../images/zebra.png</file>
+    <file>ico/zebra.ico</file>
+    <file>png32/046-32_1.png</file>
+    <file>png32/046-32_2.png</file>
   </qresource>
 </RCC>

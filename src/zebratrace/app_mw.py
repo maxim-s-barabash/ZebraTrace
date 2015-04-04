@@ -44,6 +44,7 @@ class Info(QtCore.QObject):
             self.emit(QtCore.SIGNAL("infoChanget()"))
 '''
 
+
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, app):
         QtGui.QMainWindow.__init__(self)
@@ -89,6 +90,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.actionAbout.triggered.connect(app.about)
         self.actionAboutQt.triggered.connect(app.aboutQt)
 
+        self.buttonAutoTrace.toggled.connect(app.autoTrace)
         self.buttonTrace.clicked.connect(app.trace)
         self.buttonSave.clicked.connect(app.saveAs)
         self.buttonHelp.clicked.connect(app.help)
@@ -246,6 +248,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def traceBegin(self):
         self.configUpdate()
 #        self.info.clean()
+        self.buttonAutoTrace.setEnabled(False)
         self.buttonTrace.setEnabled(False)
         self.buttonSave.setEnabled(False)
         self.actionSaveAs.setEnabled(False)
@@ -253,6 +256,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def traceEnd(self):
         self.view.openFileSVG(QtCore.QFile(self.app.temp_svg))
         self.view.setFocus(True)
+        self.buttonAutoTrace.setEnabled(True)
         self.buttonTrace.setEnabled(True)
         self.buttonSave.setEnabled(True)
         self.actionSaveAs.setEnabled(True)
