@@ -381,6 +381,9 @@
                    <property name="toolTip">
                     <string>&lt;b&gt;i&lt;/b&gt; = 1... &lt;b&gt;n&lt;/b&gt;</string>
                    </property>
+                   <property name="suffix">
+                    <string notr="true"/>
+                   </property>
                    <property name="minimum">
                     <number>1</number>
                    </property>
@@ -413,6 +416,9 @@
                    <property name="toolTip">
                     <string>In the current unit</string>
                    </property>
+                   <property name="prefix">
+                    <string notr="true"/>
+                   </property>
                    <property name="decimals">
                     <number>5</number>
                    </property>
@@ -444,6 +450,9 @@
                    </property>
                    <property name="toolTip">
                     <string>In the current unit</string>
+                   </property>
+                   <property name="prefix">
+                    <string notr="true"/>
                    </property>
                    <property name="decimals">
                     <number>5</number>
@@ -512,6 +521,9 @@
                    </property>
                    <property name="toolTip">
                     <string>Node reduction tolerance</string>
+                   </property>
+                   <property name="suffix">
+                    <string notr="true"/>
                    </property>
                    <property name="minimum">
                     <number>0</number>
@@ -605,6 +617,9 @@
                         <property name="toolTip">
                          <string>Percentage</string>
                         </property>
+                        <property name="prefix">
+                         <string notr="true"/>
+                        </property>
                         <property name="decimals">
                          <number>2</number>
                         </property>
@@ -636,6 +651,9 @@
                         </property>
                         <property name="toolTip">
                          <string>Minimum value for (a) variable</string>
+                        </property>
+                        <property name="prefix">
+                         <string notr="true"/>
                         </property>
                         <property name="decimals">
                          <number>5</number>
@@ -671,6 +689,9 @@
                         </property>
                         <property name="toolTip">
                          <string>Maximum value for (a) variable</string>
+                        </property>
+                        <property name="prefix">
+                         <string notr="true"/>
                         </property>
                         <property name="decimals">
                          <number>5</number>
@@ -729,7 +750,7 @@
                          <string>Use (a),( i) and (n) as parameters</string>
                         </property>
                         <property name="text">
-                         <string/>
+                         <string notr="true">a</string>
                         </property>
                        </widget>
                       </item>
@@ -752,7 +773,7 @@
                          <string/>
                         </property>
                         <property name="text">
-                         <string/>
+                         <string notr="true"/>
                         </property>
                        </widget>
                       </item>
@@ -790,7 +811,7 @@
                  <item row="0" column="1">
                   <widget class="QLabel" name="labelNumberObject">
                    <property name="text">
-                    <string>0</string>
+                    <string notr="true">0</string>
                    </property>
                   </widget>
                  </item>
@@ -804,7 +825,7 @@
                  <item row="1" column="1">
                   <widget class="QLabel" name="labelNumberNodes">
                    <property name="text">
-                    <string>0</string>
+                    <string notr="true">0</string>
                    </property>
                   </widget>
                  </item>
@@ -909,7 +930,7 @@
       <item>
        <widget class="QLabel" name="labelFeedback">
         <property name="text">
-         <string>Message</string>
+         <string notr="true">Message</string>
         </property>
        </widget>
       </item>
@@ -946,7 +967,7 @@
          <bool>false</bool>
         </property>
         <property name="flat">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
        </widget>
       </item>

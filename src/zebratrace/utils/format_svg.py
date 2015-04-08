@@ -16,8 +16,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-tr = lambda a: a
-
 
 class SVG():
 
@@ -28,6 +26,7 @@ class SVG():
         self.order = 100
 
     def save(self, filename=None, dpi=90.0):
+        from . import tr
         if filename is None:
             filename = self.filename
         dom = self.dom

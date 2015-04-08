@@ -2,6 +2,7 @@
 import random
 import sys
 
+tr = lambda a: a
 from .format_eps import EPS
 from .format_gcode import GCode
 from .format_svg import SVG

@@ -35,6 +35,7 @@ from .geom.image import desaterate, grayscale
 from .gui import dialogs
 from .utils import BACKENDS
 from .utils import unicode, xrange
+from . import utils
 
 
 # Douglas-Peucker line simplification.
@@ -46,14 +47,13 @@ from .geom.visvalingam import simplify_visvalingam_whyatt as simplify_points
 class ZQApplication(AppData, QApplication):
     def __init__(self, argv):
         super(ZQApplication, self).__init__(argv)
-        self.config = AppConfig()
         self.document = None
-        lang = getattr(self.config, 'lang', None)
-        self.locale(lang)
         self.autoTraceTimer = QTimer()
         self.autoTraceTimer.timeout.connect(self.autoTrace)
+        self.config = AppConfig()
+        lang = getattr(self.config, 'lang', None)
+        self.locale(lang)
         self.mw = MainWindow(self)
-        self.tr = self.mw.tr
         self.loadConfig()
 
     def autoTrace(self):
@@ -65,11 +65,15 @@ class ZQApplication(AppData, QApplication):
         try:
             lang = lang or self.lang
             translate_path = QLibraryInfo.location(QLibraryInfo.TranslationsPath)
-            transl = QTranslator(self)
+            transl = self.transl = QTranslator(self)
             fn = 'zebratrace_%s' % lang
             if not(transl.load(fn, translate_path)):
                 transl.load(fn, self.translations_dir)
             self.installTranslator(transl)
+            self.tr = lambda a: QApplication.translate("ZQApplication", a)
+            dialogs.tr = lambda a: QApplication.translate("@default", a)
+            utils.tr = lambda a: QApplication.translate("@default", a)
+
         except locale.Error:
             pass
 
@@ -169,7 +173,7 @@ class ZQApplication(AppData, QApplication):
             self.document.clean()
 
     def docFlatClean(self):
-        self.autoTraceTimer.start(500)
+        self.autoTraceTimer.start(700)
         if self.document:
             self.document.flat_data = []
 

@@ -18,7 +18,6 @@
 
 import os
 import sys
-
 from .app import ZQApplication
 
 

@@ -18,9 +18,6 @@
 import textwrap
 
 
-tr = lambda a: a
-
-
 class EPS():
 
     def __init__(self, dom, filename='plot.eps', feedback=None):
@@ -29,6 +26,7 @@ class EPS():
         self.feedback = feedback
 
     def save(self, filename=None, dpi=90.0):
+        from . import tr
         if filename is None:
             filename = self.filename
         dom = self.dom
@@ -39,6 +37,7 @@ class EPS():
         feedback = self.feedback
         if feedback:
             feed = feedback(text=tr('Save EPS file.'))
+
 
         header = '%!PS-Adobe-3.0 EPSF-3.0\n'
         header += '%%Creator: ZebraTRACE v0.6a\n'
