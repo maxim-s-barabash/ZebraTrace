@@ -31,8 +31,9 @@ class DOM(object):
         self.w, self.h = float(wh[0]), float(wh[1])
 
         if bound is None:
-            img_d = [[1, self.w / self.h], [self.h / self.w, 1]][self.w > self.h]
-            bound = [-1 * img_d[1], -1 * img_d[0], 1 * img_d[1], 1 * img_d[0]]
+            #img_d = [[1, self.w / self.h], [self.h / self.w, 1]][self.w > self.h]
+            img_d0, img_d1 = (self.h / self.w, 1) if self.w > self.h else (1, self.w / self.h)
+            bound = [-1 * img_d1, -1 * img_d0, img_d1, img_d0]
 
         self.bound = bound  # [-1, -1, 0, 0]
         self.x1, self.y1 = float(self.bound[0]), float(self.bound[1])
