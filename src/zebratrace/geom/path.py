@@ -16,7 +16,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from math import hypot, atan, pi, cos, sin, atan2
+from math import pi, cos, sin, atan2
 
 from .point import Point
 from .style import Style
@@ -113,8 +113,7 @@ class PathData(object):
         left = []
         p0, p1, pn, ps = node[0], node[1], node[-1], node[-2]
         # if directions are not equal
-        if (p1.x - p0.x) * (p1.x - pn.x) < 0. or \
-            (p1.y - p0.y) * (p1.y - pn.y) < 0.:
+        if (p1.x - p0.x) * (p1.x - pn.x) < 0. or (p1.y - p0.y) * (p1.y - pn.y) < 0.:
             # extrapolation
             pre_x, pre_y = 2. * p0.x - p1.x, 2. * p0.y - p1.y
             node.append(Point(2. * pn.x - ps.x, 2. * pn.y - ps.y))

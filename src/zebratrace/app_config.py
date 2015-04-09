@@ -22,7 +22,7 @@ from os.path import join, expanduser, abspath, dirname, lexists
 import sys
 import tempfile
 
-from . import event
+from . import event, __version__
 from .utils import unicode, id_generator
 from .utils.jsonconfig import JsonConfigParser
 
@@ -57,7 +57,7 @@ TEMP_PREFIX = "TRACE_"
 
 class AppData:
     app_name = "ZebraTRACE"
-    app_version = "0.6 alpha"
+    app_version = __version__
     lang, enc = locale.getdefaultlocale()
 
     app_dir = dirname(abspath(sys.argv[0]))

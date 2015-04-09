@@ -15,6 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from .. import __version__
 import textwrap
 
 
@@ -38,9 +39,8 @@ class EPS():
         if feedback:
             feed = feedback(text=tr('Save EPS file.'))
 
-
         header = '%!PS-Adobe-3.0 EPSF-3.0\n'
-        header += '%%Creator: ZebraTRACE v0.6a\n'
+        header += '%%Creator: ZebraTRACE v%s\n' % __version__
         header += '%%Pages: 1\n'
         header += '%%LanguageLevel: 2\n'
         header += '%%%%BoundingBox: %i %i %i %i\n' % \

@@ -15,6 +15,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from .. import __version__
 
 
 class SVG():
@@ -33,7 +34,7 @@ class SVG():
         style = dom.style
         feedback = self.feedback
         if feedback:
-            feed = feedback(text=tr('Save SVG file.'))
+            feedback(text=tr('Save SVG file.'))
 
         order = self.order
         d = 90.0 / dpi
@@ -45,7 +46,7 @@ class SVG():
         dy = dom.dy * order
 
         header = '<?xml version="1.0" encoding="utf-8"?>\n'
-        header += '<!-- Created with ZebraTRACE v0.6a -->'
+        header += '<!-- Created with ZebraTRACE v%s -->' % __version__
         header += '<svg xmlns="http://www.w3.org/2000/svg" '
         header += 'xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" \n'
         header += 'strok_width="%i" stroke="%s" fill="%s" \n' % \
