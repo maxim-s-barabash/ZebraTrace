@@ -116,8 +116,8 @@ class PathData(object):
         if (p1.x - p0.x) * (p1.x - pn.x) < 0. or \
             (p1.y - p0.y) * (p1.y - pn.y) < 0.:
             # extrapolation
-            pre_x, pre_y = 2 * p0.x - p1.x, 2. * p0.y - p1.y
-            node.append(Point(2 * pn.x - ps.x, 2. * pn.y - ps.y))
+            pre_x, pre_y = 2. * p0.x - p1.x, 2. * p0.y - p1.y
+            node.append(Point(2. * pn.x - ps.x, 2. * pn.y - ps.y))
         else:
             pre_x, pre_y = ps.x, ps.y
             node.append(p1)
@@ -125,12 +125,7 @@ class PathData(object):
         for i in range(len(node) - 1):
             x, y = node[i].x, node[i].y
             x1, y1 = node[i + 1].x, node[i + 1].y
-            if pre_x < x1:
-                alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2.
-            elif pre_x == x1:
-                alpha = [pi, 0.][y1 < pre_y]
-            else:
-                alpha = atan((y1 - pre_y) / (x1 - pre_x)) + pi / 2. + pi
+            alpha = atan2(y1 - pre_y, x1 - pre_x) + pi / 2.
 
             d = node[i].d
 
