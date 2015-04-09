@@ -17,14 +17,14 @@ See <a href="http://maxim-s-barabash.github.io/ZebraTrace/">ZebraTrace</a>
 for more information.<br><br>
 Copyright (C) 2012-2015</center>""")
         about = str(about) % (mw.app.app_name, mw.app.app_version)
-        QtGui.QMessageBox.about(mw, tr("About"), about)
+        QtGui.QMessageBox.about(mw, tr("About"), _fromUtf8(about))
 
 
 def getBitmapFileName(mw, path):
-    f = _fromUtf8("*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga")
-    filters = tr("Bitmap files (%s);;All files (*.*)") % f
+    f = "*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga"
+    filters = str(tr("Bitmap files (%s);;All files (*.*)")) % f
     fn = QtGui.QFileDialog.getOpenFileName(mw, tr("Open Bitmap File"),
-                                           path, filters)
+                                           path, _fromUtf8(filters))
     return fn
 
 
