@@ -22,7 +22,7 @@
 
 """
 
-from math import hypot, sqrt
+from math import sqrt
 
 
 def simplify_points(pts, tolerance):
@@ -55,7 +55,6 @@ def simplify_points(pts, tolerance):
             vecX = float(pts[i].x - pts[anchor].x)
             vecY = float(pts[i].y - pts[anchor].y)
             seg_len = sqrt(vecX * vecX + vecY * vecY)
-            #seg_len = hypot(vecX, vecY)
             # dot product:
             proj = vecX * anchorX + vecY * anchorY
             if proj < 0.0:
@@ -65,7 +64,6 @@ def simplify_points(pts, tolerance):
                 vecX = float(pts[i].x - pts[floater].x)
                 vecY = float(pts[i].y - pts[floater].y)
                 seg_len = sqrt(vecX * vecX + vecY * vecY)
-                #seg_len = hypot(vecX, vecY)
                 # dot product:
                 proj = vecX * (-anchorX) + vecY * (-anchorY)
                 if proj < 0.0:

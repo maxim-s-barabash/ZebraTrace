@@ -20,34 +20,35 @@ Copyright (C) 2012-2015</center>""")
         QtGui.QMessageBox.about(mw, tr("About"), _fromUtf8(about))
 
 
+def getExtFromFilter(filters):
+    return filters.split('*')[1].split(')')[0]
+
 def getBitmapFileName(mw, path):
     f = "*.jpg *.jpeg *.png *.gif *.bmp *.tiff *.tga"
     filters = str(tr("Bitmap files (%s);;All files (*.*)")) % f
-    fn = QtGui.QFileDialog.getOpenFileName(mw, tr("Open Bitmap File"),
+    return QtGui.QFileDialog.getOpenFileName(mw, tr("Open Bitmap File"),
                                            path, _fromUtf8(filters))
-    return fn
+
 
 
 def getSaveFileName(mw, path):
-    filters = [tr("SVG files (*.svg)"),
-               tr("EPS files (*.eps)"),
-               tr("NGC g-code files (*.ngc)")
+    filters = [str(tr("SVG files (*.svg)")),
+               str(tr("EPS files (*.eps)")),
+               str(tr("NGC g-code files (*.ngc)"))
                ]
-    filters = ';;'.join(filters)
-    fn = QtGui.QFileDialog.getSaveFileName(mw, tr("Save File"),
-                                           path, filters)
-    return fn
-
+               
+    filters = u';;'.join(filters)
+    return QtGui.QFileDialog.getSaveFileNameAndFilter(mw, tr("Save File"),
+                                           path, _fromUtf8(filters))
 
 def getPresetName(mw, path):
     filters = tr("Preset files (*.preset)")
-    fn = QtGui.QFileDialog.getOpenFileName(mw, tr("Load Preset File"),
-                                           path, filters)
-    return fn
+    return QtGui.QFileDialog.getOpenFileName(mw, tr("Load Preset File"),
+                                             path, filters)
+
 
 
 def getSavePresetName(mw, path):
     filters = tr("Preset files (*.preset)")
-    fn = QtGui.QFileDialog.getSaveFileName(mw, tr("Save Preset File"),
-                                           path, filters)
-    return fn
+    return QtGui.QFileDialog.getSaveFileNameAndFilter(mw, tr("Save Preset File"),
+                                                      path, filters)

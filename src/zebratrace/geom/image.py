@@ -21,7 +21,7 @@
 # (http://www.riverbankcomputing.co.uk/software/pyqt/download)
 
 from PyQt4.QtGui import QImage, QColor, qGray
-
+from .. import event
 
 tr = lambda a: a
 GRAYSCALE_COLORTABLE = [QColor(i, i, i).rgb() for i in range(256)]
@@ -33,12 +33,12 @@ def grayscale(image):
     return image
 
 
-def desaterate(image, feedback=None):
+def desaterate(image):
     p = 100.0 / image.height()
     msg = tr('Desaturate the Image. Press ESC to Cancel.')
     pixel = image.pixel
-    cancel = False
 
+    event.CANCEL = False
     if not image.isGrayscale():
         tem_image = QImage(image.width(), image.height(), QImage.Format_Indexed8)
         tem_image.setColorTable(GRAYSCALE_COLORTABLE)
@@ -47,12 +47,12 @@ def desaterate(image, feedback=None):
             for imx in width:
                 lightness = qGray(pixel(imx, imy))
                 tem_image.setPixel(imx, imy, lightness)
-            if feedback and not feedback(text=msg, progress=p * imy):
-                cancel = True
+            event.emit(event.APP_STATUS, text=msg, progress=p * imy)
+            if event.CANCEL:
                 break
-        if not cancel:
+        if not event.CANCEL:
             image = tem_image
 
-    if feedback:
-        feedback()
+    event.emit(event.APP_STATUS)
+
     return image

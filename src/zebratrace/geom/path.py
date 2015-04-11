@@ -28,8 +28,8 @@ def makePathData(fX, fY, T, res=1, close_path=False):
     if step > 1:
         seg = dT / step
         tl = [T[0] + seg * i for i in range(step + 1)]
-        retx, rety = list(map(fX, tl)), list(map(fY, tl))
-        p = PathData([Point(retx[i], rety[i]) for i in range(len(retx))], close_path)
+        ret = zip(map(fX, tl), map(fY, tl))
+        p = PathData([Point(*i) for i in ret], close_path)
         return p
 
 

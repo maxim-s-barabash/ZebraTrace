@@ -16,15 +16,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from .. import __version__
+from .. import event
 import textwrap
 
 
 class EPS():
 
-    def __init__(self, dom, filename='plot.eps', feedback=None):
+    def __init__(self, dom, filename='plot.eps'):
         self.dom = dom
         self.filename = filename
-        self.feedback = feedback
 
     def save(self, filename=None, dpi=90.0):
         from . import tr
@@ -34,10 +34,8 @@ class EPS():
         scale = dom.scale / 0.75 * dpi / 90.0
         shift = (dom.x1, dom.y1 + dom.dy)
 
-        style = dom.style
-        feedback = self.feedback
-        if feedback:
-            feed = feedback(text=tr('Save EPS file.'))
+#        style = dom.style
+        event.emit(event.APP_STATUS, text=tr('Save EPS file.'))
 
         header = '%!PS-Adobe-3.0 EPSF-3.0\n'
         header += '%%Creator: ZebraTRACE v%s\n' % __version__
@@ -80,8 +78,7 @@ class EPS():
         f.write(footer.encode('utf-8'))
         f.close()
 
-        if feedback:
-            feedback()
+        event.emit(event.APP_STATUS)
 
     def pathAsEPS(self, s, scale, shift):
         shift_x, shift_y = shift

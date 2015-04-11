@@ -3,42 +3,42 @@
 <context>
     <name>@default</name>
     <message>
-        <location filename="format_svg.py" line="37"/>
+        <location filename="format_svg.py" line="35"/>
         <source>Save SVG file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="format_eps.py" line="39"/>
+        <location filename="format_eps.py" line="38"/>
         <source>Save EPS file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="format_gcode.py" line="36"/>
+        <location filename="format_gcode.py" line="34"/>
         <source>Save NGC file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="25"/>
+        <location filename="dialogs.py" line="28"/>
         <source>Bitmap files (%s);;All files (*.*)</source>
         <translation type="unfinished">Obrazové soubory (%s);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="26"/>
+        <location filename="dialogs.py" line="29"/>
         <source>Open Bitmap File</source>
         <translation type="unfinished">Otevřít soubor s obrazem</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="37"/>
+        <location filename="dialogs.py" line="40"/>
         <source>Save File</source>
         <translation type="unfinished">Uložit soubor</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="44"/>
+        <location filename="dialogs.py" line="45"/>
         <source>Load Preset File</source>
         <translation type="unfinished">Nahrát soubor s přednastavením</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="51"/>
+        <location filename="dialogs.py" line="52"/>
         <source>Save Preset File</source>
         <translation type="unfinished">Uložit soubor s přednastavením</translation>
     </message>
@@ -59,23 +59,28 @@ Autorské právo (C) 2012-2015&lt;/center&gt;</translation>
         <translation type="unfinished">O programu</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="50"/>
+        <location filename="dialogs.py" line="51"/>
         <source>Preset files (*.preset)</source>
         <translation type="unfinished">Soubory s přednastavením (*.preset)</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="32"/>
+        <location filename="dialogs.py" line="35"/>
         <source>SVG files (*.svg)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="33"/>
+        <location filename="dialogs.py" line="36"/>
         <source>EPS files (*.eps)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="34"/>
+        <location filename="dialogs.py" line="37"/>
         <source>NGC g-code files (*.ngc)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="image.py" line="38"/>
+        <source>Desaturate the Image. Press ESC to Cancel.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -422,14 +427,14 @@ Autorské právo (C) 2012-2015&lt;/center&gt;</translation>
         <translation>Teček na palec v obrázku</translation>
     </message>
     <message>
-        <location filename="app_mw.py" line="224"/>
+        <location filename="app_mw.py" line="205"/>
         <source>Time trace: %5.3f seconds.
 </source>
         <translation type="unfinished">Časová stopa: %5.3f sekund.
 </translation>
     </message>
     <message>
-        <location filename="app_mw.py" line="226"/>
+        <location filename="app_mw.py" line="207"/>
         <source>Graphic Objects
   Number of objects: %i
   Number of nodes: %i
@@ -440,7 +445,7 @@ Autorské právo (C) 2012-2015&lt;/center&gt;</translation>
 </translation>
     </message>
     <message>
-        <location filename="app_mw.py" line="225"/>
+        <location filename="app_mw.py" line="206"/>
         <source>Time flatten paths: %5.3f seconds.
 </source>
         <translation type="unfinished"></translation>
@@ -454,32 +459,32 @@ Autorské právo (C) 2012-2015&lt;/center&gt;</translation>
 <context>
     <name>ZQApplication</name>
     <message>
-        <location filename="app.py" line="120"/>
+        <location filename="app.py" line="122"/>
         <source>Open file</source>
         <translation type="unfinished">Otevřít soubor</translation>
     </message>
     <message>
-        <location filename="app.py" line="120"/>
+        <location filename="app.py" line="122"/>
         <source>This file is corrupt or not supported?</source>
         <translation type="unfinished">Tento soubor je poškezen nebo není podporován?</translation>
     </message>
     <message>
-        <location filename="app.py" line="238"/>
+        <location filename="app.py" line="249"/>
         <source>Trace the Image. Press ESC to Cancel.</source>
         <translation type="unfinished">Obkreslit obrázek (vektorizovat). Stiskněte Esc pro zrušení.</translation>
     </message>
     <message>
-        <location filename="app.py" line="247"/>
+        <location filename="app.py" line="259"/>
         <source>Error in function</source>
         <translation type="unfinished">Chyba ve funkci</translation>
     </message>
     <message>
-        <location filename="app.py" line="285"/>
+        <location filename="app.py" line="294"/>
         <source>Simplify Points</source>
         <translation type="unfinished">Zjednodušit body</translation>
     </message>
     <message>
-        <location filename="app.py" line="270"/>
+        <location filename="app.py" line="278"/>
         <source>Flatten paths</source>
         <translation type="unfinished"></translation>
     </message>

@@ -16,14 +16,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from .. import __version__
+from .. import event
 
 
 class SVG():
 
-    def __init__(self, dom, filename='plot.svg', feedback=None, ):
+    def __init__(self, dom, filename='plot.svg'):
         self.dom = dom
         self.filename = filename
-        self.feedback = feedback
         self.order = 100
 
     def save(self, filename=None, dpi=90.0):
@@ -32,9 +32,7 @@ class SVG():
             filename = self.filename
         dom = self.dom
         style = dom.style
-        feedback = self.feedback
-        if feedback:
-            feedback(text=tr('Save SVG file.'))
+        event.emit(event.APP_STATUS, text=tr('Save SVG file.'))
 
         order = self.order
         d = 90.0 / dpi
@@ -64,8 +62,7 @@ class SVG():
         f.write(footer.encode('utf-8'))
         f.close()
 
-        if feedback:
-            feedback()
+        event.emit(event.APP_STATUS)
 
     def pathStyle(self, s):
         style = self.dom.style

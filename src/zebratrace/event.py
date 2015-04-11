@@ -20,12 +20,16 @@
 The package provides Qt-like signal-slot functionality
 for internal events processing.
 '''
+CANCEL =False
+
 
 # Signal channels
 
-
 CONFIG_LOADED = ['CONFIG_LOADED']
 CONFIG_CHANGED = ['CONFIG_CHANGED']
+
+APP_STATUS = ['APP_STATUS']
+
 
 NO_DOCS = ['NO_DOCS']
 DOC_OPENED = ['DOC_OPENED']
@@ -58,10 +62,10 @@ def disconnect(channel, receiver):
             print("%s %s receiver: %s" % (msg, channel, receiver))
 
 
-def emit(channel, *args):
+def emit(channel, **args):
     for receiver in channel[1:]:
         if callable(receiver):
-            receiver(*args)
+            receiver(**args)
     '''Sends signal to all receivers in channel.
     '''
 '''    try:

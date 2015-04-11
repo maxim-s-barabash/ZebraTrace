@@ -43,7 +43,7 @@
 
 
 # This is only needed for Python v2 but is harmless for Python v3.
-from PyQt4 import QtCore, QtGui, QtSvg, QtOpenGL
+from PyQt4 import QtCore, QtGui, QtSvg
 
 
 class TraceCanvas(QtGui.QGraphicsView):

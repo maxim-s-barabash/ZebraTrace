@@ -26,24 +26,6 @@ from .gui.ui_mainwindow import Ui_MainWindow
 from .gui.widgets.svgview import TraceCanvas
 from .utils import UNITS, pxToUnit, unitToPx, unitToUnit, unicode
 
-'''
-# FIXME move to class Info to funcplotter2
-class Info(QtCore.QObject):
-    def __init__(self):
-        QtCore.QObject.__init__(self)
-        self.clean()
-
-    def clean(self):
-        self.traceTime = 0.0
-        self.numberObject = 0
-        self.numberNodes = 0
-
-    def __setattr__(self, attr, value):
-        if not hasattr(self, attr) or getattr(self, attr) != value:
-            self.__dict__[attr] = value
-            self.emit(QtCore.SIGNAL("infoChanget()"))
-'''
-
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, app):
@@ -52,9 +34,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         self.app = app
         self.config = app.config
-#        self.info = Info()
-
-        self.Escape = False
 
         self.view = TraceCanvas()
         self.createActions()
@@ -68,17 +47,17 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.viewContainer.addWidget(self.view)
         self.feedback()
 
-    def closeEvent(self, event):
+    def closeEvent(self, e):
         self.configUpdate()
         self.app.quit()
 
-    def keyPressEvent(self, event):
-        if type(event) == QtGui.QKeyEvent:
-            if (event.key() == QtCore.Qt.Key_Escape):
-                self.Escape = True
-            event.accept()
+    def keyPressEvent(self, e):
+        if type(e) == QtGui.QKeyEvent:
+            if (e.key() == QtCore.Qt.Key_Escape):
+                event.CANCEL = True
+            e.accept()
         else:
-            event.ignore()
+            e.ignore()
 
     def createActions(self):
         app = self.app
@@ -129,7 +108,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         event.connect(event.DOC_TRACE, self.traceBegin)
         event.connect(event.DOC_MODIFIED, self.infoUpdated)
         event.connect(event.DOC_MODIFIED, self.traceEnd)
-#        self.info.clean()
+
+        event.connect(event.APP_STATUS, self.feedback)
 
     def configLoaded(self):
         config = self.config
@@ -196,7 +176,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.config.dpi = val
 
     def windowTitleChanged(self):
-        #print('windowTitleChanged', self.app.document is None)
         if self.app.document is not None:
             dpi = self.config.dpi
             units = self.config.units
@@ -229,25 +208,20 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.labelNumberObject.setText(unicode(number_object))
         self.labelNumberNodes.setText(unicode(number_nodes))
 
-    def viewMouseMove(self, event):
-        super(TraceCanvas, self.view).mouseMoveEvent(event)
-        pos = self.view.mapToScene(event.pos())
+    def viewMouseMove(self, e):
+        super(TraceCanvas, self.view).mouseMoveEvent(e)
+        pos = self.view.mapToScene(e.pos())
         x = pxToUnit(pos.x(), self.config.units, self.config.dpi)
         y = pxToUnit(pos.y(), self.config.units, self.config.dpi)
         self.labelPos.setText('(%4.3f;%4.3f)' % (x, y))
 
-    def feedback(self, text='', progress=0):
-        self.Escape = not(text)
-
+    def feedback(self, text='', progress=0, **kw):
         self.labelFeedback.setText(text)
         self.progressBar.setValue(int(progress))
         self.app.processEvents()
 
-        return (not self.Escape)
-
     def traceBegin(self):
         self.configUpdate()
-#        self.info.clean()
         self.buttonAutoTrace.setEnabled(False)
         self.buttonTrace.setEnabled(False)
         self.buttonSave.setEnabled(False)

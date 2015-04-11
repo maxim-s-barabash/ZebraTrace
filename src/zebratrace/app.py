@@ -36,6 +36,7 @@ from .gui import dialogs
 from .utils import BACKENDS
 from .utils import unicode, xrange
 from . import utils
+from .geom import image
 
 
 # Douglas-Peucker line simplification.
@@ -73,6 +74,7 @@ class ZQApplication(AppData, QApplication):
             self.tr = lambda a: QApplication.translate("ZQApplication", a)
             dialogs.tr = lambda a: QApplication.translate("@default", a)
             utils.tr = lambda a: QApplication.translate("@default", a)
+            image.tr = lambda a: QApplication.translate("@default", a)
 
         except locale.Error:
             pass
@@ -112,7 +114,7 @@ class ZQApplication(AppData, QApplication):
             if img_w:
                 self.document = DOM([img_w, img_h])
                 self.document.image_fn = image_fn
-                img = desaterate(img, self.mw.feedback)
+                img = desaterate(img)
                 self.document.image = grayscale(img)
                 event.emit(event.DOC_OPENED)
                 event.emit(event.DOC_EXPECTS)
@@ -122,16 +124,22 @@ class ZQApplication(AppData, QApplication):
 
     def saveAs(self, fn=None):
         if not fn:
-            fn = dialogs.getSaveFileName(self.mw, unicode(self.config.currentPath))
+            fn, f = dialogs.getSaveFileName(self.mw, unicode(self.config.currentPath))
+            if not fn:
+                return
+            fn = unicode(fn)
+            if not os.path.splitext(fn)[1]:
+                fn += dialogs.getExtFromFilter(f)
+
         if fn:
-            filename = unicode(fn)
-            _, ext = os.path.splitext(filename)
-            ext = unicode(ext.upper())
-            self.config.currentPath = unicode(os.path.dirname(filename))
+            fn = unicode(fn)  
+            _, ext = os.path.splitext(fn)
+            ext = ext.upper()
+            self.config.currentPath = unicode(os.path.dirname(fn))
             backend = BACKENDS.get(ext)
             if backend:
                 dpi = self.config.dpi
-                backend(self.document).save(filename, dpi=dpi)
+                backend(self.document).save(fn, dpi=dpi)
                 event.emit(event.DOC_SAVED)
 
     def help(self):
@@ -151,7 +159,13 @@ class ZQApplication(AppData, QApplication):
     def savePreset(self, fn=None):
         config = self.config
         if not fn:
-            fn = dialogs.getSavePresetName(self.mw, config.presetPath)
+            fn, f = dialogs.getSavePresetName(self.mw, config.presetPath)
+            if not fn:
+                return
+            fn = unicode(fn)
+            if not os.path.splitext(fn)[1]:
+                fn += dialogs.getExtFromFilter(f)
+
         if fn:
             fn = unicode(fn)
             config.presetPath = unicode(os.path.dirname(fn))
@@ -238,8 +252,10 @@ class ZQApplication(AppData, QApplication):
             msg = self.tr('Trace the Image. Press ESC to Cancel.')
             info = document.info
             info['trace_start'] = time.time()
+            event.CANCEL = False
             for i in xrange(1, n + 1):
-                if self.mw.feedback(text=msg, progress=i * dprogres):
+                event.emit(event.APP_STATUS, text=msg, progress=dprogres * i)
+                if not event.CANCEL:
                     try:
                         variables['i'] = i
                         auto_resolution = fp.auto_resolution2(fX, fY, alpha)
@@ -248,19 +264,15 @@ class ZQApplication(AppData, QApplication):
                                              unicode(err))
                         break
 
-                    if fp.append_func(fX, fY, alpha,
-                                      resolution * auto_resolution,
-                                      stroke_color, close_path=True):
-                        '''
-                        self.mw.info.numberObject = len(fp.document.data)
-                        self.mw.info.numberNodes += fp.document.data[-1].countNodes()'''
+                    fp.append_func(fX, fY, alpha, resolution * auto_resolution,
+                                   stroke_color, close_path=True)
                 else:
                     break
             info['trace_end'] = time.time()
 
     def savePreview(self):
         document = self.document
-        previewSVG = BACKENDS['.SVG'](document, feedback=self.mw.feedback)
+        previewSVG = BACKENDS['.SVG'](document)
         previewSVG.save(self.temp_svg)
 
     def strokeToPath(self):
@@ -272,7 +284,7 @@ class ZQApplication(AppData, QApplication):
         info['flatten_paths_start'] = time.time()
         d.flat_data = []
         for i, path in enumerate(d):
-            self.mw.feedback(text=msg, progress=dprogres * i)
+            event.emit(event.APP_STATUS, text=msg, progress=dprogres * i)
             p = path.getStrokeAsPath(writing)
             d.flat_data.append(p)
         info['flatten_paths_end'] = time.time()
@@ -284,10 +296,6 @@ class ZQApplication(AppData, QApplication):
             dprogres = 100.0 / (len(d) or 1)
             msg = self.tr('Simplify Points')
             for i, path in enumerate(d.flat_data):
-                self.mw.feedback(text=msg, progress=dprogres * i)
-#                tempCountNodes = path.countNodes()
+                event.emit(event.APP_STATUS, text=msg, progress=dprogres * i)
                 for j in xrange(len(path)):
                     path[j].node = simplify_points(path[j].node, tolerance)
-
-#                self.mw.info.numberObject = len(fp.document.data)
-#                self.mw.info.numberNodes -= (tempCountNodes - path.countNodes())
