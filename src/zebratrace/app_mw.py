@@ -98,6 +98,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.coordSystem.currentIndexChanged.connect(self.app.docClean)
         self.lineEditX.textChanged.connect(self.app.docClean)
         self.lineEditY.textChanged.connect(self.app.docClean)
+        self.lineEditX.textChanged.connect(self.buttonAutoTraceUnChecked)
+        self.lineEditY.textChanged.connect(self.buttonAutoTraceUnChecked)
 
         event.connect(event.CONFIG_LOADED, self.configLoaded)
         event.connect(event.CONFIG_LOADED, self.app.trace)
@@ -110,6 +112,9 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         event.connect(event.DOC_MODIFIED, self.traceEnd)
 
         event.connect(event.APP_STATUS, self.feedback)
+
+    def buttonAutoTraceUnChecked(self, ):
+        self.buttonAutoTrace.setChecked(False)
 
     def configLoaded(self):
         config = self.config
@@ -153,7 +158,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
                    "rangeMin": self.rangeMin.value(),
                    "rangeMax": self.rangeMax.value(),
                    "polar": self.coordSystem.currentIndex(),
-                   "funcX": unicode(self.lineEditX.text()),
+                   "funcX": unicode(self.lineEditX.text()) or 'a',
                    "funcY": unicode(self.lineEditY.text()),
 
                    "sliderTransparency": self.sliderTransparency.value(),
