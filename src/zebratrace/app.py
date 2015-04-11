@@ -52,10 +52,12 @@ class ZQApplication(AppData, QApplication):
         self.autoTraceTimer = QTimer()
         self.autoTraceTimer.timeout.connect(self.autoTrace)
         self.config = AppConfig()
+        self.loadConfig()
         lang = getattr(self.config, 'lang', None)
         self.locale(lang)
         self.mw = MainWindow(self)
-        self.loadConfig()
+        event.emit(event.CONFIG_LOADED)
+        self.mw.tabPreferences.removeTab(1)  # temporarily hidden
 
     def autoTrace(self):
         self.autoTraceTimer.stop()
@@ -132,7 +134,7 @@ class ZQApplication(AppData, QApplication):
                 fn += dialogs.getExtFromFilter(f)
 
         if fn:
-            fn = unicode(fn)  
+            fn = unicode(fn)
             _, ext = os.path.splitext(fn)
             ext = ext.upper()
             self.config.currentPath = unicode(os.path.dirname(fn))
@@ -182,14 +184,16 @@ class ZQApplication(AppData, QApplication):
         dialogs.about(self.mw)
 
     def docClean(self):
-        self.autoTraceTimer.start(1500)
-        if self.document:
-            self.document.clean()
+        if self.mw.buttonTrace.isEnabled():
+            self.autoTraceTimer.start(1500)
+            if self.document:
+                self.document.clean()
 
     def docFlatClean(self):
-        self.autoTraceTimer.start(700)
-        if self.document:
-            self.document.flat_data = []
+        if self.mw.buttonTrace.isEnabled():
+            self.autoTraceTimer.start(700)
+            if self.document:
+                self.document.flat_data = []
 
     def getFunctions(self, variables):
         config = self.config
