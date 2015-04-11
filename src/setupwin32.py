@@ -34,7 +34,7 @@ plug_dir = os.path.join(os.path.dirname(PyQt4.__file__),
 
 buildOptions = dict(create_shared_zip=True,
                     compressed=True,
-                    include_files=["src/translations", "src/preset", (plug_dir, "imageformats")],
+                    include_files=["translations", "preset", (plug_dir, "imageformats")],
                     base=base,
                     include_msvcr=True,
                     )
@@ -52,7 +52,7 @@ setup(
     options=dict(build_exe=buildOptions, bdist_msi=msiOptions),
     executables=[Executable("ZebraTrace.pyw",
                             base=base,
-                            icon="/ui_build/ico/zebra.ico",
+                            icon="ui_build/ico/zebra.ico",
                             copyDependentFiles=True,
                             shortcutDir="ProgramMenuFolder",
                             shortcutName="ZebraTrace")
