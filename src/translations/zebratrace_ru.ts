@@ -49,7 +49,7 @@ See &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;Zebr
 for more information.&lt;br&gt;&lt;br&gt;
 Copyright (C) 2012-2015&lt;/center&gt;</source>
         <translation type="unfinished">&lt;center&gt;&lt;b&gt;%s&lt;/b&gt; версия %s.&lt;br&gt;&lt;br&gt;
-Потробнее на &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;ZebraTrace&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
+Подробнее на &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;ZebraTrace&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
 Copyright (C) 2012-2015&lt;/center&gt;</translation>
     </message>
     <message>
