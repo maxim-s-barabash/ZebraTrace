@@ -1,4 +1,6 @@
-ZebraTrace is a simple tool to trace bitmap images into a pattern of curves 
+# ZebraTrace
+
+is a simple tool to trace bitmap images into a pattern of curves 
 with a variable width. You can control amount of curves, resolution, min and 
 max width, functions for plotting the curves.
 
@@ -7,7 +9,11 @@ kinds of creative engraving.
 
 ZebraTrace has a Qt4-based user interface and is written in Python.
 
-How to run:
-
+### How to run:
+```
 $ cd src
 $ python ZebraTrace.pyw
+```
+
+![Screenshot](https://github.com//maxim-s-barabash/ZebraTrace/blob/gh-pages/images/screenshot1.png?raw=true)
+
