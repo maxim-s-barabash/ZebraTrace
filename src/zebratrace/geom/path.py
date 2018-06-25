@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -69,10 +66,10 @@ class PathData(object):
         return len(self.node)
 
     def __str__(self):
-        return "%s" % (self.node)
+        return "{}".format(self.node)
 
     def __repr__(self):
-        return "PathData(%s)" % (self.node)
+        return "PathData({})".format(self.node)
 
     def boundingRect(self):
         node = self.node
@@ -80,19 +77,19 @@ class PathData(object):
         lay = lambda a: a.y
         maxX, minX = max(node, key=lax), min(node, key=lax)
         maxY, minY = max(node, key=lay), min(node, key=lay)
-        return (minX.x, minY.y, maxX.x - minX.x, maxY.y - minY.y)
+        return minX.x, minY.y, maxX.x - minX.x, maxY.y - minY.y
 
     def height(self):
         node = self.node
         lax = lambda a: a.x
         maxX, minX = max(node, key=lax), min(node, key=lax)
-        return (maxX.x - minX.x)
+        return maxX.x - minX.x
 
     def width(self):
         node = self.node
         lay = lambda a: a.y
         maxY, minY = max(node, key=lay), min(node, key=lay)
-        return (maxY.y - minY.y)
+        return maxY.y - minY.y
 
     def countNodes(self):
         return len(self.node)
@@ -173,10 +170,10 @@ class Path(object):
         return len(self.path)
 
     def __str__(self):
-        return "%s" % (self.path)
+        return "{}".format(self.path)
 
     def __repr__(self):
-        return "Path(%s)" % (self.path)
+        return "Path({})".format(self.path)
 
     def __iter__(self):
         return iter(self.path)

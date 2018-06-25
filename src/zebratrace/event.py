@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-#
 #    Copyright (C) 2011-2012 by Igor E. Novikov
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,11 +14,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-'''
+"""
 The package provides Qt-like signal-slot functionality
 for internal events processing.
-'''
-CANCEL =False
+"""
+
+CANCEL = False
 
 
 # Signal channels
@@ -41,8 +40,8 @@ DOC_CLOSED = ['DOC_CLOSED']
 
 
 def connect(channel, receiver):
-    '''Connects signal receive method to provided channel.
-    '''
+    """Connects signal receive method to provided channel.
+    """
     if callable(receiver):
         try:
             channel.append(receiver)
@@ -52,8 +51,8 @@ def connect(channel, receiver):
 
 
 def disconnect(channel, receiver):
-    '''Disconnects signal receive method from provided channel.
-    '''
+    """Disconnects signal receive method from provided channel.
+    """
     if callable(receiver):
         try:
             channel.remove(receiver)
@@ -63,11 +62,11 @@ def disconnect(channel, receiver):
 
 
 def emit(channel, **args):
+    """Sends signal to all receivers in channel.
+    """
     for receiver in channel[1:]:
         if callable(receiver):
             receiver(**args)
-    '''Sends signal to all receivers in channel.
-    '''
 '''    try:
         for receiver in channel[1:]:
             try:
@@ -78,4 +77,5 @@ def emit(channel, **args):
                 print("%s %s receiver: %s" % (msg, channel, receiver))
                 print(e)
     except:
-        print('Cannot send signal to channel: %s' % channel)'''
+        print('Cannot send signal to channel: %s' % channel)
+'''

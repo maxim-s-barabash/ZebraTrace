@@ -17,14 +17,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from math import sin, cos, tan, sqrt, pi, e, fabs, exp
+from math import sin, cos, tan, sqrt, pi, e, fabs, exp, pow
 from random import random, uniform, triangular, gauss, vonmisesvariate
 
 
 class Function():
     def __init__(self, func=None):
         self.setFunc(func)
-        self.dic = {"sin": sin,
+        self.dic = {"pow": pow,
+                    "sin": sin,
                     "cos": cos,
                     "tan": tan,
                     "sqrt": sqrt,
