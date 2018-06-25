@@ -18,7 +18,7 @@
 import os
 import sys
 
-from PyQt4.QtGui import QImage
+from PyQt5.QtGui import QImage
 
 from .path import makePathData, split
 
@@ -29,7 +29,7 @@ sys.setcheckinterval(0xfff)
 
 
 class FuncPlotter:
-    def __init__(self, DOM, trace_image=None, width_range=[0.1, 2]):
+    def __init__(self, DOM, trace_image=None, width_range=None):
         """Draws the graphics functions.
 
         Parameters:

@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#    Copyright 2015 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,24 +13,19 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# to trace the image is used PyQt4
-# (http://www.riverbankcomputing.co.uk/software/pyqt/download)
-
-from PyQt4.QtGui import QImage, QColor, qGray
+from PyQt5.QtGui import QImage, QColor, qGray
 from .. import event
+
 
 tr = lambda a: a
 GRAYSCALE_COLORTABLE = [QColor(i, i, i).rgb() for i in range(256)]
 
 
 def grayscale(image):
-    image = image.convertToFormat(QImage.Format_Indexed8,
-                                  GRAYSCALE_COLORTABLE)
-    return image
+    return image.convertToFormat(QImage.Format_Indexed8, GRAYSCALE_COLORTABLE)
 
 
-def desaterate(image):
+def desaturate(image):
     p = 100.0 / image.height()
     msg = tr('Desaturate the Image. Press ESC to Cancel.')
     pixel = image.pixel

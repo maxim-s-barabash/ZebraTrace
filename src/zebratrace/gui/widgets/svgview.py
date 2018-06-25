@@ -43,10 +43,10 @@
 
 
 # This is only needed for Python v2 but is harmless for Python v3.
-from PyQt4 import QtCore, QtGui, QtSvg
+from PyQt5 import QtCore, QtGui, QtSvg, QtWidgets
 
 
-class TraceCanvas(QtGui.QGraphicsView):
+class TraceCanvas(QtWidgets.QGraphicsView):
     Native, OpenGL, Image = range(3)
 
     def __init__(self, parent=None):
@@ -61,10 +61,10 @@ class TraceCanvas(QtGui.QGraphicsView):
 
         self.opacity = 100
 
-        self.setScene(QtGui.QGraphicsScene(self))
-        self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-        self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
-        self.setViewportUpdateMode(QtGui.QGraphicsView.FullViewportUpdate)
+        self.setScene(QtWidgets.QGraphicsScene(self))
+        self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
+        self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
+        self.setViewportUpdateMode(QtWidgets.QGraphicsView.FullViewportUpdate)
 
         # Prepare background check-board pattern.
         tilePixmap = QtGui.QPixmap(32, 32)
@@ -105,28 +105,28 @@ class TraceCanvas(QtGui.QGraphicsView):
 
         s.clear()
         img = QtGui.QPixmap(img_file)
-        self.TraceImage = QtGui.QGraphicsPixmapItem(img)
-        self.TraceImage.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
-        self.TraceImage.setCacheMode(QtGui.QGraphicsItem.NoCache)
+        self.TraceImage = QtWidgets.QGraphicsPixmapItem(img)
+        self.TraceImage.setFlags(QtWidgets.QGraphicsItem.ItemClipsToShape)
+        self.TraceImage.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
         self.TraceImage.setZValue(1)
 
-        effect = QtGui.QGraphicsOpacityEffect(self)
+        effect = QtWidgets.QGraphicsOpacityEffect(self)
         self.TraceImage.setGraphicsEffect(effect)
         self.setOpacity(self.opacity)
         self.TraceImage.setZValue(1)
 
         self.svgItem = QtSvg.QGraphicsSvgItem()
-        self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
-        self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
+        self.svgItem.setFlags(QtWidgets.QGraphicsItem.ItemClipsToShape)
+        self.svgItem.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
         self.svgItem.setZValue(0)
 
-        self.backgroundItem = QtGui.QGraphicsRectItem(self.TraceImage.boundingRect())
+        self.backgroundItem = QtWidgets.QGraphicsRectItem(self.TraceImage.boundingRect())
         self.backgroundItem.setBrush(QtCore.Qt.white)
         self.backgroundItem.setPen(QtGui.QPen(QtCore.Qt.NoPen))
         self.backgroundItem.setVisible(drawBackground)
         self.backgroundItem.setZValue(-1)
 
-        self.outlineItem = QtGui.QGraphicsRectItem(self.TraceImage.boundingRect())
+        self.outlineItem = QtWidgets.QGraphicsRectItem(self.TraceImage.boundingRect())
         outline = QtGui.QPen(QtCore.Qt.darkGray, 1.5, QtCore.Qt.SolidLine)
         outline.setCosmetic(True)
         self.outlineItem.setPen(outline)
@@ -168,7 +168,7 @@ class TraceCanvas(QtGui.QGraphicsView):
             if QtOpenGL.QGLFormat.hasOpenGL():
                 self.setViewport(QtOpenGL.QGLWidget(QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers)))
         else:
-            self.setViewport(QtGui.QWidget())
+            self.setViewport(QtWidgets.QWidget())
 
     def setHighQualityAntialiasing(self, highQualityAntialiasing):
         if QtOpenGL.QGLFormat.hasOpenGL():
@@ -194,7 +194,7 @@ class TraceCanvas(QtGui.QGraphicsView):
                         QtGui.QImage.Format_ARGB32_Premultiplied)
 
             imagePainter = QtGui.QPainter(self.image)
-            QtGui.QGraphicsView.render(self, imagePainter)
+            QtWidgets.QGraphicsView.render(self, imagePainter)
             imagePainter.end()
 
             p = QtGui.QPainter(self.viewport())
@@ -215,6 +215,6 @@ class TraceCanvas(QtGui.QGraphicsView):
             super(TraceCanvas, self).keyPressEvent(event)
 
     def wheelEvent(self, event):
-        factor = pow(1.2, event.delta() / 240.0)
+        factor = pow(1.2, event.angleDelta().y() / 240.0)
         self.scale(factor, factor)
         event.accept()

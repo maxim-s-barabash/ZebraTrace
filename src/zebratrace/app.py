@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,17 +18,19 @@ from math import cos, sin
 import os
 import time
 
-from PyQt4.QtCore import QLibraryInfo, QTranslator, QTimer
-from PyQt4.QtGui import QApplication, QMessageBox, QImage
+from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import QLibraryInfo, QTranslator, QTimer
+from PyQt5.QtGui import QImage
 
 from . import event
 from .app_config import Preset, default_preset
 from .app_config import locale, AppData, AppConfig
 from .app_mw import MainWindow
-from .geom.DOM import DOM
+from .geom.dom import DOM
 from .geom.funcplotter2 import FuncPlotter
 from .geom.function import Function
-from .geom.image import desaterate, grayscale
+from .geom.image import desaturate, grayscale
 from .gui import dialogs
 from .utils import BACKENDS
 from .utils import unicode, xrange
@@ -57,7 +56,7 @@ class ZQApplication(AppData, QApplication):
         self.locale(lang)
         self.mw = MainWindow(self)
         event.emit(event.CONFIG_LOADED)
-        self.mw.tabPreferences.removeTab(1)  # temporarily hidden
+#        self.mw.tabPreferences.removeTab(1)  # temporarily hidden
 
     def autoTrace(self):
         self.autoTraceTimer.stop()
@@ -73,10 +72,10 @@ class ZQApplication(AppData, QApplication):
             if not(transl.load(fn, translate_path)):
                 transl.load(fn, self.translations_dir)
             self.installTranslator(transl)
-            self.tr = lambda a: QApplication.translate("ZQApplication", a)
-            dialogs.tr = lambda a: QApplication.translate("@default", a)
-            utils.tr = lambda a: QApplication.translate("@default", a)
-            image.tr = lambda a: QApplication.translate("@default", a)
+            self.tr = lambda a: QCoreApplication.translate("ZQApplication", a)
+            dialogs.tr = lambda a: QCoreApplication.translate("@default", a)
+            utils.tr = lambda a: QCoreApplication.translate("@default", a)
+            image.tr = lambda a: QCoreApplication.translate("@default", a)
 
         except locale.Error:
             pass
@@ -116,7 +115,7 @@ class ZQApplication(AppData, QApplication):
             if img_w:
                 self.document = DOM([img_w, img_h])
                 self.document.image_fn = image_fn
-                img = desaterate(img)
+                img = desaturate(img)
                 self.document.image = grayscale(img)
                 event.emit(event.DOC_OPENED)
                 event.emit(event.DOC_EXPECTS)
@@ -223,15 +222,23 @@ class ZQApplication(AppData, QApplication):
         document = self.document
         if document is None or not document.image:
             return
+        info = document.info
         event.emit(event.DOC_TRACE)
         if not document.data:
+            info['trace_start'] = time.time()
             self._tarce(document)
+            info['trace_end'] = time.time()
 
         if not document.flat_data:
+            info['flatten_paths_start'] = time.time()
             self.strokeToPath()
-            self.simplify()
-        self.savePreview()
+            info['flatten_paths_end'] = time.time()
 
+            info['flatten_simplify_start'] = time.time()
+            self.simplify()
+            info['flatten_simplify_end'] = time.time()
+
+        self.savePreview()
         event.emit(event.DOC_MODIFIED)
         event.emit(event.DOC_EXPECTS)
 
@@ -254,8 +261,6 @@ class ZQApplication(AppData, QApplication):
             # Step 1. Make Path
             dprogres = 100.0 / n
             msg = self.tr('Trace the Image. Press ESC to Cancel.')
-            info = document.info
-            info['trace_start'] = time.time()
             event.CANCEL = False
             for i in xrange(1, n + 1):
                 event.emit(event.APP_STATUS, text=msg, progress=dprogres * i)
@@ -272,7 +277,6 @@ class ZQApplication(AppData, QApplication):
                                    stroke_color, close_path=True)
                 else:
                     break
-            info['trace_end'] = time.time()
 
     def savePreview(self):
         document = self.document
@@ -284,14 +288,11 @@ class ZQApplication(AppData, QApplication):
         writing = self.config.curveWriting
         dprogres = 100.0 / (len(d) or 1)
         msg = self.tr('Flatten paths')
-        info = d.info
-        info['flatten_paths_start'] = time.time()
         d.flat_data = []
         for i, path in enumerate(d):
             event.emit(event.APP_STATUS, text=msg, progress=dprogres * i)
             p = path.getStrokeAsPath(writing)
             d.flat_data.append(p)
-        info['flatten_paths_end'] = time.time()
 
     def simplify(self):
         d = self.document

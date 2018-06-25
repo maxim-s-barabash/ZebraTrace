@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,7 +16,7 @@
 
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from . import event
 from .gui.ui_mainwindow import Ui_MainWindow
@@ -27,9 +24,9 @@ from .gui.widgets.svgview import TraceCanvas
 from .utils import UNITS, pxToUnit, unitToPx, unitToUnit, unicode
 
 
-class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
+class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, app):
-        QtGui.QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self)
         self.setupUi(self)
 
         self.app = app
@@ -53,7 +50,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def keyPressEvent(self, e):
         if type(e) == QtGui.QKeyEvent:
-            if (e.key() == QtCore.Qt.Key_Escape):
+            if e.key() == QtCore.Qt.Key_Escape:
                 event.CANCEL = True
             e.accept()
         else:
@@ -113,7 +110,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         event.connect(event.APP_STATUS, self.feedback)
 
-    def buttonAutoTraceUnChecked(self, ):
+    def buttonAutoTraceUnChecked(self):
         self.buttonAutoTrace.setChecked(False)
 
     def configLoaded(self):

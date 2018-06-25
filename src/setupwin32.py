@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,29 +19,28 @@
 
 import sys
 import os
-
-import PyQt4
-
+import PyQt5
 from cx_Freeze import setup, Executable
 from zebratrace import __version__
 
 base = None
 if sys.platform == "win32":
     base = "Win32GUI"
-plug_dir = os.path.join(os.path.dirname(PyQt4.__file__),
+plug_dir = os.path.join(os.path.dirname(PyQt5.__file__),
                         "plugins", 'imageformats')
 
+buildOptions = dict(
+    create_shared_zip=True,
+    compressed=True,
+    include_files=["translations", "preset", (plug_dir, "imageformats")],
+    base=base,
+    include_msvcr=True,
+)
 
-buildOptions = dict(create_shared_zip=True,
-                    compressed=True,
-                    include_files=["translations", "preset", (plug_dir, "imageformats")],
-                    base=base,
-                    include_msvcr=True,
-                    )
-
-msiOptions = dict(upgrade_code=True,
-                  add_to_path=False,
-                  )
+msiOptions = dict(
+    upgrade_code=True,
+    add_to_path=False,
+)
 
 setup(
     name="ZebraTRACE",
@@ -50,10 +49,12 @@ setup(
     author_email="maxim.s.barabash@gmail.com",
     description="ZebraTrace is a simple tool to trace bitmap images into a pattern of curves with a variable width",
     options=dict(build_exe=buildOptions, bdist_msi=msiOptions),
-    executables=[Executable("ZebraTrace.pyw",
-                            base=base,
-                            icon="ui_build/ico/zebra.ico",
-                            copyDependentFiles=True,
-                            shortcutDir="ProgramMenuFolder",
-                            shortcutName="ZebraTrace")
-                 ])
+    executables=[
+        Executable(
+            "ZebraTrace.pyw",
+            base=base,
+            icon="ui_build/ico/zebra.ico",
+            copyDependentFiles=True,
+            shortcutDir="ProgramMenuFolder",
+            shortcutName="ZebraTrace")
+    ])
