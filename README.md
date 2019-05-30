@@ -18,3 +18,4 @@ $ python ZebraTrace.pyw
 
 ![Screenshot](https://github.com//maxim-s-barabash/ZebraTrace/blob/gh-pages/images/screenshot1.png?raw=true)
 
+[More examples](https://github.com/maxim-s-barabash/ZebraTrace/wiki/Gallery)
