@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#    Copyright 2015 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -22,16 +19,19 @@ from .style import Style
 class DOM(object):
     image_fn = ""
     image = None
+    data = None
+    flat_data = None
+    info = None
 
     def __init__(self, wh, bound=None):
-
-        # wh    - list [width, height] specifying the size of the image in pixels SVG
-        # bound    - list [x1, y1, x2, y2] border coordinate plane
+        """
+        :param wh: list [width, height] specifying the size of the image in pixels SVG
+        :param bound: list [x1, y1, x2, y2] border coordinate plane
+        """
         self.wh = wh  # [1000, 1000]
         self.w, self.h = float(wh[0]), float(wh[1])
 
         if bound is None:
-            #img_d = [[1, self.w / self.h], [self.h / self.w, 1]][self.w > self.h]
             img_d0, img_d1 = (self.h / self.w, 1) if self.w > self.h else (1, self.w / self.h)
             bound = [-1 * img_d1, -1 * img_d0, img_d1, img_d0]
 
@@ -56,13 +56,10 @@ class DOM(object):
         return len(self.data)
 
     def __str__(self):
-        return "[%s]" % (self.data)
+        return "[{}]".format(self.data)
 
     def __repr__(self):
-        return "DOM(%s)" % (self.data)
+        return "DOM({})".format(self.data)
 
     def __iter__(self):
         return iter(self.data)
-
-#    def __getitem__(self, key):
-#        return (self.x, self.y)[key]

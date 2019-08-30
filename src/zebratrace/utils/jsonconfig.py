@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -55,9 +52,9 @@ def _encode_dict(data):
         return rv
 
 
-class JsonConfigParser:
+class JsonConfigParser(object):
 
-    def update(self, cnf={}):
+    def update(self, cnf=None):
         if cnf:
             self.__dict__.update(cnf)
 
@@ -82,4 +79,3 @@ class JsonConfigParser:
         except (IOError, os.error):
             err = sys.exc_info()[1]
             print(err)
-            return

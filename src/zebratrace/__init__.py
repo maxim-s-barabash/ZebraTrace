@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,9 +12,8 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-__version__ = '0.6.0'
 
-import os
+__version__ = '0.6.0'
 import sys
 from .app import ZQApplication
 

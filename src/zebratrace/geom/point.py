@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -46,12 +43,6 @@ class Point(object):
 
     def __repr__(self):
         return "Point(%g,%g)" % (self.x, self.y)
-
-#    def __iter__(self):
-#        return iter((self.x,self.y))
-
-#    def __getitem__(self, key):
-#        return (self.x, self.y)[key]
 
     def distance(self, other):
         return hypot((self.x - other.x), (self.y - other.y))

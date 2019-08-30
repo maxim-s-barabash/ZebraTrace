@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#    Copyright 2012 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
+#    Copyright 2018 Maxim.S.Barabash <maxim.s.barabash@gmail.com>
 #
 #    Based on https://github.com/kartograph/kartograph.py/blob/master/kartograph/simplify/visvalingam.py
 
@@ -61,7 +61,6 @@ def simplify_visvalingam_whyatt(points, tolerance):
         popped = sorted(popped, reverse=True)
         for i in popped:
             # remove point from index list
-            #pts = pts[:i] + pts[i + 1:]
             del(pts[i])
 
     return [points[i] for i in pts]
