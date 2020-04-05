@@ -22,7 +22,7 @@ def about(mw):
         about_tmpl = tr(u"""<center><b>%s</b> version %s.<br><br>
 See <a href="http://maxim-s-barabash.github.io/ZebraTrace/">ZebraTrace</a>
 for more information.<br><br>
-Copyright (C) 2012-2015</center>""")
+Copyright (C) 2012-2020</center>""")
         about = about_tmpl % (mw.app.app_name, mw.app.app_version)
         QMessageBox.about(mw, tr("About"), about)
 

@@ -3,437 +3,418 @@
 <context>
     <name>@default</name>
     <message>
-        <location filename="format_svg.py" line="35"/>
+        <location filename="../zebratrace/utils/format_svg.py" line="32"/>
         <source>Save SVG file.</source>
         <translation>Сохраняем файл SVG.</translation>
     </message>
     <message>
-        <location filename="format_eps.py" line="38"/>
+        <location filename="../zebratrace/utils/format_eps.py" line="35"/>
         <source>Save EPS file.</source>
         <translation>Сохраняем файл EPS.</translation>
     </message>
     <message>
-        <location filename="format_gcode.py" line="34"/>
+        <location filename="../zebratrace/utils/format_gcode.py" line="31"/>
         <source>Save NGC file.</source>
         <translation>Сохраняем файл NGC.</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="28"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="36"/>
         <source>Bitmap files (%s);;All files (*.*)</source>
         <translation>Растровые файлы (%s);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="29"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="37"/>
         <source>Open Bitmap File</source>
         <translation>Открыть изображение</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="40"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="46"/>
         <source>Save File</source>
         <translation>Сохранить файл</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="45"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="51"/>
         <source>Load Preset File</source>
         <translation>Загрузить пресет</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="52"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="56"/>
         <source>Save Preset File</source>
         <translation>Сохранить пресет</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="15"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="22"/>
         <source>&lt;center&gt;&lt;b&gt;%s&lt;/b&gt; version %s.&lt;br&gt;&lt;br&gt;
 See &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;ZebraTrace&lt;/a&gt;
 for more information.&lt;br&gt;&lt;br&gt;
-Copyright (C) 2012-2015&lt;/center&gt;</source>
-        <translation type="unfinished">&lt;center&gt;&lt;b&gt;%s&lt;/b&gt; версия %s.&lt;br&gt;&lt;br&gt;
+Copyright (C) 2012-2020&lt;/center&gt;</source>
+        <translation>&lt;center&gt;&lt;b&gt;%s&lt;/b&gt; версия %s.&lt;br&gt;&lt;br&gt;
 Подробнее на &lt;a href=&quot;http://maxim-s-barabash.github.io/ZebraTrace/&quot;&gt;ZebraTrace&lt;/a&gt;.&lt;br&gt;&lt;br&gt;
-Copyright (C) 2012-2015&lt;/center&gt;</translation>
+Copyright (C) 2012-2020&lt;/center&gt;</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="20"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="27"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="51"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="55"/>
         <source>Preset files (*.preset)</source>
         <translation>Файлы пресетов (*.preset)</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="35"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="41"/>
         <source>SVG files (*.svg)</source>
         <translation>Файлы SVG (*.svg)</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="36"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="42"/>
         <source>EPS files (*.eps)</source>
         <translation>Файлы EPS (*.eps)</translation>
     </message>
     <message>
-        <location filename="dialogs.py" line="37"/>
+        <location filename="../zebratrace/gui/dialogs.py" line="43"/>
         <source>NGC g-code files (*.ngc)</source>
         <translation>Файлы NGC g-code (*.ngc)</translation>
     </message>
     <message>
-        <location filename="image.py" line="38"/>
+        <location filename="../zebratrace/geom/image.py" line="30"/>
         <source>Desaturate the Image. Press ESC to Cancel.</source>
-        <translation type="unfinished">Обесцвечиваем изображение. Нажмите клавишу ESC для отмены.</translation>
+        <translation>Обесцвечиваем изображение. Нажмите клавишу ESC для отмены.</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="ui_mainwindow.py" line="563"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="549"/>
         <source>Preview:</source>
         <translation>Предпросмотр:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="565"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="551"/>
         <source>Wireframe Overlay</source>
         <translation>С наложением растрового изображения</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="566"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="552"/>
         <source>Transparency:</source>
         <translation>Прозрачность:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="568"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="554"/>
         <source>Resolution:</source>
         <translation>Разрешение:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="589"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="575"/>
         <source>Node Reduction:</source>
         <translation>Уменьшение узлов:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="609"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="595"/>
         <source>Info</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="613"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="599"/>
         <source>Trace</source>
         <translation>Трассировать</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="623"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="609"/>
         <source>Quit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="618"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="604"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="619"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="605"/>
         <source>&amp;Help</source>
         <translation>&amp;Справка</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="620"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="606"/>
         <source>&amp;View</source>
         <translation>&amp;Вид</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="621"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="607"/>
         <source>Open Bitmap...</source>
         <translation>Открыть изображение...</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="625"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="611"/>
         <source>About...</source>
         <translation>О программе...</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="626"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="612"/>
         <source>About Qt</source>
         <translation>О Qt</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="627"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="613"/>
         <source>&amp;Background</source>
         <translation>&amp;Фон</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="628"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="614"/>
         <source>Border &amp;Frame</source>
         <translation>&amp;Граница</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="629"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="615"/>
         <source>Load Preset...</source>
         <translation>Загрузить пресет...</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="630"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="616"/>
         <source>Save Preset...</source>
         <translation>Сохранить пресет...</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="631"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="617"/>
         <source>Trace Image</source>
         <translation>Трассировать изображение</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="562"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="548"/>
         <source>ZebraTRACE</source>
         <translation>ZebraTRACE</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="602"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="588"/>
         <source>Function &lt;b&gt;X(a)&lt;/b&gt;:</source>
         <translation>Функция &lt;b&gt;X(a)&lt;/b&gt;:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="604"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="590"/>
         <source>Function &lt;b&gt;Y(a)&lt;/b&gt;:</source>
         <translation>Функция &lt;b&gt;Y(a)&lt;/b&gt;:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="616"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="602"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="622"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="608"/>
         <source>Save &amp;As...</source>
         <translation>Сохранить &amp;как...</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="617"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="603"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="608"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="594"/>
         <source>Preferences</source>
         <translation>Параметры</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="567"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="553"/>
         <source>Transparent bitmap layer</source>
         <translation>Прозрачность слоя с растровым изображением</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="577"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="563"/>
         <source>Number of Curves (&lt;b&gt;n&lt;/b&gt;):</source>
         <translation>Количество (&lt;b&gt;n&lt;/b&gt;):</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="590"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="576"/>
         <source>Node reduction tolerance</source>
         <translation>Допуск для сокращения узлов</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="612"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="598"/>
         <source>Trace the raster content</source>
         <translation>Трассировать растровое изображение</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="615"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="601"/>
         <source>Save trace result to a file</source>
         <translation>Сохранить результат трассировки в файл</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="564"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="550"/>
         <source>Tracing Result</source>
         <translation>Результат трассировки</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="576"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="562"/>
         <source> Curves</source>
         <translation>Кривые</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="591"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="577"/>
         <source>Advanced</source>
         <translation>Продвинутые параметры</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="592"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="578"/>
         <source>Functions</source>
         <translation>Функции</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="605"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="591"/>
         <source>Trace result details</source>
         <translation>Подробности трассировки</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="599"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="585"/>
         <source>Coordinates:</source>
         <translation>Координаты:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="600"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="586"/>
         <source>Cartesian</source>
         <translation>Прямоугольные</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="601"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="587"/>
         <source>Polar</source>
         <translation>Полярные</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="606"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="592"/>
         <source>Paths:</source>
         <translation>Объекты:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="607"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="593"/>
         <source>Nodes:</source>
         <translation>Узлы:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="579"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="565"/>
         <source>Minimum Width:</source>
         <translation>Ширина от:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="581"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="567"/>
         <source>Maximum Width:</source>
         <translation>Ширина до:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="584"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="570"/>
         <source>Center Line</source>
-        <translation>Ценральная линия</translation>
+        <translation>Центральная линия</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="585"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="571"/>
         <source>Left End</source>
         <translation>Фаска слева</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="586"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="572"/>
         <source>Right End</source>
         <translation>Фаска справа</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="587"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="573"/>
         <source>Left Line</source>
         <translation>Линия слева</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="588"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="574"/>
         <source>Right Line</source>
         <translation>Линия справа</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="583"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="569"/>
         <source>Writing:</source>
         <translation>Форма:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="593"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="579"/>
         <source>Quality:</source>
         <translation>Качество:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="570"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="556"/>
         <source>Units:</source>
-        <translation type="unfinished">Ед. изм.:</translation>
+        <translation>Ед. изм.:</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="572"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="558"/>
         <source>px</source>
         <translation>px</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="573"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="559"/>
         <source>mm</source>
         <translation>мм</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="574"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="560"/>
         <source>cm</source>
         <translation>см</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="575"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="561"/>
         <source>in</source>
         <translation>″</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="578"/>
-        <source>&lt;b&gt;i&lt;/b&gt; = 1... &lt;b&gt;n&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui_mainwindow.py" line="582"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="568"/>
         <source>In the current unit</source>
-        <translation type="unfinished">В текущих единицах измерения</translation>
+        <translation>В текущих единицах измерения</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="594"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="580"/>
         <source>Percentage</source>
-        <translation type="unfinished">В процентах</translation>
+        <translation>В процентах</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="595"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="581"/>
         <source>Min (&lt;b&gt;a&lt;/b&gt;) value:</source>
-        <translation type="unfinished">Минимальное (&lt;b&gt;a&lt;/b&gt;):</translation>
+        <translation>Минимальное (&lt;b&gt;a&lt;/b&gt;):</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="596"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="582"/>
         <source>Minimum value for (a) variable</source>
-        <translation type="unfinished">Минимальное значение для переменной (a)</translation>
+        <translation>Минимальное значение для переменной (a)</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="597"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="583"/>
         <source>Max (&lt;b&gt;a&lt;/b&gt;) value:</source>
-        <translation type="unfinished">Максимальное (&lt;b&gt;a&lt;/b&gt;):</translation>
+        <translation>Максимальное (&lt;b&gt;a&lt;/b&gt;):</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="598"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="584"/>
         <source>Maximum value for (a) variable</source>
-        <translation type="unfinished">Максимальное значение для переменной (a)</translation>
+        <translation>Максимальное значение для переменной (a)</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="603"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="589"/>
         <source>Use (a),( i) and (n) as parameters</source>
-        <translation type="unfinished">Используйте (a),( i) и (n) в качестве параметров</translation>
+        <translation>Используйте (a),( i) и (n) в качестве параметров</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="610"/>
-        <source>%p%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui_mainwindow.py" line="614"/>
-        <source>Return</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui_mainwindow.py" line="624"/>
-        <source>Ctrl+X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui_mainwindow.py" line="571"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="557"/>
         <source>Drawing Units</source>
         <translation>Единицы измерения</translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="569"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="555"/>
         <source>Dots per inch in Image</source>
         <translation>Точек на дюйм в изображении</translation>
     </message>
     <message>
-        <location filename="app_mw.py" line="205"/>
+        <location filename="../zebratrace/app_mw.py" line="205"/>
         <source>Time trace: %5.3f seconds.
 </source>
         <translation>Время трассировки: %5.3f секунд.
+
 </translation>
     </message>
     <message>
-        <location filename="app_mw.py" line="207"/>
+        <location filename="../zebratrace/app_mw.py" line="207"/>
         <source>Graphic Objects
   Number of objects: %i
   Number of nodes: %i
@@ -441,52 +422,74 @@ Copyright (C) 2012-2015&lt;/center&gt;</translation>
         <translation>Графические объекты
   Количество объектов: %i
   Количество узлов:%i
+
 </translation>
     </message>
     <message>
-        <location filename="app_mw.py" line="206"/>
+        <location filename="../zebratrace/app_mw.py" line="206"/>
         <source>Time flatten paths: %5.3f seconds.
 </source>
-        <translation>Время изменения формы линий: %5.3f секун.
+        <translation>Время изменения формы линий: %5.3f секунд.
+
 </translation>
     </message>
     <message>
-        <location filename="ui_mainwindow.py" line="611"/>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="597"/>
         <source>Auto Update</source>
         <translation>Автообновление предпросмотра</translation>
+    </message>
+    <message>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="564"/>
+        <source>&lt;b&gt;i&lt;/b&gt; = 1... &lt;b&gt;n&lt;/b&gt;</source>
+        <translation>&lt;b&gt;i&lt;/b&gt; = 1... &lt;b&gt;n&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="596"/>
+        <source>%p%</source>
+        <translation>%p%</translation>
+    </message>
+    <message>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="600"/>
+        <source>Return</source>
+        <translation>Возвращение</translation>
+    </message>
+    <message>
+        <location filename="../zebratrace/gui/ui_mainwindow.py" line="610"/>
+        <source>Ctrl+X</source>
+        <translation>Ctrl+X</translation>
     </message>
 </context>
 <context>
     <name>ZQApplication</name>
     <message>
-        <location filename="app.py" line="122"/>
+        <location filename="../zebratrace/app.py" line="123"/>
         <source>Open file</source>
-        <translation type="unfinished">Открытие файла</translation>
+        <translation>Открытие файла</translation>
     </message>
     <message>
-        <location filename="app.py" line="122"/>
+        <location filename="../zebratrace/app.py" line="123"/>
         <source>This file is corrupt or not supported?</source>
         <translation>Файл испорчен или не поддерживается?</translation>
     </message>
     <message>
-        <location filename="app.py" line="249"/>
+        <location filename="../zebratrace/app.py" line="263"/>
         <source>Trace the Image. Press ESC to Cancel.</source>
-        <translation>Трассируем  изображение. Нажмите клавишу ESC для отмены.</translation>
+        <translation>Трассируем изображение. Нажмите клавишу ESC для отмены.</translation>
     </message>
     <message>
-        <location filename="app.py" line="259"/>
+        <location filename="../zebratrace/app.py" line="272"/>
         <source>Error in function</source>
         <translation>Ошибка в функции</translation>
     </message>
     <message>
-        <location filename="app.py" line="294"/>
+        <location filename="../zebratrace/app.py" line="302"/>
         <source>Simplify Points</source>
         <translation>Уменьшение количества узлов</translation>
     </message>
     <message>
-        <location filename="app.py" line="278"/>
+        <location filename="../zebratrace/app.py" line="290"/>
         <source>Flatten paths</source>
-        <translation type="unfinished">Формируем объекты</translation>
+        <translation>Формируем объекты</translation>
     </message>
 </context>
 </TS>
