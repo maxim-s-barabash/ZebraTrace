@@ -15,7 +15,22 @@ You are in the project directory ZebraTrace
 $ cd src
 $ python ZebraTrace.pyw
 ```
+[learn more](https://github.com/maxim-s-barabash/ZebraTrace/wiki/Let's-start.-Run-from-source-code-on-linux.)
+
 
 ![Screenshot](https://github.com//maxim-s-barabash/ZebraTrace/blob/gh-pages/images/screenshot1.png?raw=true)
 
+
+
+### Supported File Formats
+
+|         | Supported File Formats |
+| -----   | ----                   |
+| Input:  | jpg jpeg png gif bmp tiff tga |
+| Output: | SVG EPS NGC g-code     |
+
+
+### WIKI
+
 [More examples](https://github.com/maxim-s-barabash/ZebraTrace/wiki/Gallery)
+
