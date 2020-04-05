@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainwindow.ui'
+# Form implementation generated from reading ui file 'src/ui_build/mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.10.1
 #
@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(885, 605)
+        MainWindow.resize(885, 728)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/image/ico/zebra.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -460,7 +460,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.bottomPanel)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 885, 18))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 885, 22))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -471,7 +471,7 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
         self.actionOpenBitmap = QtWidgets.QAction(MainWindow)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("."), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionOpenBitmap.setIcon(icon2)
         self.actionOpenBitmap.setMenuRole(QtWidgets.QAction.NoRole)
         self.actionOpenBitmap.setObjectName("actionOpenBitmap")
