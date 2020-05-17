@@ -1,0 +1,8 @@
+{
+  "funcX": "-2+4*i/(n+1)-(a - a % (8/n))",
+  "funcY": "a*1.5+i/n*4",
+  "rangeMax": 0.0,
+  "rangeMin": -1.6,
+  "polar": 0,
+  "resolution": 1.0
+}
