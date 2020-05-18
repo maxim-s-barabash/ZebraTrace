@@ -34,3 +34,16 @@ $ python ZebraTrace.pyw
 
 [More examples](https://github.com/maxim-s-barabash/ZebraTrace/wiki/Gallery)
 
+
+### CREDITS
+
+#### Translations
+
+cz - [Pavel Fric](https://fripohled.blogspot.cz/)
+
+#### Idea
+
+[user8](https://github.com/user8)
+
+
+
