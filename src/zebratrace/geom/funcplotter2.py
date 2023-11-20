@@ -25,7 +25,7 @@ from .path import makePathData, split
 
 # to trace the image is used PyQt4
 # (http://www.riverbankcomputing.co.uk/software/pyqt/download)
-sys.setcheckinterval(0xfff)
+sys.setswitchinterval(0xfff)
 
 
 class FuncPlotter:
